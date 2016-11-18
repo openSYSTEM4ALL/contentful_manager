@@ -1,0 +1,215 @@
+<html lang="en" ng-app="cam">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CAM | Migrate</title>
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="https://unpkg.com/contentful-management@1.1.14/browser-dist/contentful-management.js"></script>
+	<script src="script/config.js"></script>
+	<script src="script/controller.js"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Monsterrat:400,700|Merriweather:400,300italic,700"
+					rel="stylesheet" type="text/css">
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<style>
+		.box {
+			color: white;
+			padding: 10px;
+			text-align: center;
+		}
+		
+		.error {
+			color: red;
+			padding: 10px;
+			text-align: center;
+		}
+		
+		.green {
+			background: rgba(0, 115, 136, .75);
+			width: 50%;
+		}
+		
+		.blue {
+			background: #9c27b0;
+			width: 50%;
+		}
+		
+		.status {
+			background: rgba(0, 115, 136, .75);
+			width: 100%;
+		}
+		
+		.header {
+			background-color: #464444;
+			color: rgba(255, 255, 255, 0.9);
+			text-align: center;
+			font-size: 35px;
+			height: 45px;
+			margin-top: 0px;
+		}
+		
+		.heading-text {
+			text-align: center;
+			font-size: 18px;
+			margin-top: 15px;
+		}
+		
+		.button:enabled {
+			color: #1b5e20;
+		}
+		
+		.button:disabled {
+			color: #bdbdbd;
+		}
+		
+		#scroller {
+			overflow: auto;
+		}
+		
+		table,
+		th,
+		td {
+			border: 1px solid grey;
+			border-collapse: collapse;
+			padding: 5px;
+		}
+		
+		table tr:nth-child(odd) {
+			background-color: #f1f1f1;
+		}
+		
+		table tr:nth-child(even) {
+			background-color: #ffffff;
+		}
+		
+		label,
+		h4 {
+			color: #eae6ea
+		}
+		
+		ul {
+			text-align: left;
+		}
+	</style>
+</head>
+
+<body style="background-color : #f2f2f2;">
+	<div id="layoutContainer" ng-controller="layoutController as ctrl" ng-cloak>
+		<div>
+			<div class="header">
+				<span>Contentful Asset Migration</span>
+			</div>
+			<div class="heading-text">
+				<p>Please select the source and destination space, then make the asset selection.</p> <br/>
+				<button type="button" class="button" id="btnMigrate" ng-disabled="(selectedSource.value === '0' || selectedDest.value === '0')"
+								ng-click="migratecontent(selectedfiles);">Migrate</button>
+			</div>
+		</div>
+		<br/><br/>
+		<div layout="row" layout-xs="column" id="scroller">
+			<!--left- source pane -->
+			<div flex class="green box">
+				<label for="selectsource"> Select Source: </label>
+				<select style="color: initial;" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
+								ng-change="changedValue(selectedSource)">
+				<br>
+				</select>
+				<hr>
+				<!--Fetch all published assets and keep it in selectedfiles variable -->
+				<ul ng-repeat="x in names" ng-init="count=$index">
+					<span>{{count}}</span>
+					<li ng-repeat="(filelocale,value) in x.fields.file">
+						<input type="checkbox" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale + '$' + count]" />
+						<span>{{filelocale + ' : ' + value.fileName}}</span>
+						<p> URL : {{value.url}}</p>
+						<hr>
+					</li>
+				</ul>
+			</div>
+			<!--middle- destination pane -->
+			<div flex class="blue box">
+				<label for="selectDestSpace"> Select Destination: </label>
+				<select style="color: initial;" name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces"
+								ng-change="getDestAssets(selectedDest)">
+      			</select>
+				<hr>
+				<table align="center">
+					<tr ng-repeat="(value,key) in selectedfiles">
+						<td>{{(key==true ? value.split('//')[0].substring(0,5) : null)}}</td>
+						<td>{{(key==true ? value.split("/").pop() : null)}}</td>
+					</tr>
+				</table>
+			</div>
+			<!--right- status pane -->
+			<div flex class="status box">
+				<label> Status of Content Migration </label>
+				<hr>
+				<h4 align="left" ng-show="checksuccessful.length > 0">
+					<u>Passed Cases</u>
+				</h4>
+				<ul>
+					<br/>
+					<li ng-repeat="x in checksuccessful">
+						{{x.asset}}
+						<hr>
+					</li>
+				</ul>
+				<h4 align="left" ng-show="checkerrorcase.length > 0">
+					<u>Failed Cases</u>
+				</h4>
+				<ul class="error">
+					<br/>
+					<li ng-repeat="x in checkerrorcase">
+						{{x.asset}}
+						<hr>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery Easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+	<!--  <script type="text/javascript">
+	  	
+		// function checkAssetSelection() {
+		// 	var checkboxes = document.getElementByName("assetName[]");
+		// 	for(var i=0; i < checkboxes.length; i++){
+		// 	if(checkboxes[i].checked) {
+		// 		checked = true;
+		// 	}
+		// }
+		// if (!checked) {
+		// 	alert('Please select ');
+		// }
+		// return checked;
+		//return atLeastOneIsChecked;
+		//}
+	 	//	$('#btnMigrate').click(function () {
+		//   var atLeastOneIsChecked = $('input[type="checkbox"]').is(':checked');
+		//   alert('Please select atleast one asset.');
+		//   return false;
+		// });
+	 </script> -->
+</body>
+
+</html>
