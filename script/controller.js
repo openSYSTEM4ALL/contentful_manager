@@ -120,7 +120,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			// 	.success(function(response) {
 			// 		$scope.destFiles = response.items;
 			// 	});
-		}  //andof getDestAssets
+		} //andof getDestAssets
 
 
 
@@ -147,19 +147,21 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 				}
 			}
 		}
-
-		json.fields.title[locale] = $scope.names[selectedIndex].fields.title[locale];
-		json.fields.file[locale] = {
-			"contentType": $scope.names[selectedIndex].fields.file[locale].contentType,
-			"fileName": $scope.names[selectedIndex].fields.file[locale].fileName,
-			"upload": "https:" + $scope.names[selectedIndex].fields.file[locale].url
+		for (i = 0; i < locale.length; i++) {
+			json.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
+			json.fields.file[locale[i]] = {
+				"contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
+				"fileName": $scope.names[selectedIndex].fields.file[locale[i]].fileName,
+				"upload": "https:" + $scope.names[selectedIndex].fields.file[locale[i]].url
+			}
 		}
 
 		$scope.destSpace.createAssetWithId(assetID, json)
 			.then((asset) => {
-				asset.processForLocale(locale)
+				asset.processForAllLocales()
 					.then((asset) => {
-						asset.publish();
+						//asset.publish();
+						$scope.processAsset(locale, selectedIndex, assetID);
 					});
 			});
 	}
