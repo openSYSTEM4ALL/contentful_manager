@@ -4,6 +4,7 @@
 #add a config.js in script folder and please add the belwo format with var spac
 ##you can configure the same as per your need
 
+<pre>
 var spac = [{
 	value: "0",
 	space: "--Select--"
@@ -24,3 +25,4 @@ var spac = [{
 	space: "TestSpace",
 	token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }];
+</pre>
