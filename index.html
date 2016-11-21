@@ -9,9 +9,12 @@
     <link type="text/css" rel="stylesheet" href="css/style.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.min.js"></script>
+    <script src="script/ang.js"></script>
 </head>
 
-<body>
+<body data-ng-app="myApp">
     <header>
         <div class="navbar-fixed">
             <nav>
@@ -39,108 +42,6 @@
             <li><a href="#" class="waves-effect waves-teal">Production</a></li>
             <li><span class="badge" data-badge-caption="">139</span><a href="#" class="waves-effect waves-teal">Assets</a></li>
         </ul>
-    </header>
-    <main>
-        <div class="container">
-            <h3 class="header center">Starter Template</h3>
-            <div class="row center">
-                <a href="#" id="download-button" class="btn-large waves-effect waves-light red accent-2">Use material</a>
-            </div>
-            <br><br>
-            <div class="row">
-                <div class="card-panel hoverable col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center brown-text"><i class="material-icons">input</i></h2>
-                        <h5 class="center">Fast developement</h5>
-                        <p class="light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus ultricies leo, in mattis
-                            diam molestie malesuada. Nullam tortor arcu, mollis vitae scelerisque in, dignissim eget augue.
-                            Praesent mattis ac dolor vel finibus. Duis tristique bibendum ante, non imperdiet dui aliquet
-                            sed.</p>
-                    </div>
-                </div>
-                <div class="card-panel hoverable col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center brown-text"><i class="material-icons">perm_identity</i></h2>
-                        <h5 class="center">User Experience</h5>
-                        <p class="light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus ultricies leo, in mattis
-                            diam molestie malesuada. Nullam tortor arcu, mollis vitae scelerisque in, dignissim eget augue.
-                            Praesent mattis ac dolor vel finibus. Duis tristique bibendum ante, non imperdiet dui aliquet
-                            sed.</p>
-                    </div>
-                </div>
-                <div class="card-panel hoverable col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center brown-text"><i class="material-icons">settings_input_antenna</i></h2>
-                        <h5 class="center">On the fly</h5>
-                        <p class="light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus ultricies leo, in mattis
-                            diam molestie malesuada. Nullam tortor arcu, mollis vitae scelerisque in, dignissim eget augue.
-                            Praesent mattis ac dolor vel finibus. Duis tristique bibendum ante, non imperdiet dui aliquet
-                            sed.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <!--parallax-->
-        <div class="parallax-container">
-            <div class="parallax"><img src="http://all4desktop.com/data_images/original/4237670-images.jpg"></div>
-        </div>
-        <div class="divider"></div>
-        <!--cards panel-->
-        <div class="container">
-            <div class="center">
-                <h4>Feedback</h4>
-                <a class="waves-effect waves-light btn-floating"><i class="material-icons left">add</i>button</a>
-            </div>
-            <div class="row">
-                <div class="col s12 m6 l4">
-                    <div class="card-panel grey lighten-5 z-depth-1">
-                        <div class="row valign-wrapper">
-                            <div class="col s4">
-                                <img src="http://placehold.it/500X500" alt="" class="circle responsive-img">
-                                <!-- notice the "circle" class -->
-                            </div>
-                            <div class="col s8">
-                                <span class="black-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6 l4">
-                    <div class="card-panel grey lighten-5 z-depth-1">
-                        <div class="row valign-wrapper">
-                            <div class="col s4">
-                                <img src="http://placehold.it/500X500" alt="" class="circle responsive-img">
-                                <!-- notice the "circle" class -->
-                            </div>
-                            <div class="col s8">
-                                <span class="black-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6 l4">
-                    <div class="card-panel grey lighten-5 z-depth-1">
-                        <div class="row valign-wrapper">
-                            <div class="col s4">
-                                <img src="http://placehold.it/500X500" alt="" class="circle responsive-img">
-                                <!-- notice the "circle" class -->
-                            </div>
-                            <div class="col s8">
-                                <span class="black-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
         <!--Splash Screen-->
         <div id="splashscreen">
             <div class="">
@@ -167,6 +68,11 @@
             </div>
         </div>
         <!--End Splash Screen-->
+    </header>
+    <main>
+       
+       <div ng-view=""></div>
+        
     </main>
     <footer class="page-footer">
         <div class="container">
