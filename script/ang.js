@@ -5,9 +5,9 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
         controller: "singleTopicViewController",
         templateUrl: "/templates/singleTopicView.html"
     });
-    $routeProvider.when("/newMessage", {
-        controller: "newMessageController",
-        templateUrl: "/templates/newTopicView.html"
+    $routeProvider.when("/migrate", {
+        controller: "layoutController",
+        templateUrl: "/templates/migrate.html"
     });
     $routeProvider.when("/", {
         controller: "landingController",
@@ -30,3 +30,14 @@ app.controller('landingController', ["$scope", "$http",  function ($scope, $http
  $('.parallax').parallax();
  
 }]);
+
+
+
+
+
+
+
+
+
+
+

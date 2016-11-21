@@ -1,0 +1,63 @@
+<div id="layoutContainer" ng-controller="layoutController as ctrl" ng-cloak>
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col s12 m4 l4">
+            <div class="card">
+                <div class="card-content green white-text">
+                    <p class="card-title">Total assets</p>
+                    <h5>300</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m4 l4">
+            <div class="card">
+                <div class="card-content blue-grey white-text">
+                    <p class="card-title flow-text">Selected</p>
+                    <h5>300</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m4 l4">
+            <div class="card">
+                <div class="card-content deep-purple white-text">
+                    <p class="card-title">Migrated</p>
+                    <h5>100 </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <!--tabs Screen-->
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s3"><a href="#test1">Source</a></li>
+                <li class="tab col s3"><a href="#test2">Selected Files</a></li>
+                <li class="tab col s3 disabled"><a href="#test3">Confirm</a></li>
+                <li class="tab col s3"><a href="#test4">Migrate</a></li>
+            </ul>
+        </div>
+        <div id="test1" class="col ">
+            <!--tab1-->
+            <label for="selectsource"> Select Source: </label>
+            <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
+                ng-change="changedValue(selectedSource)">
+				<br>
+				</select>
+            <!--Fetch all published assets and keep it in selectedfiles variable -->
+            <ul ng-repeat="x in names" ng-init="count=$index">
+                <span>{{count}}</span>
+                <li ng-repeat="(filelocale,value) in x.fields.file">
+                    <input type="checkbox" class="filled-in" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale + '$' + count]"
+                    />
+                    <label for="{{filelocale + value.fileName}}">{{filelocale + ' : ' + value.fileName}}</label>
+                    <p> URL : {{value.url}}</p>
+                    <div class="divider"></div>
+                </li>
+            </ul>
+        </div>
+        <div id="test2" class="col s12">Test2 </div>
+        <div id="test3" class="col s12">Test 3</div>
+        <div id="test4" class="col s12">Test 4</div>
+    </div>
+</div>

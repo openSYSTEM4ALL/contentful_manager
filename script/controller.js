@@ -1,6 +1,9 @@
-var app = angular.module('cam', ['ngMaterial']);
+//var app = angular.module('cam', ['ngMaterial']);
 
 app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', function ($scope, $http, $q, $timeout, $window, $filter) {
+
+	$('ul.tabs').tabs();
+
 	//Variable Declaration
 	$scope.spaces = spac;
 	$scope.selectedfiles = {};
@@ -25,16 +28,21 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 		return angular.isUndefined(val) || val === null || val === '';
 	};
 
-
+	$scope.$on('$viewContentLoaded', function () {
+		//call it here
+		$('select').material_select();
+	});
+	
 	//Fetch all published asset of a selected Sorce Space
 	$scope.changedValue = function (srcitem) { //clear status if any
+			
 			if ($scope.checksuccessful.length > 0)
 				$scope.checksuccessful.splice(0);
 
 			if ($scope.checkerrorcase.length > 0)
 				$scope.checkerrorcase.splice(0);
-
-			$scope.srcitem = srcitem;
+                  
+			$scope.srcitem = $filter('filter')($scope.spaces, {space: srcitem})[0];
 
 			if ($scope.srcitem.value == "0") {
 				$scope.names = [];
@@ -71,8 +79,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 						})
 				});
 		} // end of changedvalue  
-
-	//Fetch dest assets
+	//changed values
+	$('select').on('change', function (e) {
+     var optionSelected = $(this).find("option:selected");
+     var valueSelected  = optionSelected.val();
+     var textSelected   = optionSelected.text();
+     $scope.changedValue(textSelected);
+    });
+   //Fetch dest assets
 	$scope.getDestAssets = function (destitem) { //clear status if any
 			if ($scope.checksuccessful.length > 0)
 				$scope.checksuccessful.splice(0);
@@ -275,5 +289,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			}
 
 		} //end of migrate function
+
 
 }]); //end of controller
