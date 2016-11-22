@@ -23,6 +23,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	//initialized with 0
 	$scope.samlversion = 1;
 
+	$scope.selectCount= 0;
+
 	angular.isUndefinedOrNullOrEmpty = function (val) {
 		return angular.isUndefined(val) || val === null || val === '';
 	};
@@ -93,6 +95,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 				$scope.checkerrorcase.splice(0);
 
 			$scope.destitem = destitem;
+			$scope.destitem = $filter('filter')($scope.spaces, {space: destitem})[0];
 
 			if ($scope.destitem.value == "0") {
 				$scope.selectedfiles = {};
