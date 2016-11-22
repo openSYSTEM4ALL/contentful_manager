@@ -7,7 +7,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	//Variable Declaration
 	$scope.spaces = spac;
 	$scope.selectedfiles = {};
-	$scope.destFiles = [];
 	$scope.selectedSource = $scope.spaces[0];
 	$scope.selectedDest = $scope.spaces[0];
 	$scope.filelocale = [];
@@ -45,8 +44,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			$scope.srcitem = $filter('filter')($scope.spaces, {space: srcitem})[0];
 
 			if ($scope.srcitem.value == "0") {
-				$scope.names = [];
-				$scope.destFiles = [];
+				$scope.names = [];;
 				return false;
 			}
 			if ($scope.srcitem.space == "Dev") {
@@ -86,6 +84,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
      var textSelected   = optionSelected.text();
      $scope.changedValue(textSelected);
     });
+    
    //Fetch dest assets
 	$scope.getDestAssets = function (destitem) { //clear status if any
 			if ($scope.checksuccessful.length > 0)
@@ -97,7 +96,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
 			if ($scope.destitem.value == "0") {
 				$scope.selectedfiles = {};
-				$scope.destFiles = [];
 				return false;
 			}
 
@@ -124,30 +122,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 				.then((space) => {
 					// Now that we have a space, we can get entries from that space
 					$scope.destSpace = space;
-					space.getAssets()
-						.then((assets) => {
-							$scope.destFiles = assets.items;
-						});
 				});
+		} //end of getDestAssets
 
-			// $http.get("https://api.contentful.com/spaces/"+ destitem.value + "/assets", $scope.destconfig)
-			// 	.success(function(response) {
-			// 		$scope.destFiles = response.items;
-			// 	});
-		} //andof getDestAssets
-
-
-
-	function getDestFiles(fileName, locale, spaceID) {
-		console.log(locale);
-		for (var asset in $scope.destFiles) {
-
-			if ($scope.destFiles[asset].sys.id == fileName) {
-				return true;
-			}
-
-		}
-	}
 	$scope.createNewAsset = function (locale, selectedIndex, assetID) {
 
 		var json = {
