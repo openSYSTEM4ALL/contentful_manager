@@ -6,6 +6,10 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
         controller: "layoutController",
         templateUrl: "/templates/migrate.html"
     });
+    $routeProvider.when("/login", {
+        controller: "loginController",
+        templateUrl:"/templates/login.html"
+    });
     $routeProvider.when("/", {
         controller: "landingController",
         templateUrl:"/templates/landing.html"
