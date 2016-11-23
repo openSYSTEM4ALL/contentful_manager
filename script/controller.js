@@ -245,7 +245,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
 					//if key is true as in asset is selected
 					if (key == true) {
-						$scope.locale = selectedAssets.split("$")[0];
+					    $scope.locale = selectedAssets.split("$")[0].split(":")[0];
 						$scope.selectedIndex = selectedAssets.split("$")[1];
 						$scope.assetID = $scope.names[$scope.selectedIndex].sys.id;
 						//$scope.currentAssetToMigrate = $scope.destSpace.getAsset($scope.assetID);
