@@ -23,7 +23,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	//initialized with 0
 	$scope.samlversion = 1;
 
-	$scope.selectCount= 0;
+	$scope.checkCount= 0;
 
 	angular.isUndefinedOrNullOrEmpty = function (val) {
 		return angular.isUndefined(val) || val === null || val === '';
@@ -91,6 +91,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	$('#ddlDestSpace').on('change', function (e) {
      $scope.getDestAssets($scope.selectedDest.space);
     });
+	$scope.$watch('selectedfiles', function () {
+    $scope.checkCount= $( "input:checked" ).length;
+    }, true);
     
    //Fetch dest assets
 	$scope.getDestAssets = function (destitem) { //clear status if any

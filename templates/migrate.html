@@ -13,7 +13,7 @@
             <div class="card-small white-text">
                 <div class="card-content">
                     <p class="card-title white-text">Selected</p>
-                    <h5>0</h5>
+                    <h5>{{checkCount}}</h5>
                 </div>
             </div>
         </div>
@@ -32,48 +32,75 @@
         <div class="row">
             <div class="">
                 <ul class="tabs">
-                    <li class="tab col s3"><a href="#assetslist">Source</a></li>
-                    <li class="tab col s3"><a href="#test2">Selected Files</a></li>
-                    <li class="tab col s3 disabled"><a href="#test3">Confirm</a></li>
-                    <li class="tab col s3"><a href="#test4">Migrate</a></li>
+                    <li class="tab col s3"><a id="assetslistid" href="#assetslist">Source</a></li>
+                    <li class="tab col s3"><a id="selectedAssetid" href="#selectedAsset">Selected Files</a></li>
+                    <li class="tab col s3"><a id="migratedAssetid" href="#migratedAsset">Migrate</a></li>
                 </ul>
             </div>
             <div id="assetslist" class="col s12">
                 <!--tab1-->
-                <label for="selectsource"> Select Source: </label>
-                <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
-                    ng-change="changedValue(selectedSource)">
-				<br>
-				</select>
+                <div class="row right-align">
+                    <div class="col s12">
+                        <a class="waves-effect waves-light btn" onclick="$('#selectedAssetid').click()">Next--> </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s10">
+                        <label for="selectsource"> Select Source: </label>
+                        <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
+                            ng-change="changedValue(selectedSource)">
+				       </select>
+                    </div>
+                </div>
                 <!--Fetch all published assets and keep it in selectedfiles variable -->
-                <ul ng-repeat="x in names" ng-init="count=$index">
-                    <li ng-repeat="(filelocale,value) in x.fields.file">
-                        <span class="new badge" data-badge-caption="">{{count +1}}</span>
-                        <input type="checkbox" class="filled-in" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
-                        />
-                        <label for="{{filelocale + value.fileName}}">{{filelocale + ' : ' + value.fileName}}</label>
-                        <p> <a href="{{value.url}}" class="dont-break-out blue-grey-text">{{value.url}}</a></p>
-                        <div class="divider"></div>
-                    </li>
-                </ul>
-            </div>
-            <div id="test2" class="col s12">
-                <!--middle- destination pane -->
-                <div class="">
-                    <label for="selectDestSpace"> Select Destination: </label>
-                    <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestAssets(selectedDest)">
-      			</select>
-                    <ul>
-                        <li ng-repeat="(value,key) in selectedfiles">
-                            <span>{{(key==true ? value.split("$")[0] : null)}}</span>
-                            <span class="new badge" data-badge-caption="">{{(key==true ? value.split("$").pop() : null)}}</span>
-                            <div class="divider"></div>
-                        </li>
-                    </ul>
+                <div class="row">
+                    <div class="col s12">
+                        <ul ng-repeat="x in names" ng-init="count=$index">
+                            <li ng-repeat="(filelocale,value) in x.fields.file">
+                                <span class="new badge" data-badge-caption="">{{count +1}}</span>
+                                <input type="checkbox" class="filled-in" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
+                                />
+                                <label for="{{filelocale + value.fileName}}">{{filelocale + ' : ' + value.fileName}}</label>
+                                <p> <a href="{{value.url}}" class="dont-break-out blue-grey-text">{{value.url}}</a></p>
+                                <div class="divider"></div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div id="test3" class="col s12">Test 3</div>
-            <div id="test4" class="col s12">Test 4</div>
+            <div id="selectedAsset" class="col s12">
+                <!--tab2 -->
+                <div class="row">
+                    <div class="col s6">
+                        <a class="waves-effect waves-light btn" onclick="$('#assetslistid').click()">
+                            <--Back</a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <a class="waves-effect waves-light btn" onclick="$('#migratedAssetid').click()">Migrate <i class="material-icons right">send</i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s10">
+                        <label for="selectDestSpace"> Select Destination: </label>
+                        <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestAssets(selectedDest)"> </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <ul>
+                            <li ng-repeat="(value,key) in selectedfiles">
+                                <span>{{(key==true ? value.split("$")[0] : null)}}</span>
+                                <span class="new badge" data-badge-caption="">{{(key==true ? value.split("$").pop() : null)}}</span>
+                                <div class="divider"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="migratedAsset" class="col s12">
+                <!--tab3 -->
+                Test 3
+            </div>
         </div>
     </div>
 </div>
