@@ -1,6 +1,18 @@
-<div>
-    <label for="txtSpaceName">Space Name</label> <input id="txtSpaceName" ng-model="spaceName" type="text" />
-    <label for="txtSpaceName">Space ID</label>  <input id="txtSpaceId" ng-model="spaceID" type="text" />
-    <label for="txtSpaceName">Management Token</label> <input id="txtMgmntTkn" ng-model="mgmntToken" type="text" /> 
-    <input id="btnSave" type="button" value="Save" ng-click="saveConfigurations()" />
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col s12">
+            <label for="txtSpaceName">Space Name</label> <input id="txtSpaceName" ng-model="spaceName" type="text" />
+        </div>
+        <div class="col s12">
+            <label for="txtSpaceName">Space ID</label> <input id="txtSpaceId" ng-model="spaceID" type="text" />
+        </div>
+        <div class="col s12">
+            <label for="txtSpaceName">Management Token</label> <input id="txtMgmntTkn" ng-model="mgmntToken" type="text"
+            />
+        </div>
+        <div class="col s12">
+            <input id="btnSave" class="waves-effect waves-light btn" type="button" value="Save" ng-click="saveConfigurations()" />
+        </div>
+    </div>
 </div>
