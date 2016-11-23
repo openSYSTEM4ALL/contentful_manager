@@ -1,5 +1,9 @@
 //var app = angular.module('cam', ['ngMaterial']);
 var spac = [];
+var storedData = localStorage.getItem('StoredData')
+if (storedData) {
+    spac = JSON.parse(storedData);
+}
 app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', function ($scope, $http, $q, $timeout, $window, $filter) {
     
        
@@ -8,12 +12,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	angular.isUndefinedOrNullOrEmpty = function (val) {
 	    return angular.isUndefined(val) || val === null || val === '';
 	};
-   
-	$scope.spaces=spac
+	
+	
+	    $scope.spaces = spac
+        	
     	
 	$scope.selectedfiles = {};
-	$scope.selectedSource = $scope.spaces[0];
-	$scope.selectedDest = $scope.spaces[0];
+	//$scope.selectedSource = $scope.spaces[0];
+	//$scope.selectedDest = $scope.spaces[0];
 	$scope.filelocale = [];
 	$scope.sourceassetinfo = [];
 	$scope.newfilesinfo = [];
@@ -88,13 +94,17 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	$('#ddlSrcSpace').on('change', function (e) {
      //var optionSelected = $(this).find("option:selected");
      //var valueSelected  = optionSelected.val();
-     //var textSelected   = optionSelected.text();
-     $scope.changedValue($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text());
+	    //var textSelected   = optionSelected.text();
+	    if ($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
+	        $scope.changedValue($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text());
+	    }
     });
 	$('#ddlDestSpace').on('change', function (e) {
     // $scope.getDestAssets($scope.selectedDest.space);
-	//$('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text()
-	$scope.getDestAssets($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
+	    //$('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text()
+	    if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
+	        $scope.getDestAssets($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
+	    }
     });
 	$scope.$watch('selectedfiles', function () {
     $scope.checkCount= $( "input:checked" ).length;
@@ -303,7 +313,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	                   space: $scope.spaceName,
 	                   token: $scope.mgmntToken
 	               });
-	
+	       localStorage.setItem('StoredData', JSON.stringify(spac));
 	       
 	    }
 
