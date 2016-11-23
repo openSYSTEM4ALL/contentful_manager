@@ -20,6 +20,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	$scope.desconfig;
 	$scope.checksuccessful = [];
 	$scope.checkerrorcase = [];
+	$scope.publishedAsset=[];
 	//initialized with 0
 	$scope.samlversion = 1;
 
@@ -179,8 +180,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			.then((asset) => {
 				//asset.sys.version = asset.sys.version+1;
 				asset.publish()
-				.then((asset) =>{
-				 console.log('published asset : '+asset.fields.file.fileName +asset.sys.publishedVersion);
+				.then((assetcall) =>{
+				//asset.campublish = true;
+					$scope.publishedAsset.push(assetcall);
+					$scope.$apply();
+				 console.log('published asset : '+assetcall.fields.file.fileName +assetcall.sys.publishedVersion);
 				});
 				//alert('published' + asset);
 			});
@@ -195,6 +199,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 				//asset.sys.version = asset.sys.version+1;
 				asset.publish()
 				.then((asset) =>{
+				 $scope.publishedAsset.push(assetcall);
+				 $scope.$apply();
 				 console.log('published asset c: '+asset.fields.file.fileName +asset.sys.publishedVersion);
 				});
 			});
@@ -238,10 +244,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 		}
 		//Migrate assets from source to Destination
 	$scope.migratecontent = function (item) {
-
+       
 			$scope.selectedvalues = item;
 			//loop for traversing selected items 
 			$scope.tags = [];
+			$scope.publishedAsset=[];
 			angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
 					//if key is true as in asset is selected
 					if (key == true) {
