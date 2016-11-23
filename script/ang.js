@@ -1,10 +1,7 @@
 var app = angular.module('myApp', ['ngRoute']);
 
 app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
-    $routeProvider.when("/message/:id", {
-        controller: "singleTopicViewController",
-        templateUrl: "/templates/singleTopicView.html"
-    });
+    
     $routeProvider.when("/migrate", {
         controller: "layoutController",
         templateUrl: "/templates/migrate.html"
