@@ -86,10 +86,12 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
      //var optionSelected = $(this).find("option:selected");
      //var valueSelected  = optionSelected.val();
      //var textSelected   = optionSelected.text();
-     $scope.changedValue($scope.selectedSource.space);
+     $scope.changedValue($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text());
     });
 	$('#ddlDestSpace').on('change', function (e) {
-     $scope.getDestAssets($scope.selectedDest.space);
+    // $scope.getDestAssets($scope.selectedDest.space);
+	//$('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text()
+	$scope.getDestAssets($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
     });
 	$scope.$watch('selectedfiles', function () {
     $scope.checkCount= $( "input:checked" ).length;
@@ -176,7 +178,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 		asset.update()
 			.then((asset) => {
 				//asset.sys.version = asset.sys.version+1;
-				asset.publish();
+				asset.publish()
+				.then((asset) =>{
+				 console.log('published asset : '+asset.fields.file.fileName +asset.sys.publishedVersion);
+				});
 				//alert('published' + asset);
 			});
 	}
@@ -188,7 +193,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 		asset.update()
 			.then((asset) => {
 				//asset.sys.version = asset.sys.version+1;
-				asset.publish();
+				asset.publish()
+				.then((asset) =>{
+				 console.log('published asset c: '+asset.fields.file.fileName +asset.sys.publishedVersion);
+				});
 			});
 	}
 	$scope.processAsset = function (locale, selectedIndex, assetID) {
