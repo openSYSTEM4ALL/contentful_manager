@@ -1,11 +1,16 @@
 //var app = angular.module('cam', ['ngMaterial']);
-
+var spac = [];
 app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', function ($scope, $http, $q, $timeout, $window, $filter) {
-
+    
+       
+    
 	$('ul.tabs').tabs();
-
-	//Variable Declaration
-	$scope.spaces = spac;
+	angular.isUndefinedOrNullOrEmpty = function (val) {
+	    return angular.isUndefined(val) || val === null || val === '';
+	};
+   
+	$scope.spaces=spac
+    	
 	$scope.selectedfiles = {};
 	$scope.selectedSource = $scope.spaces[0];
 	$scope.selectedDest = $scope.spaces[0];
@@ -25,9 +30,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
 	$scope.checkCount= 0;
 
-	angular.isUndefinedOrNullOrEmpty = function (val) {
-		return angular.isUndefined(val) || val === null || val === '';
-	};
 
 	$scope.$on('$viewContentLoaded', function () {
 		//call it here
@@ -42,7 +44,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
 			if ($scope.checkerrorcase.length > 0)
 				$scope.checkerrorcase.splice(0);
-                  
+                
 			    $scope.srcitem = $filter('filter')($scope.spaces, {space: srcitem})[0];
 				$scope.srcSpaceId = $scope.srcitem.value;
 				$scope.srcAccessToken = $scope.srcitem.token;
@@ -286,6 +288,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			}
 
 		} //end of migrate function
-
+	$scope.saveConfigurations = function () {
+	 
+	    
+	       spac.push({
+	                   value: $scope.spaceID,
+	                   space: $scope.spaceName,
+	                   token: $scope.mgmntToken
+	               });
+	
+	       
+	    }
 
 }]); //end of controller
