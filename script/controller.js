@@ -295,4 +295,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 		} //end of migrate function
 
 
-}]); //end of controller
+}]); 
+//end of controller
+
+app.controller('loginController', function(){
+
+});
