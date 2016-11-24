@@ -18,22 +18,22 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <table>
-               <tr>
-                   <td>Space Name</td>
-                   <td>Space ID</td>
-                   <td>Management Token</td>
-                   <td colspan="2">Edit/Delete</td>
+            <table class="responsive-table bordered" data-ng-if="spaces.length>0">
+               <tr class="">
+                   <th>Space Name</th>
+                   <th>Space ID</th>
+                   <th>Management Token</th>
+                   <th colspan="2">Edit/Delete</th>
                </tr>
                 <tr ng-repeat="space in spaces track by $index">
                     <td><span class="dont-break-out" ng-model="space.space">{{space.space}}</span></td>
                     <td><span class="dont-break-out" ng-model="space.value">{{space.value}}</span></td> 
                     <td><span class="dont-break-out" ng-model="space.token">{{space.token}}</span></td>
-                    <td><input id="btnEdit" class="waves-effect waves-light btn-floating" type="button" value="Edit" ng-click='editValues(space.value,space.space,space.token)' /></td>
-                    <td><input id="btnDelete" class="waves-effect waves-light btn red lighten-2" type="button" value="Delete" ng-click='deleteSpace(space.value)' /></td>
+                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating"  value="Edit" ng-click='editValues(space.value,space.space,space.token)' ><i class="material-icons">mode_edit</i></button></td>
+                    <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2"  value="Delete" ng-click='deleteSpace(space.value)' ><i class="material-icons">delete</i> </button></td>
                               
                 </tr>
-                <div class="divider"></div>   
+                  
             </table>
         </div>
     </div>
