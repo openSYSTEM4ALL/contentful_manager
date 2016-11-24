@@ -5,37 +5,21 @@ if (storedData) {
     spac = JSON.parse(storedData);
 }
 app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', function ($scope, $http, $q, $timeout, $window, $filter) {
-
-
-
-    $('ul.tabs').tabs();
-    angular.isUndefinedOrNullOrEmpty = function (val) {
-        return angular.isUndefined(val) || val === null || val === '';
-    };
-
-
-    $scope.spaces = spac
-
-
-    $scope.selectedfiles = {};
-    //$scope.selectedSource = $scope.spaces[0];
-    //$scope.selectedDest = $scope.spaces[0];
-    $scope.filelocale = [];
-    $scope.sourceassetinfo = [];
-    $scope.newfilesinfo = [];
-    $scope.sourceData = [];
-    var promises = [];
-    var migratepromise = [];
-    var processpromise = [];
-    $scope.sourceconfig;
-    $scope.desconfig;
-    $scope.checksuccessful = [];
-    $scope.checkerrorcase = [];
-    $scope.publishedAsset = [];
-    //initialized with 0
-    $scope.samlversion = 1;
-
-    $scope.checkCount = 0;
+    
+       
+    
+	$('ul.tabs').tabs();
+	angular.isUndefinedOrNullOrEmpty = function (val) {
+	    return angular.isUndefined(val) || val === null || val === '';
+	};
+	
+	
+	$scope.spaces = spac; 	
+	$scope.selectedfiles = {};
+	$scope.checksuccessful = [];
+	$scope.checkerrorcase = [];
+	$scope.publishedAsset=[];
+	$scope.checkCount= 0;
 
 
     $scope.$on('$viewContentLoaded', function () {
@@ -56,29 +40,15 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.srcSpaceId = $scope.srcitem.value;
         $scope.srcAccessToken = $scope.srcitem.token;
 
-        // if ($scope.srcitem.value == "0") {
-        // 	$scope.names = [];
-        // 	return false;
-        // }
-        // if ($scope.srcitem.space == "Dev") {
-        // 	$scope.srcSpaceId = $scope.spaces[1].value;
-        // 	$scope.srcAccessToken = $scope.spaces[1].token;
-        // } else if ($scope.srcitem.space == "Stage") {
-        // 	$scope.srcSpaceId = $scope.spaces[2].value;
-        // 	$scope.srcAccessToken = $scope.spaces[2].token;
-        // } else if ($scope.srcitem.space == "ProdSupp") {
-        // 	$scope.srcSpaceId = $scope.spaces[3].value;
-        // 	$scope.srcAccessToken = $scope.spaces[3].token;
-        // } else if ($scope.srcitem.space == "TestSpace") {
-        // 	$scope.srcSpaceId = $scope.spaces[4].value;
-        // 	$scope.srcAccessToken = $scope.spaces[4].token;
-        // }
+			// if ($scope.srcitem.value == "0") {
+			// 	$scope.names = [];
+			// 	return false;
+			// }
 
-        //$scope.contentful = require('contentful-management')
-        $scope.srcClient = contentfulManagement.createClient({
-            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: $scope.srcAccessToken
-        })
+			$scope.srcClient = contentfulManagement.createClient({
+				// This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+				accessToken: $scope.srcAccessToken
+			})
 
         $scope.srcClient.getSpace($scope.srcSpaceId)
             .then((space) => {
@@ -126,24 +96,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         // 	return false;
         // }
 
-        // if ($scope.destitem.space == "Dev") {
-        // 	$scope.destSpaceId = $scope.destitem.value;
-        // 	$scope.destAccessToken = $scope.destitem.token;
-        // } else if ($scope.destitem.space == "Stage") {
-        // 	$scope.destSpaceId = $scope.spaces[2].value;
-        // 	$scope.destAccessToken = $scope.spaces[2].token;
-        // } else if ($scope.destitem.space == "ProdSupp") {
-        // 	$scope.destSpaceId = $scope.spaces[3].value;
-        // 	$scope.destAccessToken = $scope.spaces[3].token;
-        // } else if ($scope.destitem.space == "TestSpace") {
-        // 	$scope.destSpaceId = $scope.spaces[4].value;
-        // 	$scope.destAccessToken = $scope.spaces[4].token;
-        // }
-
-        $scope.destClient = contentfulManagement.createClient({
-            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: $scope.destAccessToken
-        });
+			$scope.destClient = contentfulManagement.createClient({
+				// This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+				accessToken: $scope.destAccessToken
+			});
 
         $scope.destClient.getSpace($scope.destSpaceId)
             .then((space) => {
