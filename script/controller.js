@@ -273,7 +273,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     
             }
-            btnSave.value = "Save"
+            btnSave.value = "Save";
             
         }
         else {
@@ -287,7 +287,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.spaceID = "";
         $scope.spaceName = "";
         $scope.mgmntToken = "";
-       
+        Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
     $scope.editValues = function (value, space, token) {
 
@@ -304,11 +304,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 console.log(v);
                 spac.splice(v, 1);
                 localStorage.setItem('StoredData', JSON.stringify(spac));
+                Materialize.toast('Hi, Gone to trash', 4000);
                 break;
-
             }
         }
-
+       
 
     }
     $scope.resetValues = function () {
@@ -318,7 +318,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.spaceName = "";
         $scope.mgmntToken = "";
 		txtSpaceId.readOnly = false;
-
+        Materialize.toast('BOOM ! BOOM !', 4000);
 
     }
 
