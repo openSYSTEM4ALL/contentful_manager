@@ -25,8 +25,8 @@
             <div class="card-small white-text z-depth-2">
                 <div class="card-content deep-purple">
                     <div class="container">
-                        <p class="card-title white-text">Migrated</p>
-                        <h5>0</h5>
+                        <p class="card-title white-text">Migration</p>
+                            <h5>{{srcSpac+'->'+desSpac}}</h5>
                     </div>
                 </div>
             </div>
@@ -47,9 +47,9 @@
                 <!--tab1-->
                 <div class="row ">
                     <div class="col s6">
-                      <a class="waves-effect waves-light btn"  href="#/configure">Configure--> </a>
+                        <a class="waves-effect waves-light btn" href="#/configure">Configure--> </a>
                     </div>
-                    <div class="col s6 right-align" >
+                    <div class="col s6 right-align">
                         <a class="waves-effect waves-light btn" onclick="$('#selectedAssetid').click()">Next--> </a>
                     </div>
                 </div>
@@ -59,7 +59,6 @@
                         <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
                             ng-change="changedValue(selectedSource)">
 				       </select>
-                        
                     </div>
                 </div>
                 <!--Fetch all published assets and keep it in selectedfiles variable -->

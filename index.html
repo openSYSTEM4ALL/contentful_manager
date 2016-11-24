@@ -13,7 +13,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.min.js"></script>
 	<script src="https://unpkg.com/contentful-management@1.1.14/browser-dist/contentful-management.js"></script>
     <script src="script/ang.js"></script>
+<<<<<<< HEAD
     <script src="script/otherController.js"></script>
+=======
+    
+>>>>>>> 9cef403bb129fa752a002f3ba3156f695fc5a3e0
 </head>
 
 <body data-ng-app="myApp">
@@ -28,7 +32,24 @@
                 </div>
             </nav>
         </div>
-        <ul class="side-nav fixed" id="nav-mobile">
+        <ul class="side-nav fixed">
+            <li class="logo">
+                <a id="logo-container" href="" class="brand-logo">
+                    <object id="front-page-logo" type="image/png" data="images/logo.png">Your browser does not support Images</object></a>
+                
+            </li>
+            <div class="divider"></div>
+            <li><span class="new badge"data-badge-caption="">Guest</span></li>
+            <li><a href="#/login" class="waves-effect waves-teal">Login</a> </li>
+            <div class="divider"></div>
+            <li><a href="#/" class="waves-effect waves-teal">Home</a></li>
+            <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
+            <li><a href="#/migrate" class="waves-effect waves-teal">let's Migrate your stuff!</a></li>
+             
+        </ul>
+
+        <!--SideNav fro mobile-->
+         <ul class="side-nav" id="nav-mobile">
             <li class="logo">
                 <a id="logo-container" href="" class="brand-logo">
                     <object id="front-page-logo" type="image/png" data="images/logo.png">Your browser does not support Images</object></a>
@@ -121,6 +142,11 @@
     <script type="text/javascript" src="script/app.js"></script>
     <script type="text/javascript" src="script/config.js"></script>
     <script type="text/javascript" src="script/controller.js"></script>
+    <script>
+     if (GetIEVersion() > 0) {
+        window.location.replace("/templates/unsupported.html");
+    }
+    </script>
 </body>
 
 </html>
