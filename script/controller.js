@@ -14,27 +14,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 	};
 	
 	
-	    $scope.spaces = spac
-        	
-    	
+	$scope.spaces = spac; 	
 	$scope.selectedfiles = {};
-	//$scope.selectedSource = $scope.spaces[0];
-	//$scope.selectedDest = $scope.spaces[0];
-	$scope.filelocale = [];
-	$scope.sourceassetinfo = [];
-	$scope.newfilesinfo = [];
-	$scope.sourceData = [];
-	var promises = [];
-	var migratepromise = [];
-	var processpromise = [];
-	$scope.sourceconfig;
-	$scope.desconfig;
 	$scope.checksuccessful = [];
 	$scope.checkerrorcase = [];
 	$scope.publishedAsset=[];
-	//initialized with 0
-	$scope.samlversion = 1;
-
 	$scope.checkCount= 0;
 
 
@@ -60,21 +44,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			// 	$scope.names = [];
 			// 	return false;
 			// }
-			// if ($scope.srcitem.space == "Dev") {
-			// 	$scope.srcSpaceId = $scope.spaces[1].value;
-			// 	$scope.srcAccessToken = $scope.spaces[1].token;
-			// } else if ($scope.srcitem.space == "Stage") {
-			// 	$scope.srcSpaceId = $scope.spaces[2].value;
-			// 	$scope.srcAccessToken = $scope.spaces[2].token;
-			// } else if ($scope.srcitem.space == "ProdSupp") {
-			// 	$scope.srcSpaceId = $scope.spaces[3].value;
-			// 	$scope.srcAccessToken = $scope.spaces[3].token;
-			// } else if ($scope.srcitem.space == "TestSpace") {
-			// 	$scope.srcSpaceId = $scope.spaces[4].value;
-			// 	$scope.srcAccessToken = $scope.spaces[4].token;
-			// }
 
-			//$scope.contentful = require('contentful-management')
 			$scope.srcClient = contentfulManagement.createClient({
 				// This is the access token for this space. Normally you get both ID and the token in the Contentful web app
 				accessToken: $scope.srcAccessToken
@@ -124,20 +94,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 			// if ($scope.destitem.value == "0") {
 			// 	$scope.selectedfiles = {};
 			// 	return false;
-			// }
-
-			// if ($scope.destitem.space == "Dev") {
-			// 	$scope.destSpaceId = $scope.destitem.value;
-			// 	$scope.destAccessToken = $scope.destitem.token;
-			// } else if ($scope.destitem.space == "Stage") {
-			// 	$scope.destSpaceId = $scope.spaces[2].value;
-			// 	$scope.destAccessToken = $scope.spaces[2].token;
-			// } else if ($scope.destitem.space == "ProdSupp") {
-			// 	$scope.destSpaceId = $scope.spaces[3].value;
-			// 	$scope.destAccessToken = $scope.spaces[3].token;
-			// } else if ($scope.destitem.space == "TestSpace") {
-			// 	$scope.destSpaceId = $scope.spaces[4].value;
-			// 	$scope.destAccessToken = $scope.spaces[4].token;
 			// }
 
 			$scope.destClient = contentfulManagement.createClient({
