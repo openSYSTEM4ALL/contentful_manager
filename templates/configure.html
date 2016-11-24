@@ -1,8 +1,8 @@
 <div class="container">
     <br>
     <div class="row">
-        <div class="col s12">
-            <label for="txtSpaceName">Space Name</label> <input id="txtSpaceName" ng-model="spaceName" type="text" />
+        <div class="col s12 .input-field">
+            <label for="txtSpaceName">Space Name</label> <input id="txtSpaceName" ng-model="spaceName" type="text" required/>
         </div>
         <div class="col s12">
             <label for="txtSpaceName">Space ID</label> <input id="txtSpaceId" ng-model="spaceID" type="text" />
@@ -29,9 +29,10 @@
                     <td><span class="dont-break-out" ng-model="space.space">{{space.space}}</span></td>
                     <td><span class="dont-break-out" ng-model="space.value">{{space.value}}</span></td> 
                     <td><span class="dont-break-out" ng-model="space.token">{{space.token}}</span></td>
-                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating"  value="Edit" ng-click='editValues(space.value,space.space,space.token)' ><i class="material-icons">mode_edit</i></button></td>
-                    <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2"  value="Delete" ng-click='deleteSpace(space.value)' ><i class="material-icons">delete</i> </button></td>
-                              
+                    <td colspan="2">
+                    <button id="btnEdit" class="waves-effect waves-light btn-floating"  value="Edit" ng-click='editValues(space.value,space.space,space.token)' ><i class="material-icons">mode_edit</i></button>
+                    <button id="btnDelete" class="waves-effect waves-light btn-floating red accent-2"  value="Delete" ng-click='deleteSpace(space.value)' ><i class="material-icons">delete</i> </button>
+                    </td>     
                 </tr>
                   
             </table>
