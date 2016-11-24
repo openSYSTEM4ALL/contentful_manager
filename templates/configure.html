@@ -13,6 +13,27 @@
         </div>
         <div class="col s12">
             <input id="btnSave" class="waves-effect waves-light btn" type="button" value="Save" ng-click="saveConfigurations()" />
+            <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetValues()" />
+         </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <table>
+               <tr>
+                   <td>Space Name</td>
+                   <td>Space ID</td>
+                   <td>Management Token</td>
+                   <td colspan="2">Edit/Delete</td>
+               </tr>
+                <tr ng-repeat="space in spaces track by $index">
+                    <td><span ng-model="space.space">{{space.space}}</span></td>
+                   <td><span ng-model="space.value">{{space.value}}</span></td> 
+                    <td><span ng-model="space.token">{{space.token}}</span></td>
+                    <td><input id="btnEdit" type="button" value="Edit" ng-click='editValues(space.value,space.space,space.token)' /></td>
+                    <td><input id="btnDelete" type="button" value="Delete" ng-click='deleteSpace(space.value)' /></td>
+                                   
+                </tr>
+            </table>
         </div>
     </div>
 </div>
