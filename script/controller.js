@@ -312,10 +312,12 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     }
     $scope.resetValues = function () {
+		
+        btnSave.value = "Save";
         $scope.spaceID = "";
         $scope.spaceName = "";
         $scope.mgmntToken = "";
-        btnsave.value = "Save";
+		txtSpaceId.readOnly = false;
 
 
     }
