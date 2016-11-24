@@ -65,6 +65,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         //var optionSelected = $(this).find("option:selected");
         //var valueSelected  = optionSelected.val();
         //var textSelected   = optionSelected.text();
+        $scope.srcSpac =$('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text();
+        $scope.$apply();
         if ($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.changedValue($('#ddlSrcSpace').siblings('.dropdown-content').find('li.active>span').text());
         }
@@ -72,6 +74,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $('#ddlDestSpace').on('change', function (e) {
         // $scope.getDestAssets($scope.selectedDest.space);
         //$('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text()
+        $scope.desSpac =$('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text();
+        $scope.$apply();
         if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.getDestAssets($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
         }
