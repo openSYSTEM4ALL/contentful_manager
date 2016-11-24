@@ -15,13 +15,13 @@
             <label for="txtAssetUrl">Source URL</label> <input id="txtAssetUrl" ng-model="assetUrl" type="text" />
         </div>
         <div class="col s12">
-            <input id="btnSave" class="waves-effect waves-light btn" type="button" value="Save" ng-click="saveAssetToList()" />
-            <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetValues()" />
+            <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" />
+            <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            <table class="responsive-table bordered" data-ng-if="spaces.length>0">
+            <table class="responsive-table bordered" data-ng-if="assetList.length > 0">
                 <tr class="">
                     <th>Asset Name</th>
                     <th>Title</th>
@@ -30,11 +30,11 @@
                     <th colspan="2">Edit/Delete</th>
                 </tr>
                 <tr ng-repeat="asset in assetList track by $index">
-                    <td><span class="dont-break-out" ng-model="asset.name">{{space.space}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.title">{{space.space}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.contentType">{{space.space}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.url">{{space.space}}</span></td>
-                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.name,asset.title,asset.contentType,asset.url)'><i class="material-icons">mode_edit</i></button></td>
+                    <td><span class="dont-break-out" ng-model="asset.assetName">{{asset.assetName}}</span></td>
+                    <td><span class="dont-break-out" ng-model="asset.assetTitle">{{asset.assetTitle}}</span></td>
+                    <td><span class="dont-break-out" ng-model="asset.assetContentType">{{asset.assetContentType}}</span></td>
+                    <td><span class="dont-break-out" ng-model="asset.assetUrl">{{asset.assetUrl}}</span></td>
+                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.assetName,asset.assetTitle,asset.assetContentType,asset.assetUrl)'><i class="material-icons">mode_edit</i></button></td>
                     <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.name)'><i class="material-icons">delete</i> </button></td>
                 </tr>
             </table>
