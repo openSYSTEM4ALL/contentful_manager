@@ -5,8 +5,11 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
 
     $scope.$on('$viewContentLoaded', function () {
         //call it here
-        $('select').material_select();
+        $scope.reRender();
     });
+    $scope.reRender = function () {  
+       $('select').material_select();
+    }
     $('#ddlDestSpace').on('change', function (e) {
         if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.getDestLocales($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
@@ -41,6 +44,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                 space.getLocales()
                     .then((locales) => {
                         $scope.destLocales = locales.items;
+                        $scope.$apply();
+                        $scope.reRender();
+                        
                     })
             });
     }
