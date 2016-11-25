@@ -1,34 +1,41 @@
 <div class="container">
     <br>
-    <div class="row">
-        <div class="col s10">
-            <label for="selectDestSpace"> Select Destination: </label>
-            <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)"> </select>
+    <form name="newForm" novalidate>
+        <div class="row">
+            <div class="input-field col s10">
+                <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)" > </select>
+                <label> Select Destination:</label>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <label for="txtAssetName">Asset Name</label> <input id="txtAssetName" ng-model="assetName" type="text" />
+        <div class="row">
+            <div class="input-field col s12">
+                <label for="txtAssetName">Asset Name <span class="error red-text" ng-show="newForm.txtAssetName.$error.required">*</span></label>
+                <input id="txtAssetName" name="txtAssetName" ng-model="assetName" type="text" required/>
+            </div>
+            <div class="input-field col s12">
+                <label for="txttitleName">Title <span class="error red-text" ng-show="newForm.txttitleName.$error.required">*</span></label>
+                <input id="txttitleName" name="txttitleName" ng-model="assetTitle" type="text" required/>
+            </div>
+            <div class="input-field col s12">
+                <label for="txtContentType">Content Type<span class="error red-text" ng-show="newForm.txtContentType.$error.required">*</span></label>
+                <input id="txtContentType" name="txtContentType" ng-model="assetContentType" type="text" required />
+            </div>
+            <div class="input-field col s12">
+                <label for="txtAssetUrl">Source URL<span class="error red-text" ng-show="newForm.txtAssetUrl.$error.required">*</span></label>
+                <input id="txtAssetUrl" name="txtAssetUrl" ng-model="assetUrl" type="text" required/>
+            </div>
+            <div class="input-field col s10">
+                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
+                    ng-change="setAssetLocale(selectedLocale)"> </select>
+                <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
+            </div>
+            <div class="input-field col s12">
+                <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid"
+                />
+                <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
+            </div>
         </div>
-        <div class="col s12">
-            <label for="txttitleName">Title</label> <input id="txttitleName" ng-model="assetTitle" type="text" />
-        </div>
-        <div class="col s12">
-            <label for="txtContentType">Content Type</label> <input id="txtContentType" ng-model="assetContentType" type="text"
-            />
-        </div>
-        <div class="col s12">
-            <label for="txtAssetUrl">Source URL</label> <input id="txtAssetUrl" ng-model="assetUrl" type="text" />
-        </div>
-        <div class="col s10">
-            <label for="selectAssetLocale"> Select Asset Locale: </label>
-            <select name="selectAssetLocale" id="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales" ng-change="setAssetLocale(selectedLocale)"> </select>
-        </div>
-        <div class="col s12">
-            <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" />
-            <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
-        </div>
-    </div>
+    </form>
     <div class="row">
         <div class="col s12">
             <table class="responsive-table bordered" data-ng-if="assetList.length > 0">
