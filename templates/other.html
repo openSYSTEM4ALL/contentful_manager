@@ -3,7 +3,7 @@
     <form name="newForm" novalidate>
         <div class="row">
             <div class="input-field col s10">
-                <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)" > </select>
+                <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)"> </select>
                 <label> Select Destination:</label>
             </div>
         </div>
@@ -16,9 +16,34 @@
                 <label for="txttitleName">Title <span class="error red-text" ng-show="newForm.txttitleName.$error.required">*</span></label>
                 <input id="txttitleName" name="txttitleName" ng-model="assetTitle" type="text" required/>
             </div>
+            <!--
             <div class="input-field col s12">
                 <label for="txtContentType">Content Type<span class="error red-text" ng-show="newForm.txtContentType.$error.required">*</span></label>
                 <input id="txtContentType" name="txtContentType" ng-model="assetContentType" type="text" required />
+            </div> -->
+            <div class="input-field col s10">
+                
+                <select name="selectContentType" id="ddlContentType" ng-model="assetContentType"> 
+                    <option value="0" disabled selected>Select Content Type</option>
+                    <option value="1" >image/jpeg</option>
+                    <option value="2" >image/png</option>
+                    <option value="3" >image/bmp</option>
+                    <option value="4" >image/gif</option>
+                    <option value="5" >image/x-icon</option>
+                    <option value="6">image/tiff</option>
+                    <option value="7">text/plain</option>
+                    <option value="8">text/richtext</option>
+                    <option value="9">code/html</option>
+                    <option value="10">code/css</option>
+                    <option value="11">code/javascript</option>
+                    <option value="12">application/pdf</option>
+                    <option value="13">application/msword</option>
+                    <option value="14">application/mspowerpoint</option>
+                    <option value="15">video/avi</option>
+                    <option value="16">video/mpeg</option>
+                   
+                    </select>
+                    <label for="selectContentType">Content Type: </label>
             </div>
             <div class="input-field col s12">
                 <label for="txtAssetUrl">Source URL<span class="error red-text" ng-show="newForm.txtAssetUrl.$error.required">*</span></label>
@@ -43,6 +68,7 @@
                     <th>Asset Name</th>
                     <th>Title</th>
                     <th>Content Type</th>
+                    <th>Locale</th>
                     <th>Source URL</th>
                     <th colspan="2">Edit/Delete</th>
                 </tr>
@@ -50,8 +76,9 @@
                     <td><span class="dont-break-out" ng-model="asset.assetName">{{asset.assetName}}</span></td>
                     <td><span class="dont-break-out" ng-model="asset.assetTitle">{{asset.assetTitle}}</span></td>
                     <td><span class="dont-break-out" ng-model="asset.assetContentType">{{asset.assetContentType}}</span></td>
+                    <td><span class="dont-break-out" ng-model="asset.locale">{{asset.locale}}</span></td>
                     <td><span class="dont-break-out" ng-model="asset.assetUrl">{{asset.assetUrl}}</span></td>
-                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.assetName,asset.assetTitle,asset.assetContentType,asset.assetUrl)'><i class="material-icons">mode_edit</i></button></td>
+                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.assetName,asset.assetTitle,asset.assetContentType,asset.locale,asset.assetUrl)'><i class="material-icons">mode_edit</i></button></td>
                     <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.name)'><i class="material-icons">delete</i> </button></td>
                 </tr>
             </table>

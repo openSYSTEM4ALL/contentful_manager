@@ -7,8 +7,8 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         //call it here
         $scope.reRender();
     });
-    $scope.reRender = function () {  
-       $('select').material_select();
+    $scope.reRender = function () {
+        $('select').material_select();
     }
     $('#ddlDestSpace').on('change', function (e) {
         if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
@@ -17,7 +17,12 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
     });
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
-            $scope.setAssetLocale($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
+            $scope.selectedLocale = ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
+        }
+    });
+    $('#ddlContentType').on('change', function (e) {
+        if ($('#ddlContentType').siblings('.dropdown-content').find('li.active>span').text() != "") {
+            $scope.assetContentType = ($('#ddlContentType').siblings('.dropdown-content').find('li.active>span').text());
         }
     });
     $scope.spaces = spac;
@@ -46,7 +51,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                         $scope.destLocales = locales.items;
                         $scope.$apply();
                         $scope.reRender();
-                        
+
                     })
             });
     }
@@ -60,6 +65,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                     $scope.assetList[a].assetTitle = $scope.assetTitle;
                     $scope.assetList[a].assetContentType = $scope.assetContentType;
                     $scope.assetList[a].assetUrl = $scope.assetUrl;
+                    $scope.assetList[a].locale = $scope.selectedLocale;
                     txtAssetName.readOnly = false;
                 }
             }
@@ -69,7 +75,8 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                 assetName: $scope.assetName,
                 assetTitle: $scope.assetTitle,
                 assetContentType: $scope.assetContentType,
-                assetUrl: $scope.assetUrl
+                assetUrl: $scope.assetUrl,
+                locale: $scope.selectedLocale
             }
             $scope.assetList.push(currentAsset);
         }
@@ -78,15 +85,17 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         $scope.assetTitle = "";
         $scope.assetContentType = "";
         $scope.assetUrl = "";
+        $scope.selectedLocale = "";
         Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
 
-    $scope.editAssetInList = function (name, title, contentType, uploadUrl) {
+    $scope.editAssetInList = function (name, title, contentType, locale, uploadUrl) {
 
         $scope.assetName = name;
         $scope.assetTitle = title;
         $scope.assetContentType = contentType;
         $scope.assetUrl = uploadUrl;
+        $scope.selectedLocale = locale;
         txtAssetName.readOnly = true;
         btnAdd.value = "Update";
     }
@@ -104,17 +113,77 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
 
     $scope.resetData = function () {
 
-        btnAdd.value = "Save";
+        btnAdd.value = "Add";
         $scope.assetName = "";
         $scope.assetTitle = "";
         $scope.assetContentType = "";
         $scope.assetUrl = "";
+        $scope.selectedLocale = "";
         txtAssetName.readOnly = false;
         Materialize.toast('BOOM ! BOOM !', 4000);
     }
 
+
+    //Migrate assets from source to Destination
+
+    $scope.createNewAsset = function (selectedAsset) {
+
+        var fileName = selectedAsset.assetName;
+        var assetID = selectedAsset.assetName.replace(/\s+/g, '');
+        var title = selectedAsset.assetTitle;
+        var contentType = selectedAsset.assetContentType;
+        var locale = selectedAsset.locale;
+        var uploadPath = selectedAsset.assetUrl;
+        //console.log('assetID:' + $scope.assetID + $scope.locale);
+        var json = {
+            fields: {
+                file: {
+
+                },
+
+                title: {
+
+                }
+            }
+        }
+        
+            json.fields.title[locale] = title;
+            json.fields.file[locale] = {
+                "contentType": contentType,
+                "fileName": fileName,
+                "upload": "https://" + uploadPath
+            }
+        
+
+        $scope.destSpace.createAssetWithId(assetID, json)
+            .then((asset) => {
+                asset.processForLocale(locale)
+                    .then((asset) => {
+                        //asset.publish();
+                        //$scope.processAsset(locale, selectedIndex, assetID);
+                    });
+            });
+    }
+    $scope.migratecontent = function () {
+
+            $scope.selectedvalues = $scope.assetList;
+            //loop for traversing selected items 
+
+            $scope.createAsset = [];
+            angular.forEach($scope.selectedvalues, function (selectedAsset) {
+                    $scope.createNewAsset(selectedAsset);
+                }
+
+
+
+
+            ); //end of traversal loop 
+        } //end of migrate function
+
+
     $scope.uploadToContentful = function () {
 
+        $scope.migratecontent();
     }
 
 
