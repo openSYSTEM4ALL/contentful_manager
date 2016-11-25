@@ -266,32 +266,52 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     } //end of migrate function
     $scope.saveConfigurations = function () {
+        if (txtSpaceName.value.length <= 0 || txtSpaceId.value.length <= 0 || txtMgmntTkn.value.length <= 0) {
+            Materialize.toast('Please enter required values', 2000);
 
-        if (btnSave.value == "Update") {
-            for (var v in spac) {
-                if (spac[v].value == $scope.spaceID) {
-                    spac[v].space = $scope.spaceName;
-                    spac[v].token = $scope.mgmntToken;
-
-                }
-
-    
-            }
-            btnSave.value = "Save";
-            
         }
         else {
-            spac.push({
-                value: $scope.spaceID,
-                space: $scope.spaceName,
-                token: $scope.mgmntToken
-            });
+            if (btnSave.value == "Update") {
+                for (var v in spac) {
+                    if (spac[v].value == $scope.spaceID) {
+                        spac[v].space = $scope.spaceName;
+                        spac[v].token = $scope.mgmntToken;
+
+                    }
+
+
+                }
+                btnSave.value = "Save";
+
+            }
+            else {
+                var duplicate = false;
+                for (var v in spac) {
+                    if (spac[v].value == $scope.spaceID) {
+                        Materialize.toast('Enter unique value for Space ID', 2000);
+                        $scope.spaceID = "";
+                        duplicate = true;
+                        break;
+                    }
+      
+
+                }
+                if (!duplicate) {
+                    spac.push({
+                        value: $scope.spaceID,
+                        space: $scope.spaceName,
+                        token: $scope.mgmntToken
+                    });
+                    localStorage.setItem('StoredData', JSON.stringify(spac));
+                  
+                    $scope.spaceName = "";
+                    $scope.mgmntToken = "";
+                    $scope.spaceID = "";
+                    Materialize.toast('Congrats! Your operation was successfull', 2000);
+                }
+            }
+         
         }
-        localStorage.setItem('StoredData', JSON.stringify(spac));
-        $scope.spaceID = "";
-        $scope.spaceName = "";
-        $scope.mgmntToken = "";
-        Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
     $scope.editValues = function (value, space, token) {
 
@@ -308,7 +328,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 console.log(v);
                 spac.splice(v, 1);
                 localStorage.setItem('StoredData', JSON.stringify(spac));
-                Materialize.toast('Hi, Gone to trash', 4000);
+                Materialize.toast('Hi, Gone to trash', 2000);
                 break;
             }
         }
@@ -322,7 +342,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.spaceName = "";
         $scope.mgmntToken = "";
 		txtSpaceId.readOnly = false;
-        Materialize.toast('BOOM ! BOOM !', 4000);
+        Materialize.toast('BOOM ! BOOM !', 2000);
 
     }
 
