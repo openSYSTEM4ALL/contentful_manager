@@ -1,11 +1,12 @@
 li.active {
     background-color: #03a9f4 !important;
-    ;
 }
 
 li.active a {
     color: #fff !important;
-    ;
+}
+li.active span {
+    color: #fff !important;
 }
 
 .parallax-container {
