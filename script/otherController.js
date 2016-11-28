@@ -51,9 +51,21 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                         $scope.destLocales = locales.items;
                         $scope.$apply();
                         $scope.reRender();
-
+                        $scope.findDefaultLocale();
                     })
             });
+    }
+
+    $scope.findDefaultLocale = function () {
+        var defaultFound = false;
+         angular.forEach($scope.destLocales, function (destLocale) {
+             if(!defaultFound) {
+                   if(destLocale.default == true) {
+                       $scope.defaultDestLocale = destLocale.code;
+                       defaultFound = true;
+                        }
+                    }
+                });      
     }
 
     $scope.saveAssetToList = function () {
@@ -189,16 +201,13 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
     }
     $scope.migratecontent = function () {
 
-            $scope.selectedvalues = $scope.assetList;
+            $scope.selectedValues = $scope.assetList;
             //loop for traversing selected items 
 
             $scope.createAsset = [];
-            angular.forEach($scope.selectedvalues, function (selectedAsset) {
+            angular.forEach($scope.selectedValues, function (selectedAsset) {
                     $scope.createNewAsset(selectedAsset);
                 }
-
-
-
 
             ); //end of traversal loop 
         } //end of migrate function
