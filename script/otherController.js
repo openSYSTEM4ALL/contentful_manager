@@ -83,9 +83,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
 
         $scope.assetName = "";
         $scope.assetTitle = "";
-        $scope.assetContentType = "";
+        //$scope.assetContentType = ""; //Not working for dropdown
         $scope.assetUrl = "";
-        $scope.selectedLocale = "";
+        //$scope.selectedLocale = "";  //Not working for dropdown
         Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
 
@@ -116,9 +116,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         btnAdd.value = "Add";
         $scope.assetName = "";
         $scope.assetTitle = "";
-        $scope.assetContentType = "";
+        $scope.assetContentType = ""; //Not working for dropdown
         $scope.assetUrl = "";
-        $scope.selectedLocale = "";
+        $scope.selectedLocale = ""; //Not working for dropdown
         txtAssetName.readOnly = false;
         Materialize.toast('BOOM ! BOOM !', 4000);
     }
@@ -129,7 +129,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
     $scope.createNewAsset = function (selectedAsset) {
 
         var fileName = selectedAsset.assetName;
-        var assetID = selectedAsset.assetName.replace(/\s+/g, '');
+        var assetID = selectedAsset.assetName.replace(/\s+/g, '').toLowerCase();
         var title = selectedAsset.assetTitle;
         var contentType = selectedAsset.assetContentType;
         var locale = selectedAsset.locale;
@@ -146,22 +146,45 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                 }
             }
         }
-        
-            json.fields.title[locale] = title;
-            json.fields.file[locale] = {
-                "contentType": contentType,
-                "fileName": fileName,
-                "upload": "https://" + uploadPath
-            }
-        
+
+        json.fields.title[locale] = title;
+        json.fields.file[locale] = {
+            "contentType": contentType,
+            "fileName": fileName,
+            "upload": "https://" + uploadPath
+        }
+
 
         $scope.destSpace.createAssetWithId(assetID, json)
             .then((asset) => {
                 asset.processForLocale(locale)
-                    .then((asset) => {
-                        //asset.publish();
-                        //$scope.processAsset(locale, selectedIndex, assetID);
+                    .then((assetProcessed) => {
+                        assetProcessed.publish();
+                    }).catch((err) => {
+                        console.log(err);
                     });
+            }).catch((err) => {
+                $scope.destSpace.getAsset(assetID)
+                    .then((asset) => {
+                        asset.fields.file[locale] = {
+                            "contentType": contentType,
+                            "fileName": fileName,
+                            "upload": "https://" + uploadPath
+                        }
+                        asset.update()
+                            .then((assetUpdated) => {
+                                assetUpdated.processForLocale(locale)
+                                 .then((assetProcessed) => {
+                                     assetProcessed.publish();
+                                 }).catch((err) => {
+                                     console.log(err);
+                                    })
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+                    }).catch((err) => {
+                        console.log(err);
+                    })
             });
     }
     $scope.migratecontent = function () {
