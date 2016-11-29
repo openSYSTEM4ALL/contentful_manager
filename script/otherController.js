@@ -32,6 +32,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
         }
+        else if($scope.localeToUpload == "OtherLocale") {
+            $scope.selectedLocale = null;
+        }
     });
     $scope.spaces = spac;
     $scope.destLocales = [];
@@ -69,6 +72,8 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
             if (!defaultFound) {
                 if (destLocale.default == true) {
                     $scope.defaultDestLocale = destLocale.code;
+                    $scope.checkLocale();
+                    $scope.$apply();
                     defaultFound = true;
                 }
             }
@@ -102,9 +107,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
 
         $scope.assetName = "";
         $scope.assetTitle = "";
-        //$scope.assetContentType = ""; //Not working for dropdown
+        $scope.assetContentType = "";
         $scope.assetUrl = "";
-        //$scope.selectedLocale = "";  //Not working for dropdown
+        //$scope.selectedLocale = "";  //Not working for select
         Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
 
@@ -135,9 +140,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         btnAdd.value = "Add";
         $scope.assetName = "";
         $scope.assetTitle = "";
-        //$scope.assetContentType = ""; //Not working for dropdown
+        $scope.assetContentType = ""; 
         $scope.assetUrl = "";
-        //$scope.selectedLocale = ""; //Not working for dropdown
+        //$scope.selectedLocale = ""; //Not working for select
         txtAssetName.readOnly = false;
         Materialize.toast('BOOM ! BOOM !', 4000);
     }
@@ -221,9 +226,24 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
 
 
     $scope.uploadToContentful = function () {
-
         $scope.migratecontent();
     }
 
+$scope.checkLocale = function() {
+    if(angular.isUndefinedOrNullOrEmpty($scope.selectedLocale)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
+$scope.checkDest = function () {
+    if(angular.isUndefinedOrNullOrEmpty($scope.selectedDest)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 }]);
