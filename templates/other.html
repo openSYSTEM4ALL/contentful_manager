@@ -5,6 +5,19 @@
             <div class="input-field col s10">
                 <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)"> </select>
                 <label> Select Destination:</label>
+                <p>
+                    <input name="rbgroupLocale" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" checked />
+                    <label for="default">Default Locale</label>
+                    <input name="rbgroupLocale" type="radio" id="rest" value="OtherLocale" ng-model="localeToUpload" />
+                    <label for="rest">Other Locale</label>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s10">
+                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
+                    ng-change="setAssetLocale(selectedLocale)"> </select>
+                <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
             </div>
         </div>
         <div class="row">
@@ -22,7 +35,6 @@
                 <input id="txtContentType" name="txtContentType" ng-model="assetContentType" type="text" required />
             </div> -->
             <div class="input-field col s10">
-                
                 <select name="selectContentType" id="ddlContentType" ng-model="assetContentType"> 
                     <option value="0" disabled selected>Select Content Type</option>
                     <option value="1" >image/jpeg</option>
@@ -43,16 +55,11 @@
                     <option value="16">video/mpeg</option>
                    
                     </select>
-                    <label for="selectContentType">Content Type: </label>
+                <label for="selectContentType">Content Type: </label>
             </div>
             <div class="input-field col s12">
                 <label for="txtAssetUrl">Source URL<span class="error red-text" ng-show="newForm.txtAssetUrl.$error.required">*</span></label>
                 <input id="txtAssetUrl" name="txtAssetUrl" ng-model="assetUrl" type="text" required/>
-            </div>
-            <div class="input-field col s10">
-                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
-                    ng-change="setAssetLocale(selectedLocale)"> </select>
-                <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
             </div>
             <div class="input-field col s12">
                 <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid"

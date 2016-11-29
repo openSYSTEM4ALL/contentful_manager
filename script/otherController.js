@@ -25,6 +25,14 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
             $scope.assetContentType = ($('#ddlContentType').siblings('.dropdown-content').find('li.active>span').text());
         }
     });
+    $("input[name='rbgroupLocale']").on('change', function (e) {
+        if ($scope.localeToUpload == "DefaultLocale") {
+            if (angular.isUndefinedOrNullOrEmpty($scope.defaultDestLocale)) {
+                $scope.findDefaultLocale();
+            }
+            $scope.selectedLocale = $scope.defaultDestLocale;
+        }
+    });
     $scope.spaces = spac;
     $scope.destLocales = [];
     $scope.assetList = [];
@@ -51,21 +59,20 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                         $scope.destLocales = locales.items;
                         $scope.$apply();
                         $scope.reRender();
-                        $scope.findDefaultLocale();
                     })
             });
     }
 
     $scope.findDefaultLocale = function () {
         var defaultFound = false;
-         angular.forEach($scope.destLocales, function (destLocale) {
-             if(!defaultFound) {
-                   if(destLocale.default == true) {
-                       $scope.defaultDestLocale = destLocale.code;
-                       defaultFound = true;
-                        }
-                    }
-                });      
+        angular.forEach($scope.destLocales, function (destLocale) {
+            if (!defaultFound) {
+                if (destLocale.default == true) {
+                    $scope.defaultDestLocale = destLocale.code;
+                    defaultFound = true;
+                }
+            }
+        });
     }
 
     $scope.saveAssetToList = function () {
@@ -107,7 +114,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         $scope.assetTitle = title;
         $scope.assetContentType = contentType;
         $scope.assetUrl = uploadUrl;
-        $scope.selectedLocale = locale;
+        //$scope.selectedLocale = locale;
         txtAssetName.readOnly = true;
         btnAdd.value = "Update";
     }
@@ -128,9 +135,9 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         btnAdd.value = "Add";
         $scope.assetName = "";
         $scope.assetTitle = "";
-        $scope.assetContentType = ""; //Not working for dropdown
+        //$scope.assetContentType = ""; //Not working for dropdown
         $scope.assetUrl = "";
-        $scope.selectedLocale = ""; //Not working for dropdown
+        //$scope.selectedLocale = ""; //Not working for dropdown
         txtAssetName.readOnly = false;
         Materialize.toast('BOOM ! BOOM !', 4000);
     }
@@ -186,10 +193,10 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                         asset.update()
                             .then((assetUpdated) => {
                                 assetUpdated.processForLocale(locale)
-                                 .then((assetProcessed) => {
-                                     assetProcessed.publish();
-                                 }).catch((err) => {
-                                     console.log(err);
+                                    .then((assetProcessed) => {
+                                        assetProcessed.publish();
+                                    }).catch((err) => {
+                                        console.log(err);
                                     })
                             }).catch((err) => {
                                 console.log(err);
