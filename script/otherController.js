@@ -31,14 +31,14 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
-        }
-        else if($scope.localeToUpload == "OtherLocale") {
+        } else if ($scope.localeToUpload == "OtherLocale") {
             $scope.selectedLocale = null;
         }
     });
     $scope.spaces = spac;
     $scope.destLocales = [];
     $scope.assetList = [];
+    $scope.successfulAssets = [];
 
     $scope.getDestLocales = function (destSpaceSelected) {
 
@@ -140,7 +140,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         btnAdd.value = "Add";
         $scope.assetName = "";
         $scope.assetTitle = "";
-        $scope.assetContentType = ""; 
+        $scope.assetContentType = "";
         $scope.assetUrl = "";
         //$scope.selectedLocale = ""; //Not working for select
         txtAssetName.readOnly = false;
@@ -183,7 +183,13 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
             .then((asset) => {
                 asset.processForLocale(locale)
                     .then((assetProcessed) => {
-                        assetProcessed.publish();
+                        assetProcessed.publish()
+                            .then((assetPublished) => {
+                                console.log(assetPublished);
+                                $scope.successfulAssets.push(assetPublished);
+                            }).catch((err) => {
+                                console.log(err);
+                            })
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -199,7 +205,13 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                             .then((assetUpdated) => {
                                 assetUpdated.processForLocale(locale)
                                     .then((assetProcessed) => {
-                                        assetProcessed.publish();
+                                        assetProcessed.publish()
+                                            .then((assetPublished) => {
+                                                console.log(assetPublished);
+                                                $scope.successfulAssets.push(assetPublished);
+                                            }).catch((err) => {
+                                                console.log(err);
+                                            })
                                     }).catch((err) => {
                                         console.log(err);
                                     })
@@ -229,21 +241,19 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         $scope.migratecontent();
     }
 
-$scope.checkLocale = function() {
-    if(angular.isUndefinedOrNullOrEmpty($scope.selectedLocale)){
-        return true;
+    $scope.checkLocale = function () {
+        if (angular.isUndefinedOrNullOrEmpty($scope.selectedLocale)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    else{
-        return false;
-    }
-}
 
-$scope.checkDest = function () {
-    if(angular.isUndefinedOrNullOrEmpty($scope.destSpace)){
-        return true;
+    $scope.checkDest = function () {
+        if (angular.isUndefinedOrNullOrEmpty($scope.destSpace)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    else{
-        return false;
-    }
-}
 }]);
