@@ -175,7 +175,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
         json.fields.file[locale] = {
             "contentType": contentType,
             "fileName": fileName,
-            "upload": "https://" + uploadPath
+            "upload": uploadPath
         }
 
 
@@ -187,6 +187,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                             .then((assetPublished) => {
                                 console.log(assetPublished);
                                 $scope.successfulAssets.push(assetPublished);
+                                $scope.$apply();
                             }).catch((err) => {
                                 console.log(err);
                             })
@@ -199,7 +200,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                         asset.fields.file[locale] = {
                             "contentType": contentType,
                             "fileName": fileName,
-                            "upload": "https://" + uploadPath
+                            "upload": uploadPath
                         }
                         asset.update()
                             .then((assetUpdated) => {
@@ -209,6 +210,7 @@ app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$f
                                             .then((assetPublished) => {
                                                 console.log(assetPublished);
                                                 $scope.successfulAssets.push(assetPublished);
+                                                $scope.$apply();
                                             }).catch((err) => {
                                                 console.log(err);
                                             })
