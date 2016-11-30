@@ -6,18 +6,18 @@
                 <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)"> </select>
                 <label> Select Destination:</label>
                 <p>
-                    <input name="rbgroupLocale" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" />
+                    <input name="rbgroupLocale" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" ng-disabled="checkDest()"/>
                     <label for="default">Default Locale <span ng-show="localeToUpload === 'DefaultLocale'">{{"(" + defaultDestLocale + ")"}}</span> </label>
-                    <input name="rbgroupLocale" type="radio" id="rest" value="OtherLocale" ng-model="localeToUpload"  />
+                    <input name="rbgroupLocale" type="radio" id="rest" value="OtherLocale" ng-model="localeToUpload" ng-disabled="checkDest()" />
                     <label for="rest">Other Locale</label>
                 </p>
             </div>
         </div>
         <div class="row" ng-show="localeToUpload === 'OtherLocale'">
-            <div class="input-field col s10">
-                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
-                    ng-change="setAssetLocale(selectedLocale)"> </select>
-                <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
+            <div class="col s10">
+                 <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
+                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales" ng-change="setAssetLocale(selectedLocale)">
+                </select>
             </div>
         </div>
         <div class="row">
@@ -33,22 +33,22 @@
                 <label for="selectContentType">Content Type: </label>
                 <select name="selectContentType" id="ddlContentType" ng-model="assetContentType" class="browser-default"> 
                     <option value="0" disabled selected>Select Content Type</option>
-                    <option value="1" >image/jpeg</option>
-                    <option value="2" >image/png</option>
-                    <option value="3" >image/bmp</option>
-                    <option value="4" >image/gif</option>
-                    <option value="5" >image/x-icon</option>
-                    <option value="6">image/tiff</option>
-                    <option value="7">text/plain</option>
-                    <option value="8">text/richtext</option>
-                    <option value="9">code/html</option>
-                    <option value="10">code/css</option>
-                    <option value="11">code/javascript</option>
-                    <option value="12">application/pdf</option>
-                    <option value="13">application/msword</option>
-                    <option value="14">application/mspowerpoint</option>
-                    <option value="15">video/avi</option>
-                    <option value="16">video/mpeg</option>
+                    <option value="image/jpeg" >image/jpeg</option>
+                    <option value="image/png" >image/png</option>
+                    <option value="image/bmp" >image/bmp</option>
+                    <option value="image/gif" >image/gif</option>
+                    <option value="image/x-icon">image/x-icon</option>
+                    <option value="image/tiff">image/tiff</option>
+                    <option value="text/plain">text/plain</option>
+                    <option value="text/richtext">text/richtext</option>
+                    <option value="code/html">code/html</option>
+                    <option value="code/css">code/css</option>
+                    <option value="code/javascript">code/javascript</option>
+                    <option value="application/pdf">application/pdf</option>
+                    <option value="application/msword">application/msword</option>
+                    <option value="application/mspowerpoint">application/mspowerpoint</option>
+                    <option value="video/avi">video/avi</option>
+                    <option value="video/mpeg">video/mpeg</option>
                     </select>
             </div>
             <div class="input-field col s12">
@@ -56,7 +56,7 @@
                 <input id="txtAssetUrl" name="txtAssetUrl" ng-model="assetUrl" type="text" required/>
             </div>
             <div class="input-field col s12">
-                <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid || checkLocale()"
+                <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid"
                 />
                 <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
             </div>
@@ -87,7 +87,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" />
+            <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" ng-disabled="assetList.length < 1"/>
         </div>
     </div>
 </div>

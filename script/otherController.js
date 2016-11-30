@@ -239,7 +239,7 @@ $scope.checkLocale = function() {
 }
 
 $scope.checkDest = function () {
-    if(angular.isUndefinedOrNullOrEmpty($scope.selectedDest)){
+    if(angular.isUndefinedOrNullOrEmpty($scope.destSpace)){
         return true;
     }
     else{
