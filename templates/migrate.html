@@ -59,9 +59,10 @@
                 </div>
                 <div class="row">
                     <div class="col s10">
-                        <label for="selectsource"> Select Source: </label>
+                        <label for="selectsource">  Source : </label>
                         <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
                             ng-change="changedValue(selectedSource)">
+                        <option value="" disabled selected>-- Select Source --</option>
 				       </select>
                     </div>
                 </div>
@@ -98,7 +99,9 @@
                 <div class="row">
                     <div class="col s10">
                         <label for="selectDestSpace"> Select Destination: </label>
-                        <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestAssets(selectedDest)"> </select>
+                        <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestAssets(selectedDest)"> 
+                            <option value="" disabled selected>-- Select Destination --</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
