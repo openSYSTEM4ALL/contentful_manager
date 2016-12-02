@@ -1,4 +1,4 @@
-app.controller('otherController', ['$scope', '$http', '$timeout', '$window', '$filter', function ($scope, $http, $timeout, $window, $filter) {
+app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$filter', function ($scope, $http, $timeout, $window, $filter) {
     angular.isUndefinedOrNullOrEmpty = function (val) {
         return angular.isUndefined(val) || val === null || val === '';
     };

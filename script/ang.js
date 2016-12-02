@@ -14,9 +14,9 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
         controller: "layoutController",
         templateUrl: "/templates/configure.html"
     });
-    $routeProvider.when("/other", {
-        controller: "otherController",
-        templateUrl: "/templates/other.html"
+    $routeProvider.when("/upload", {
+        controller: "uploadController",
+        templateUrl: "/templates/upload.html"
     });
     $routeProvider.when("/bulkupload", {
         controller: "bulkController",
