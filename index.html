@@ -13,7 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.min.js"></script>
     <script src="https://unpkg.com/contentful-management@1.1.14/browser-dist/contentful-management.js"></script>
     <script src="script/ang.js"></script>
-    <script src="script/otherController.js"></script>
 </head>
 
 <body data-ng-app="myApp">
@@ -40,7 +39,7 @@
             <li><a href="#/" class="waves-effect waves-teal">Home</a></li>
             <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
             <li><a href="#/migrate" class="waves-effect waves-teal">Migrate</a></li>
-            <li><a href="#/other" class="waves-effect waves-teal">Contentful Upload</a></li>
+            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
         </ul>
         <!--SideNav fro mobile-->
         <ul class="side-nav" id="nav-mobile">
@@ -55,7 +54,7 @@
             <li><a href="#/" class="waves-effect waves-teal">Home</a></li>
             <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
             <li><a href="#/migrate" class="waves-effect waves-teal">Migrate</a></li>
-            <li><a href="#/other" class="waves-effect waves-teal">Contentful Upload</a></li>
+            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
         </ul>
         <!--Splash Screen-->
         <div id="splashscreen">
@@ -115,7 +114,7 @@
                         <li><a class="grey-text text-lighten-3" href="#/">Home</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/configure">Configure</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/migrate">Migrate</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#/other">Contentful Upload</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/upload">Contentful Upload</a></li>
                     </ul>
                 </div>
             </div>
@@ -133,6 +132,7 @@
     <script type="text/javascript" src="script/app.js"></script>
     <script type="text/javascript" src="script/config.js"></script>
     <script type="text/javascript" src="script/controller.js"></script>
+    <script type="text/javascript" src="script/uploadController.js"></script>
     <script>
      if (GetIEVersion() > 0) {
         window.location.replace("/templates/unsupported.html");
