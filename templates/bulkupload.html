@@ -1,0 +1,42 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col s8">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" accept=".xls,.xlsx,.ods" fileread="" opts="result" multiple="false">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                </div>
+            </div>
+        </div>
+        <div class="input-field col s4">
+            <a href="/help/format.xlsx" class="icon-thunder-cloud">Download format <i class="material-icons">description</i></a>
+        </div>
+    </div>
+    <div class="divider"></div>
+   <div class="row" data-ng-if="result.data.length > 0">
+       <div class="col s12">
+            <table class="responsive-table bordered">
+                <tr class="teal-text grey lighten-3">
+                    <th>Asset Name</th>
+                    <th>Title</th>
+                    <th>Content Type</th>
+                    <th>Locale</th>
+                    <th>Source URL</th>
+                    <th>Edit/Delete</th>
+                </tr>
+                <tr ng-repeat="asset in result.data track by $index">
+                    <td><span class="dont-break-out">{{asset.asset_name}}</span></td>
+                    <td><span class="dont-break-out">{{asset.asset_title}}</span></td>
+                    <td><span class="dont-break-out">{{asset.content_type}}</span></td>
+                    <td><span class="dont-break-out">{{asset.locale}}</span></td>
+                    <td><span class="dont-break-out">{{asset.url}}</span></td>
+                    <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click=''><i class="material-icons">delete</i> </button></td>
+                </tr>
+            </table>
+       </div>
+   </div>
+</div>

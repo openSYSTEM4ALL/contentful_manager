@@ -18,6 +18,10 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
         controller: "otherController",
         templateUrl: "/templates/other.html"
     });
+    $routeProvider.when("/bulkupload", {
+        controller: "bulkController",
+        templateUrl:"/templates/bulkupload.html"
+    });
     $routeProvider.when("/", {
         controller: "landingController",
         templateUrl:"/templates/landing.html"
