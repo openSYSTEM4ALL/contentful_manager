@@ -6,7 +6,7 @@
                 <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)">
                 <option value="" disabled selected>-- Select Destination --</option>
                 </select>
-                <label> Destination:</label>
+                <label>Destination:</label>
                 <p>
                     <input name="rbgroupLocale" class="validate" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
                     />
@@ -22,6 +22,7 @@
                 <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
                 <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
                     ng-change="setAssetLocale(selectedLocale)">
+                    <option value="" disabled selected>-- Select Locale --</option>
                 </select>
             </div>
         </div>

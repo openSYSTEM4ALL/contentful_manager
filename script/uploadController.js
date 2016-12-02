@@ -144,13 +144,13 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         $scope.assetUrl = "";
         //$scope.selectedLocale = ""; //Not working for select
         txtAssetName.readOnly = false;
-        Materialize.toast('BOOM ! BOOM !', 4000);
+        Materialize.toast('Oh! That vanished!', 4000);
     }
 
 
-    //Migrate assets from source to Destination
+    //Upload assets to a Destination on Contentful
 
-    $scope.createNewAsset = function (selectedAsset) {
+    $scope.uploadAsset = function (selectedAsset) {
 
         var fileName = selectedAsset.assetName;
         var assetID = selectedAsset.assetName.replace(/\s+/g, '').toLowerCase();
@@ -225,23 +225,15 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                     })
             });
     }
-    $scope.migratecontent = function () {
+    $scope.uploadToContentful = function () {
 
             $scope.selectedValues = $scope.assetList;
             //loop for traversing selected items 
-
-            $scope.createAsset = [];
             angular.forEach($scope.selectedValues, function (selectedAsset) {
-                    $scope.createNewAsset(selectedAsset);
+                    $scope.uploadAsset(selectedAsset);
                 }
-
             ); //end of traversal loop 
-        } //end of migrate function
-
-
-    $scope.uploadToContentful = function () {
-        $scope.migratecontent();
-    }
+        } //end of upload function
 
     $scope.checkLocale = function () {
         if (angular.isUndefinedOrNullOrEmpty($scope.selectedLocale)) {
