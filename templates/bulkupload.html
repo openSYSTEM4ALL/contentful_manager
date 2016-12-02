@@ -1,7 +1,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col s8">
+        <div class="col s8 m6 l6">
             <div class="file-field input-field">
                 <div class="btn">
                     <span>File</span>
@@ -12,12 +12,16 @@
                 </div>
             </div>
         </div>
-        <div class="input-field col s4">
+        <div class="input-field col s4 m6 l6">
             <a href="/help/format.xlsx" class="icon-thunder-cloud">Download format <i class="material-icons">description</i></a>
         </div>
     </div>
-    <div class="divider"></div>
+           
    <div class="row" data-ng-if="result.data.length > 0">
+       <div class="input-field col s12 m6 l6">
+            <input id="search" type="text" ng-model="searchText" class="validate">
+            <label for="search"><i class="material-icons">search</i>Search</label>
+        </div>
        <div class="col s12">
             <table class="responsive-table bordered">
                 <tr class="teal-text grey lighten-3">
@@ -28,7 +32,7 @@
                     <th>Source URL</th>
                     <th>Edit/Delete</th>
                 </tr>
-                <tr ng-repeat="asset in result.data track by $index">
+                <tr ng-repeat="asset in result.data | filter:searchText">
                     <td><span class="dont-break-out">{{asset.asset_name}}</span></td>
                     <td><span class="dont-break-out">{{asset.asset_title}}</span></td>
                     <td><span class="dont-break-out">{{asset.content_type}}</span></td>
