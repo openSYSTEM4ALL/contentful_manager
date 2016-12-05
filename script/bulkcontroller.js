@@ -170,10 +170,9 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
           selectedAsset.status = 'start';
           console.log('interval:' + interval);
           $timeout(function () {
-             console.log('hello');
             $scope.uploadAsset(selectedAsset);
           }, interval);
-          interval = interval + 1500;
+          interval = interval + 2500;
           //$timeout($scope.uploadAsset(selectedAsset), interval);
         }); //end of traversal loop 
       } //end of upload function
