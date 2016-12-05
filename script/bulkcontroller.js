@@ -1,4 +1,4 @@
-app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', function ($scope, $http, $q, $timeout, $window, $filter) {
+app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', '$interval', function ($scope, $http, $q, $timeout, $window, $filter, $interval) {
     angular.isUndefinedOrNullOrEmpty = function (val) {
       return angular.isUndefined(val) || val === null || val === '';
     };
@@ -89,13 +89,24 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
             .then((assetProcessed) => {
               assetProcessed.publish()
                 .then((assetPublished) => {
+                  selectedAsset.status = 'published';
                   console.log(assetPublished);
                   $scope.successfulAssets.push(assetPublished);
                   $scope.$apply();
                 }).catch((err) => {
+                  $scope.$apply(function () {
+                    var e = JSON.parse(err.message);
+                    selectedAsset.status = 'error';
+                    selectedAsset.error = e.status + ':' + e.statusText;
+                  });
                   console.log(err);
                 })
             }).catch((err) => {
+              $scope.$apply(function () {
+                var e = JSON.parse(err.message);
+                selectedAsset.status = 'error';
+                selectedAsset.error = e.status + ':' + e.statusText;
+              });
               console.log(err);
             });
         }).catch((err) => {
@@ -112,19 +123,40 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                     .then((assetProcessed) => {
                       assetProcessed.publish()
                         .then((assetPublished) => {
+                          selectedAsset.status = 'published';
                           console.log(assetPublished);
                           $scope.successfulAssets.push(assetPublished);
                           $scope.$apply();
                         }).catch((err) => {
+                          $scope.$apply(function () {
+                            var e = JSON.parse(err.message);
+                            selectedAsset.status = 'error';
+                            selectedAsset.error = e.status + ':' + e.statusText;
+                          });
                           console.log(err);
                         })
                     }).catch((err) => {
+                      $scope.$apply(function () {
+                        var e = JSON.parse(err.message);
+                        selectedAsset.status = 'error';
+                        selectedAsset.error = e.status + ':' + e.statusText;
+                      });
                       console.log(err);
                     })
                 }).catch((err) => {
+                  $scope.$apply(function () {
+                    var e = JSON.parse(err.message);
+                    selectedAsset.status = 'error';
+                    selectedAsset.error = e.status + ':' + e.statusText;
+                  });
                   console.log(err);
                 })
             }).catch((err) => {
+              $scope.$apply(function () {
+                var e = JSON.parse(err.message);
+                selectedAsset.status = 'error';
+                selectedAsset.error = e.status + ':' + e.statusText;
+              });
               console.log(err);
             })
         });
@@ -133,8 +165,16 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
     $scope.bulkUploadToContentful = function () {
         $scope.selectedValues = $scope.result.data;
         //loop for traversing selected items 
+        var interval = 0;
         angular.forEach($scope.selectedValues, function (selectedAsset) {
-          $scope.uploadAsset(selectedAsset);
+          selectedAsset.status = 'start';
+          interval = interval + 1500;
+          console.log('interval:' + interval);
+          $timeout(function () {
+             console.log('hello');
+            $scope.uploadAsset(selectedAsset);
+          }, interval);
+          //$timeout($scope.uploadAsset(selectedAsset), interval);
         }); //end of traversal loop 
       } //end of upload function
   }])
