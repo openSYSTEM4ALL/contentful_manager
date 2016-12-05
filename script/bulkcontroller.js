@@ -168,12 +168,12 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         var interval = 0;
         angular.forEach($scope.selectedValues, function (selectedAsset) {
           selectedAsset.status = 'start';
-          interval = interval + 1500;
           console.log('interval:' + interval);
           $timeout(function () {
              console.log('hello');
             $scope.uploadAsset(selectedAsset);
           }, interval);
+          interval = interval + 1500;
           //$timeout($scope.uploadAsset(selectedAsset), interval);
         }); //end of traversal loop 
       } //end of upload function
