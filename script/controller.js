@@ -174,10 +174,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             .then((asset) => {
                 //asset.sys.version = asset.sys.version+1;
                 asset.publish()
-                    .then((asset) => {
+                    .then((assetcall) => {
                         $scope.publishedAsset.push(assetcall);
                         $scope.$apply();
-                        console.log('published asset c: ' + asset.fields.file.fileName + asset.sys.publishedVersion);
+                        console.log('published asset c: ' + assetcall.fields.file.fileName + assetcall.sys.publishedVersion);
                     });
             });
     }
