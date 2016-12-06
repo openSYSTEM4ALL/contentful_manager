@@ -52,17 +52,122 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         });
     }
 
+    $scope.setassetstatus = function (name, status, msg) {
+      angular.forEach($scope.selectedValues, function (selectedAsset) {
+        if (selectedAsset.asset_name == name) {
+          if (status == 'published') {
+            selectedAsset.status = status;
+          } else {
+            selectedAsset.status = status;
+            selectedAsset.error = msg;
+          }
+
+        }
+      });
+    };
+    $scope.multiplelocaleupload = function (multiple, json, selectedAsset) {
+      var assetID = multiple[0].asset_name.replace(/\s+/g, '').toLowerCase();
+      $scope.destSpace.createAssetWithId(assetID, json)
+        .then((asset) => {
+          asset.processForAllLocales()
+            .then((assetProcessed) => {
+              assetProcessed.publish()
+                .then((assetPublished) => {
+                  selectedAsset.status = 'published';
+                  $scope.setassetstatus(selectedAsset.asset_name, 'published', 'published');
+                  console.log(assetPublished);
+                  //$scope.successfulAssets.push(assetPublished);
+                  $scope.$apply();
+                }).catch((err) => {
+                  $scope.$apply(function () {
+                    var e = JSON.parse(err.message);
+                    selectedAsset.status = 'error';
+                    selectedAsset.error = e.status + ':' + e.statusText;
+                    $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+                  });
+                  console.log(err);
+                })
+            }).catch((err) => {
+              $scope.$apply(function () {
+                var e = JSON.parse(err.message);
+                selectedAsset.status = 'error';
+                selectedAsset.error = e.status + ':' + e.statusText;
+                $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+              });
+              console.log(err);
+            });
+        }).catch((err) => {
+          $scope.destSpace.getAsset(assetID)
+            .then((asset) => {
+
+              for (k = 0; k < multiple.length; k++) {
+                asset.fields.file[multiple[k].locale] = {
+                  "contentType": multiple[k].content_type,
+                  "fileName": multiple[k].asset_name.replace(/\s+/g, '').toLowerCase(),
+                  "upload": multiple[k].url
+                }
+              }
+
+              asset.update()
+                .then((assetUpdated) => {
+                  assetUpdated.processForAllLocales()
+                    .then((assetProcessed) => {
+                      assetProcessed.publish()
+                        .then((assetPublished) => {
+                          selectedAsset.status = 'published';
+                          console.log(assetPublished);
+                          $scope.setassetstatus(selectedAsset.asset_name, 'published', 'published');
+                          //$scope.successfulAssets.push(assetPublished);
+                          $scope.$apply();
+                        }).catch((err) => {
+                          $scope.$apply(function () {
+                            var e = JSON.parse(err.message);
+                            selectedAsset.status = 'error';
+                            selectedAsset.error = e.status + ':' + e.statusText;
+                            $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+                          });
+                          console.log(err);
+                        })
+                    }).catch((err) => {
+                      $scope.$apply(function () {
+                        var e = JSON.parse(err.message);
+                        selectedAsset.status = 'error';
+                        selectedAsset.error = e.status + ':' + e.statusText;
+                        $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+                      });
+                      console.log(err);
+                    })
+                }).catch((err) => {
+                  $scope.$apply(function () {
+                    var e = JSON.parse(err.message);
+                    selectedAsset.status = 'error';
+                    selectedAsset.error = e.status + ':' + e.statusText;
+                    $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+                  });
+                  console.log(err);
+                })
+            }).catch((err) => {
+              $scope.$apply(function () {
+                var e = JSON.parse(err.message);
+                selectedAsset.status = 'error';
+                selectedAsset.error = e.status + ':' + e.statusText;
+                $scope.setassetstatus(selectedAsset.asset_name, 'error', selectedAsset.error);
+              });
+              console.log(err);
+            })
+        });
+
+    };
+
     //Upload assets to a destination on Contentful
 
     $scope.uploadAsset = function (selectedAsset) {
 
-      var fileName = selectedAsset.asset_name;
-      var assetID = selectedAsset.asset_name.replace(/\s+/g, '').toLowerCase();
-      var title = selectedAsset.asset_title;
-      var contentType = selectedAsset.content_type;
-      var locale = selectedAsset.locale;
-      var uploadPath = selectedAsset.url;
-      //console.log('assetID:' + $scope.assetID + $scope.locale);
+      //multiple locale
+      $scope.multiple = [];
+      $scope.multiple = $filter('filter')($scope.selectedValues, {
+        asset_name: selectedAsset.asset_name
+      });
       var json = {
         fields: {
           file: {
@@ -73,111 +178,154 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
 
           }
         }
-      }
+      };
+      if ($scope.multiple.length > 1) {
 
-      json.fields.title[locale] = title;
-      json.fields.file[locale] = {
-        "contentType": contentType,
-        "fileName": fileName,
-        "upload": uploadPath
-      }
+        for (j = 0; j < $scope.multiple.length; j++) {
+          json.fields.title[$scope.multiple[j].locale] = $scope.multiple[j].asset_title;
+          json.fields.file[$scope.multiple[j].locale] = {
+            "contentType": $scope.multiple[j].content_type,
+            "fileName": $scope.multiple[j].asset_name.replace(/\s+/g, '').toLowerCase(),
+            "upload": $scope.multiple[j].url
+          }
+        }
+
+        $scope.multiplelocaleupload($scope.multiple, json, selectedAsset);
+
+      } else {
 
 
-      $scope.destSpace.createAssetWithId(assetID, json)
-        .then((asset) => {
-          asset.processForLocale(locale)
-            .then((assetProcessed) => {
-              assetProcessed.publish()
-                .then((assetPublished) => {
-                  selectedAsset.status = 'published';
-                  console.log(assetPublished);
-                  $scope.successfulAssets.push(assetPublished);
-                  $scope.$apply();
-                }).catch((err) => {
-                  $scope.$apply(function () {
-                    var e = JSON.parse(err.message);
-                    selectedAsset.status = 'error';
-                    selectedAsset.error = e.status + ':' + e.statusText;
-                  });
-                  console.log(err);
-                })
-            }).catch((err) => {
-              $scope.$apply(function () {
-                var e = JSON.parse(err.message);
-                selectedAsset.status = 'error';
-                selectedAsset.error = e.status + ':' + e.statusText;
+
+        var fileName = selectedAsset.asset_name;
+        var assetID = selectedAsset.asset_name.replace(/\s+/g, '').toLowerCase();
+        var title = selectedAsset.asset_title;
+        var contentType = selectedAsset.content_type;
+        var locale = selectedAsset.locale;
+        var uploadPath = selectedAsset.url;
+        //console.log('assetID:' + $scope.assetID + $scope.locale);
+
+
+        json.fields.title[locale] = title;
+        json.fields.file[locale] = {
+          "contentType": contentType,
+          "fileName": fileName,
+          "upload": uploadPath
+        }
+
+
+        $scope.destSpace.createAssetWithId(assetID, json)
+          .then((asset) => {
+            asset.processForLocale(locale)
+              .then((assetProcessed) => {
+                assetProcessed.publish()
+                  .then((assetPublished) => {
+                    selectedAsset.status = 'published';
+                    console.log(assetPublished);
+                    //$scope.successfulAssets.push(assetPublished);
+                    $scope.$apply();
+                  }).catch((err) => {
+                    $scope.$apply(function () {
+                      var e = JSON.parse(err.message);
+                      selectedAsset.status = 'error';
+                      selectedAsset.error = e.status + ':' + e.statusText;
+                    });
+                    console.log(err);
+                  })
+              }).catch((err) => {
+                $scope.$apply(function () {
+                  var e = JSON.parse(err.message);
+                  selectedAsset.status = 'error';
+                  selectedAsset.error = e.status + ':' + e.statusText;
+                });
+                console.log(err);
               });
-              console.log(err);
-            });
-        }).catch((err) => {
-          $scope.destSpace.getAsset(assetID)
-            .then((asset) => {
-              asset.fields.file[locale] = {
-                "contentType": contentType,
-                "fileName": fileName,
-                "upload": uploadPath
-              }
-              asset.update()
-                .then((assetUpdated) => {
-                  assetUpdated.processForLocale(locale)
-                    .then((assetProcessed) => {
-                      assetProcessed.publish()
-                        .then((assetPublished) => {
-                          selectedAsset.status = 'published';
-                          console.log(assetPublished);
-                          $scope.successfulAssets.push(assetPublished);
-                          $scope.$apply();
-                        }).catch((err) => {
-                          $scope.$apply(function () {
-                            var e = JSON.parse(err.message);
-                            selectedAsset.status = 'error';
-                            selectedAsset.error = e.status + ':' + e.statusText;
-                          });
-                          console.log(err);
-                        })
-                    }).catch((err) => {
-                      $scope.$apply(function () {
-                        var e = JSON.parse(err.message);
-                        selectedAsset.status = 'error';
-                        selectedAsset.error = e.status + ':' + e.statusText;
-                      });
-                      console.log(err);
-                    })
-                }).catch((err) => {
-                  $scope.$apply(function () {
-                    var e = JSON.parse(err.message);
-                    selectedAsset.status = 'error';
-                    selectedAsset.error = e.status + ':' + e.statusText;
-                  });
-                  console.log(err);
-                })
-            }).catch((err) => {
-              $scope.$apply(function () {
-                var e = JSON.parse(err.message);
-                selectedAsset.status = 'error';
-                selectedAsset.error = e.status + ':' + e.statusText;
-              });
-              console.log(err);
-            })
-        });
-    }
-
+          }).catch((err) => {
+            $scope.destSpace.getAsset(assetID)
+              .then((asset) => {
+                asset.fields.file[locale] = {
+                  "contentType": contentType,
+                  "fileName": fileName,
+                  "upload": uploadPath
+                }
+                asset.update()
+                  .then((assetUpdated) => {
+                    assetUpdated.processForLocale(locale)
+                      .then((assetProcessed) => {
+                        assetProcessed.publish()
+                          .then((assetPublished) => {
+                            selectedAsset.status = 'published';
+                            console.log(assetPublished);
+                            //$scope.successfulAssets.push(assetPublished);
+                            $scope.$apply();
+                          }).catch((err) => {
+                            $scope.$apply(function () {
+                              var e = JSON.parse(err.message);
+                              selectedAsset.status = 'error';
+                              selectedAsset.error = e.status + ':' + e.statusText;
+                            });
+                            console.log(err);
+                          })
+                      }).catch((err) => {
+                        $scope.$apply(function () {
+                          var e = JSON.parse(err.message);
+                          selectedAsset.status = 'error';
+                          selectedAsset.error = e.status + ':' + e.statusText;
+                        });
+                        console.log(err);
+                      })
+                  }).catch((err) => {
+                    $scope.$apply(function () {
+                      var e = JSON.parse(err.message);
+                      selectedAsset.status = 'error';
+                      selectedAsset.error = e.status + ':' + e.statusText;
+                    });
+                    console.log(err);
+                  })
+              }).catch((err) => {
+                $scope.$apply(function () {
+                  var e = JSON.parse(err.message);
+                  selectedAsset.status = 'error';
+                  selectedAsset.error = e.status + ':' + e.statusText;
+                });
+                console.log(err);
+              })
+          });
+      }
+    };
     $scope.bulkUploadToContentful = function () {
-        $scope.selectedValues = $scope.result.data;
-        //loop for traversing selected items 
-        var interval = 0;
-        angular.forEach($scope.selectedValues, function (selectedAsset) {
-          selectedAsset.status = 'start';
-          console.log('interval:' + interval);
+      $scope.selectedValues = $scope.result.data;
+      //loop for traversing selected items 
+      var interval = 0;
+
+   /*   for (i = 0; i < $scope.selectedValues.length; i++) {
+        console.log('value of i ' + i);
+        if (i != $scope.selectedValues.length - 1 && $scope.selectedValues[i].asset_name == $scope.selectedValues[i + 1].asset_name) {
+          $scope.selectedValues[i].status = 'start';
+          //just skip the duplicate
+        } else {
+          $scope.selectedValues[i].status = 'start';
+          $scope.uploadAsset($scope.selectedValues[i]);
+
+        }
+      }  */
+      var assetprev = '';
+      angular.forEach($scope.selectedValues, function (selectedAsset) {
+
+        selectedAsset.status = 'start';
+        if (selectedAsset.asset_name != assetprev) {
+          console.log('interval:' + interval +'assetname'+selectedAsset.asset_name);
           $timeout(function () {
-            $scope.uploadAsset(selectedAsset);
+          $scope.uploadAsset(selectedAsset);
           }, interval);
-          interval = interval + 2500;
-          //$timeout($scope.uploadAsset(selectedAsset), interval);
-        }); //end of traversal loop 
-      } //end of upload function
+          interval = interval + 2000;
+          assetprev = selectedAsset.asset_name;
+        }
+        //$timeout($scope.uploadAsset(selectedAsset), interval);
+      }); //end of traversal loop 
+
+    }; //end of upload function
   }])
-  .directive("fileread", [function () {
+  .directive("fileread", ['$filter', function ($filter) {
     return {
       scope: {
         opts: '='
@@ -207,7 +355,8 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                 });
               });
 
-              $scope.opts.data = data;
+              //$scope.opts.data = data;
+              $scope.opts.data = $filter('orderBy')(data, 'asset_name');
 
               $elm.val(null);
             });
