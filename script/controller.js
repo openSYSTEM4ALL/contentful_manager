@@ -142,42 +142,59 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             .then((asset) => {
                 asset.processForAllLocales()
                     .then((asset) => {
-                        //asset.publish();
                         $scope.processAsset(locale, selectedIndex, assetID);
                     });
             });
     }
     $scope.updateAsset = function (asset, locale, selectedIndex, assetID) {
         for (i = 0; i < locale.length; i++) {
-            asset.fields.file[locale[i]].url = $scope.names[selectedIndex].fields.file[locale[i]].url;
+            asset.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
+            asset.fields.file[locale[i]] = {
+                "contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
+                "fileName": $scope.names[selectedIndex].fields.file[locale[i]].fileName,
+                "upload": "https:" + $scope.names[selectedIndex].fields.file[locale[i]].url
+            }
         }
         console.log('update' + asset + locale + selectedIndex + assetID);
         asset.update()
             .then((asset) => {
-                //asset.sys.version = asset.sys.version+1;
-                asset.publish()
-                    .then((assetcall) => {
-                        //asset.campublish = true;
-                        $scope.publishedAsset.push(assetcall);
-                        $scope.$apply();
-                        console.log('published asset : ' + assetcall.fields.file.fileName + assetcall.sys.publishedVersion);
-                    });
-                //alert('published' + asset);
+                asset.processForAllLocales()
+                    .then((processedAsset) => {
+                        //asset.sys.version = asset.sys.version+1;
+                        processedAsset.publish()
+                            .then((assetcall) => {
+                                //asset.campublish = true;
+                                $scope.publishedAsset.push(assetcall);
+                                $scope.$apply();
+                                console.log('published asset : ' + assetcall.fields.file.fileName + assetcall.sys.publishedVersion);
+                            });
+                        //alert('published' + asset);
+                    })
+
             });
     }
     $scope.cloneAsset = function (asset, locale, selectedIndex, assetID) {
 
-        asset.fields.file = $scope.names[selectedIndex].fields.file;
+        //asset.fields.file = $scope.names[selectedIndex].fields.file;
 
-
+        for (i = 0; i < locale.length; i++) {
+            asset.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
+            asset.fields.file[locale[i]] = {
+                "contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
+                "fileName": $scope.names[selectedIndex].fields.file[locale[i]].fileName,
+                "upload": "https:" + $scope.names[selectedIndex].fields.file[locale[i]].url
+            }
+        }
         asset.update()
             .then((asset) => {
-                //asset.sys.version = asset.sys.version+1;
-                asset.publish()
-                    .then((assetcall) => {
-                        $scope.publishedAsset.push(assetcall);
-                        $scope.$apply();
-                        console.log('published asset c: ' + assetcall.fields.file.fileName + assetcall.sys.publishedVersion);
+                asset.processForAllLocales()
+                    .then((processedAsset) => {
+                        asset.publish()
+                            .then((assetcall) => {
+                                $scope.publishedAsset.push(assetcall);
+                                $scope.$apply();
+                                console.log('published asset c: ' + assetcall.fields.file.fileName + assetcall.sys.publishedVersion);
+                            })
                     });
             });
     }
@@ -199,17 +216,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         }
 
                     }
-
-
-                    //asset.processForLocale($scope.locale);
-                    //asset.publish();
-
-                    // .then((asset) => {
-                    // 	asset.processForLocale($scope.locale)
-                    // 	.then((asset) => {
-                    // 	asset.publish()
-                    // 	})
-                    // });
                 }) //end of if for first time migration
                 .catch(err => {
                     console.log("creating new asset " + selectedIndex + locale);
@@ -222,20 +228,19 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $scope.migratecontent = function (item) {
 
             $scope.selectedvalues = item;
-            //loop for traversing selected items 
             $scope.tags = [];
             $scope.publishedAsset = [];
+            var interval = 0;
+            //loop for traversing selected items 
             angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
                     //if key is true as in asset is selected
                     if (key == true) {
                         $scope.locale = selectedAssets.split("$")[0].split(":")[0];
                         $scope.selectedIndex = selectedAssets.split("$")[1];
                         $scope.assetID = $scope.names[$scope.selectedIndex].sys.id;
-                        //$scope.currentAssetToMigrate = $scope.destSpace.getAsset($scope.assetID);
+                        
                         console.log('assetID:' + $scope.selectedIndex + $scope.locale);
-                        //$scope.processAsset($scope.locale, $scope.selectedIndex, $scope.assetID);
-                        //if the asset is moving for the first time to destination
-                        //$scope.testasset = $scope.destSpace.getAsset($scope.assetID)
+                        
                         var tag = {
                             index: $scope.selectedIndex,
                             locale: $scope.locale,
@@ -262,7 +267,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 } else {
                     console.log('process asset : ' + $scope.sortedtags[i].assetID);
                     locs.push($scope.sortedtags[i].locale);
-                    $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
+                    //setTimeout(function () {
+                        $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
+                    //}, interval);
+                    interval = interval + 2000;
                     locs = [];
 
                 }
