@@ -4,27 +4,27 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
     
     $routeProvider.when("/migrate", {
         controller: "layoutController",
-        templateUrl: "/templates/migrate.html"
+        templateUrl: "templates/migrate.html"
     });
     $routeProvider.when("/login", {
         controller: "loginController",
-        templateUrl:"/templates/login.html"
+        templateUrl:"templates/login.html"
     });
     $routeProvider.when("/configure", {
         controller: "layoutController",
-        templateUrl: "/templates/configure.html"
+        templateUrl: "templates/configure.html"
     });
     $routeProvider.when("/upload", {
         controller: "uploadController",
-        templateUrl: "/templates/upload.html"
+        templateUrl: "templates/upload.html"
     });
     $routeProvider.when("/bulkupload", {
         controller: "bulkController",
-        templateUrl:"/templates/bulkupload.html"
+        templateUrl:"templates/bulkupload.html"
     });
     $routeProvider.when("/", {
         controller: "landingController",
-        templateUrl:"/templates/landing.html"
+        templateUrl:"templates/landing.html"
     });
 
     $routeProvider.otherwise({
