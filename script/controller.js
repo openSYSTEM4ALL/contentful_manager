@@ -13,6 +13,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $scope.spaces = spac;
     $scope.selectedfiles = {};
     $scope.publishedAsset = [];
+    $scope.resultSet = [];
     $scope.checkCount = 0;
 
     $scope.$on('$viewContentLoaded', function () {
@@ -21,7 +22,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     });
 
     //Fetch all assets of the selected Source Space
-    $scope.changedValue = function (srcitem) { 
+    $scope.changedValue = function (srcitem) {
 
             $scope.srcitem = $filter('filter')($scope.spaces, {
                 space: srcitem
@@ -41,6 +42,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         .then((assets) => {
                             $scope.names = assets.items;
                             $scope.$apply();
+                        }).catch((err) => {
+                            var e = JSON.parse(err.message);
+                            console.log(e.status + ':' + e.statusText);
                         })
                 });
         } // end of changedvalue  
@@ -70,7 +74,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     }, true);
 
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
-    $scope.getDestAssets = function (destitem) { 
+    $scope.getDestAssets = function (destitem) {
 
             $scope.destitem = destitem;
             $scope.destitem = $filter('filter')($scope.spaces, {
@@ -94,18 +98,27 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 });
         } //end of getDestAssets
 
-    // This method can be used after create as well as update operation tp process the asset for multiple locales
+    // This method can be used after create as well as update operation to process the asset for multiple locales
     $scope.processAfterCreateOrUpdate = function (updatedAsset, locale) {
         for (i = 0; i < locale.length; i++) {
             updatedAsset.processForLocale(locale[i])
                 .then((processedAsset) => {
                     processedAsset.publish()
-                        .then((assetcall) => {
-                            $scope.publishedAsset.push(assetcall);
+                        .then((assetPublished) => {
+                            $scope.publishedAsset.push(assetPublished);
+                            $scope.resultSet.push({
+                                id: assetPublished.sys.id,
+                                status: "Published"
+                            });
                             $scope.$apply();
                         }).catch((err) => {
                             var e = JSON.parse(err.message);
                             console.log(e.status + ':' + e.statusText);
+                            $scope.resultSet.push({
+                                id: processedAsset.sys.id,
+                                status: e.status + ':' + e.statusText
+                            });
+                            $scope.$apply();
                         });
                 }).catch((err) => {
                     var e = JSON.parse(err.message);
@@ -139,7 +152,29 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
         $scope.destSpace.createAssetWithId(assetID, json)
             .then((asset) => {
-                $scope.processAfterCreateOrUpdate(asset, locale);
+                asset.processForAllLocales()
+                    .then((processedAsset) => {
+                        processedAsset.publish()
+                            .then((assetPublished) => {
+                                $scope.publishedAsset.push(assetPublished);
+                                $scope.resultSet.push({
+                                    id: assetPublished.sys.id,
+                                    status: "Published"
+                                });
+                                $scope.$apply();
+                            }).catch((err) => {
+                                var e = JSON.parse(err.message);
+                                console.log(e.status + ':' + e.statusText);
+                                $scope.resultSet.push({
+                                    id: processedAsset.sys.id,
+                                    status: e.status + ':' + e.statusText
+                                });
+                                $scope.$apply();
+                            });
+                    }).catch((err) => {
+                        var e = JSON.parse(err.message);
+                        console.log(e.status + ':' + e.statusText);
+                    });
             }).catch((err) => {
                 var e = JSON.parse(err.message);
                 console.log(e.status + ':' + e.statusText);
@@ -217,6 +252,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.selectedvalues = item;
             $scope.tags = [];
             $scope.publishedAsset = [];
+            $scope.resultSet = [];
             var interval = 0;
 
             //loop for traversing selected items 
@@ -262,7 +298,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             }
         } //end of migrate function
 
- $.expr[":"].contains = $.expr.createPseudo(function (arg) {
+    $.expr[":"].contains = $.expr.createPseudo(function (arg) {
         return function (elem) {
             return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
         };
@@ -276,7 +312,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     });
 
     /* End of Migration methods */
-    
+
     /* ######################################################################## */
 
     /* Start of Configuration methods */
@@ -350,7 +386,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         Materialize.toast('BOOM ! BOOM !', 2000);
     }
 
-   
+
 }]);
 //end of controller
 
