@@ -126,8 +126,18 @@
                         <a class="waves-effect waves-light btn" id="btnMigrate" ng-click="migratecontent(selectedfiles)">Migrate <i class="material-icons right">send</i></a>
                     </div>
                 </div>
+                <!-- Switch -->
+                <div class="switch" ng-cloak>
+                    <label>
+                        <p><h6>Show Activity
+                        <input type="checkbox" ng-model="showActivity">
+                        <span class="lever"></span></h6>
+                        <span ng-show="showActivity == true">{{displayTypeOptions.option1}}</span>
+                        <span ng-show="showActivity == false">{{displayTypeOptions.option2}}</span> </p>
+                    </label>
+                </div>
                 <div class="row">
-                    <div class="col s12" ng-show="publishedAsset.length > 0">
+                    <div class="col s12" ng-show="publishedAsset.length > 0 && showActivity == false">
                         <ul>
                             <li ng-repeat="asset in publishedAsset">
                                 <p> <span class="new badge right-align" data-badge-caption="">Published</span>{{asset.sys.id}}</p>
@@ -135,7 +145,7 @@
                             <div class="divider"></div>
                         </ul>
                     </div>
-                    <div class="col s12" ng-show="resultSet.length > 0">
+                    <div class="col s12" ng-show="resultSet.length > 0 && showActivity == true">
                         <ul>
                             <li ng-repeat="asset in resultSet">
                                 <p>

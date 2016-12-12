@@ -16,6 +16,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $scope.resultSet = [];
     $scope.checkCount = 0;
 
+    $scope.displayTypeOptions = {
+        option1: "Show Activity",
+        option2: "Show Published Assets only"
+    };
     $scope.$on('$viewContentLoaded', function () {
         //call it here
         $('select').material_select();
@@ -105,7 +109,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 .then((processedAsset) => {
                     processedAsset.publish()
                         .then((assetPublished) => {
-                            //$scope.publishedAsset.push(assetPublished);
+                            $scope.publishedAsset.push(assetPublished);
                             console.log(assetPublished);
                             for (var x in $scope.resultSet) {
                                 if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
@@ -159,7 +163,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     .then((processedAsset) => {
                         processedAsset.publish()
                             .then((assetPublished) => {
-                                //$scope.publishedAsset.push(assetPublished);
+                                $scope.publishedAsset.push(assetPublished);
                                 for (var x in $scope.resultSet) {
                                     if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
                                         $scope.resultSet[x].status = "Published";
