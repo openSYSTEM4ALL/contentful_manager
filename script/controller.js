@@ -105,19 +105,22 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 .then((processedAsset) => {
                     processedAsset.publish()
                         .then((assetPublished) => {
-                            $scope.publishedAsset.push(assetPublished);
-                            $scope.resultSet.push({
-                                id: assetPublished.sys.id,
-                                status: "Published"
-                            });
+                            //$scope.publishedAsset.push(assetPublished);
+                            console.log(assetPublished);
+                            for (var x in $scope.resultSet) {
+                                if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                    $scope.resultSet[x].status = "Published";
+                                }
+                            }
                             $scope.$apply();
                         }).catch((err) => {
                             var e = JSON.parse(err.message);
                             console.log(e.status + ':' + e.statusText);
-                            $scope.resultSet.push({
-                                id: processedAsset.sys.id,
-                                status: e.status + ':' + e.statusText
-                            });
+                            for (var x in $scope.resultSet) {
+                                if ($scope.resultSet[x].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                    $scope.resultSet[x].status = e.status + ':' + e.statusText;
+                                }
+                            }
                             $scope.$apply();
                         });
                 }).catch((err) => {
@@ -156,19 +159,21 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     .then((processedAsset) => {
                         processedAsset.publish()
                             .then((assetPublished) => {
-                                $scope.publishedAsset.push(assetPublished);
-                                $scope.resultSet.push({
-                                    id: assetPublished.sys.id,
-                                    status: "Published"
-                                });
+                                //$scope.publishedAsset.push(assetPublished);
+                                for (var x in $scope.resultSet) {
+                                    if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                        $scope.resultSet[x].status = "Published";
+                                    }
+                                }
                                 $scope.$apply();
                             }).catch((err) => {
                                 var e = JSON.parse(err.message);
                                 console.log(e.status + ':' + e.statusText);
-                                $scope.resultSet.push({
-                                    id: processedAsset.sys.id,
-                                    status: e.status + ':' + e.statusText
-                                });
+                                for (var x in $scope.resultSet) {
+                                    if ($scope.resultSet[x].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                        $scope.resultSet[x].status = e.status + ':' + e.statusText;
+                                    }
+                                }
                                 $scope.$apply();
                             });
                     }).catch((err) => {
@@ -253,6 +258,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.tags = [];
             $scope.publishedAsset = [];
             $scope.resultSet = [];
+            $scope.failedSet = [];
             var interval = 0;
 
             //loop for traversing selected items 
@@ -289,6 +295,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 } else {
                     console.log('process asset : ' + $scope.sortedtags[i].assetID);
                     locs.push($scope.sortedtags[i].locale);
+                    $scope.resultSet.push({
+                        id: $scope.sortedtags[i].assetID,
+                        status: "Started"
+                    });
                     //setTimeout(function () {
                     $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
                     //}, interval);
