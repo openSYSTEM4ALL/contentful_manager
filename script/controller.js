@@ -395,7 +395,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.spaceName = "";
         $scope.mgmntToken = "";
         txtSpaceId.readOnly = false;
-        Materialize.toast('BOOM ! BOOM !', 2000);
+        Materialize.toast('Oh! That vanished!', 2000);
     }
 
 
