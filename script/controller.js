@@ -20,6 +20,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         option1: "Will show activity from start till the end for each asset",
         option2: "Will show only those assets which are published successfully"
     };
+
     $scope.$on('$viewContentLoaded', function () {
         //call it here
         $('select').material_select();
@@ -120,9 +121,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         }).catch((err) => {
                             var e = JSON.parse(err.message);
                             console.log(e.status + ':' + e.statusText);
-                            for (var x in $scope.resultSet) {
-                                if ($scope.resultSet[x].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                    $scope.resultSet[x].status = e.status + ':' + e.statusText;
+                            for (var y in $scope.resultSet) {
+                                if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                    $scope.resultSet[y].status = e.status + ':' + e.statusText;
                                 }
                             }
                             $scope.$apply();
@@ -148,7 +149,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 }
             }
         }
-        for (i = 0; i < locale.length; i++) {
+        for (var i = 0; i < locale.length; i++) {
             json.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
             json.fields.file[locale[i]] = {
                 "contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
@@ -173,9 +174,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                             }).catch((err) => {
                                 var e = JSON.parse(err.message);
                                 console.log(e.status + ':' + e.statusText);
-                                for (var x in $scope.resultSet) {
-                                    if ($scope.resultSet[x].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                        $scope.resultSet[x].status = e.status + ':' + e.statusText;
+                                for (var y in $scope.resultSet) {
+                                    if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                        $scope.resultSet[y].status = e.status + ':' + e.statusText;
                                     }
                                 }
                                 $scope.$apply();
@@ -192,7 +193,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     //This method is to update an asset
     $scope.updateAsset = function (asset, locale, selectedIndex, assetID) {
-        for (i = 0; i < locale.length; i++) {
+        for (var i = 0; i < locale.length; i++) {
             asset.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
             asset.fields.file[locale[i]] = {
                 "contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
@@ -213,7 +214,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     //This method is to update an asset which has a blank 'file' object in fields
     $scope.cloneAsset = function (asset, locale, selectedIndex, assetID) {
 
-        for (i = 0; i < locale.length; i++) {
+        for (var i = 0; i < locale.length; i++) {
             asset.fields.title[locale[i]] = $scope.names[selectedIndex].fields.title[locale[i]];
             asset.fields.file[locale[i]] = {
                 "contentType": $scope.names[selectedIndex].fields.file[locale[i]].contentType,
@@ -262,8 +263,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.tags = [];
             $scope.publishedAsset = [];
             $scope.resultSet = [];
-            $scope.failedSet = [];
-            var interval = 0;
 
             //loop for traversing selected items 
             angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
@@ -293,7 +292,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.sortedtags.push(samplelasttag);
             var locs = [];
 
-            for (i = 0; i < $scope.sortedtags.length - 1; i++) {
+            for (var i = 0; i < $scope.sortedtags.length - 1; i++) {
                 if ($scope.sortedtags[i].assetID == $scope.sortedtags[i + 1].assetID) {
                     locs.push($scope.sortedtags[i].locale);
                 } else {
@@ -303,10 +302,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         id: $scope.sortedtags[i].assetID,
                         status: "Started"
                     });
-                    //setTimeout(function () {
+                    
                     $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
-                    //}, interval);
-                    interval = interval + 2000;
+                    
                     locs = [];
                 }
             }
