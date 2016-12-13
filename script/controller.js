@@ -15,10 +15,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $scope.publishedAsset = [];
     $scope.resultSet = [];
     $scope.checkCount = 0;
-
+    $scope.showActivity = true;
     $scope.displayTypeOptions = {
-        option1: "Show Activity",
-        option2: "Show Published Assets only"
+        option1: "Will show activity from start till the end for each asset",
+        option2: "Will show only those assets which are published successfully"
     };
     $scope.$on('$viewContentLoaded', function () {
         //call it here
