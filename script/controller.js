@@ -111,7 +111,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     processedAsset.publish()
                         .then((assetPublished) => {
                             $scope.publishedAsset.push(assetPublished);
-                            console.log(assetPublished);
                             for (var x in $scope.resultSet) {
                                 if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
                                     $scope.resultSet[x].status = "Published";
@@ -201,10 +200,10 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 "upload": "https:" + $scope.names[selectedIndex].fields.file[locale[i]].url
             }
         }
-        console.log('update' + asset + locale + selectedIndex + assetID);
+        //console.log('update' + asset + locale + selectedIndex + assetID);
         asset.update()
-            .then((asset) => {
-                $scope.processAfterCreateOrUpdate(asset, locale);
+            .then((updatedAsset) => {
+                $scope.processAfterCreateOrUpdate(updatedAsset, locale);
             }).catch((err) => {
                 var e = JSON.parse(err.message);
                 console.log(e.status + ':' + e.statusText);
@@ -223,8 +222,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             }
         }
         asset.update()
-            .then((asset) => {
-                $scope.processAfterCreateOrUpdate(asset, locale);
+            .then((updatedAsset) => {
+                $scope.processAfterCreateOrUpdate(updatedAsset, locale);
             }).catch((err) => {
                 var e = JSON.parse(err.message);
                 console.log(e.status + ':' + e.statusText);
