@@ -39,6 +39,12 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $scope.destLocales = [];
     $scope.assetList = [];
     $scope.successfulAssets = [];
+    $scope.resultSet = [];
+    $scope.showActivity = true;
+    $scope.displayTypeOptions = {
+        option1: "Will show activity from start till the end for each asset",
+        option2: "Will show only those assets which are published successfully"
+    };
 
     $scope.getDestLocales = function (destSpaceSelected) {
 
@@ -72,7 +78,6 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             if (!defaultFound) {
                 if (destLocale.default == true) {
                     $scope.defaultDestLocale = destLocale.code;
-                    $scope.checkLocale();
                     $scope.$apply();
                     defaultFound = true;
                 }
@@ -137,16 +142,20 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
 
     $scope.resetData = function () {
 
-        btnAdd.value = "Add";
-        $scope.assetName = "";
-        $scope.assetTitle = "";
-        $scope.assetContentType = "";
-        $scope.assetUrl = "";
-        //$scope.selectedLocale = ""; //Not working for select
-        txtAssetName.readOnly = false;
-        Materialize.toast('Oh! That vanished!', 4000);
-    }
+            btnAdd.value = "Add";
+            $scope.assetName = "";
+            $scope.assetTitle = "";
+            $scope.assetContentType = "";
+            $scope.assetUrl = "";
+            //$scope.selectedLocale = ""; //Not working for select
+            txtAssetName.readOnly = false;
+            Materialize.toast('Oh! That vanished!', 4000);
+        }
+        /* End of Configuration methods */
 
+    /* ######################################################################## */
+
+    /* Start of Migration methods */
 
     //Upload assets to a Destination on Contentful
 
@@ -187,9 +196,21 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                             .then((assetPublished) => {
                                 console.log(assetPublished);
                                 $scope.successfulAssets.push(assetPublished);
+                                for (var x in $scope.resultSet) {
+                                    if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                        $scope.resultSet[x].status = "Published";
+                                    }
+                                }
                                 $scope.$apply();
                             }).catch((err) => {
-                                console.log(err);
+                                var e = JSON.parse(err.message);
+                                console.log(e.status + ':' + e.statusText);
+                                for (var y in $scope.resultSet) {
+                                    if ($scope.resultSet[y].id === assetProcessed.sys.id && !assetProcessed.isPublished()) {
+                                        $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                    }
+                                }
+                                $scope.$apply();
                             })
                     }).catch((err) => {
                         console.log(err);
@@ -197,11 +218,12 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             }).catch((err) => {
                 $scope.destSpace.getAsset(assetID)
                     .then((asset) => {
+                        asset.fields.title[locale] = title;
                         asset.fields.file[locale] = {
                             "contentType": contentType,
                             "fileName": fileName,
                             "upload": uploadPath
-                        }
+                        };
                         asset.update()
                             .then((assetUpdated) => {
                                 assetUpdated.processForLocale(locale)
@@ -210,9 +232,21 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                                             .then((assetPublished) => {
                                                 console.log(assetPublished);
                                                 $scope.successfulAssets.push(assetPublished);
+                                                for (var x in $scope.resultSet) {
+                                                    if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                                        $scope.resultSet[x].status = "Published";
+                                                    }
+                                                }
                                                 $scope.$apply();
                                             }).catch((err) => {
-                                                console.log(err);
+                                                var e = JSON.parse(err.message);
+                                                console.log(e.status + ':' + e.statusText);
+                                                for (var y in $scope.resultSet) {
+                                                    if ($scope.resultSet[y].id === assetProcessed.sys.id && !assetProcessed.isPublished()) {
+                                                        $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                                    }
+                                                }
+                                                $scope.$apply();
                                             })
                                     }).catch((err) => {
                                         console.log(err);
@@ -226,13 +260,17 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             });
     }
     $scope.uploadToContentful = function () {
-
+            $scope.successfulAssets = [];
+            $scope.resultSet = [];
             $scope.selectedValues = $scope.assetList;
             //loop for traversing selected items 
             angular.forEach($scope.selectedValues, function (selectedAsset) {
-                    $scope.uploadAsset(selectedAsset);
-                }
-            ); //end of traversal loop 
+                $scope.resultSet.push({
+                    id: selectedAsset.assetName.replace(/\s+/g, '').toLowerCase(),
+                    status: "Started"
+                });
+                $scope.uploadAsset(selectedAsset);
+            }); //end of traversal loop 
         } //end of upload function
 
     $scope.checkLocale = function () {
