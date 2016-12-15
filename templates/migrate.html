@@ -135,7 +135,7 @@
                             <span class="lever right"></span>
                         </label>
                         <p><label ng-show="showActivity == true">{{displayTypeOptions.option1}}</label>
-                           <label ng-show="showActivity == false">{{displayTypeOptions.option2}}</label></p>
+                            <label ng-show="showActivity == false">{{displayTypeOptions.option2}}</label></p>
                     </h6>
                 </div>
                 <div class="divider"></div>
@@ -153,8 +153,23 @@
                             <li ng-repeat="asset in resultSet">
                                 <p>
                                     <span class="new badge right-align" data-badge-caption="" ng-show="asset.status == 'Published'">{{asset.status}}</span>
-                                    <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>{{asset.id}}
+                                    <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>
+                                    <span class="left-align">{{asset.id}}</span>
+                                    <div class="preloader-wrapper small active" ng-show="asset.status == 'Started'">
+                                        <div class="spinner-layer spinner-green-only">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </p>
+                                <div class="divider"></div>
                             </li>
                             <div class="divider"></div>
                         </ul>
