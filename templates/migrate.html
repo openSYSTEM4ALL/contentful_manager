@@ -152,12 +152,11 @@
                         <ul>
                             <li ng-repeat="asset in resultSet">
                                 <div class="col s10">
-                                     <span class="left-align">{{asset.id}}</span>
+                                    <span class="left-align">{{asset.id}}</span>
                                 </div>
                                 <div class="col s2">
                                     <span class="new badge right-align" data-badge-caption="" ng-show="asset.status == 'Published'">{{asset.status}}</span>
                                     <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>
-                                   
                                     <div class="preloader-wrapper small active" ng-show="asset.status == 'Started'">
                                         <div class="spinner-layer spinner-green-only">
                                             <div class="circle-clipper left">
@@ -172,9 +171,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="divider"></div>
                             </li>
-                            <div class="divider"></div>
                         </ul>
                     </div>
                 </div>
