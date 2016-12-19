@@ -15,7 +15,8 @@ as well as for the Webmasters.
 ### How to Use
 The process is quite simple. Find the steps below on how to use different features of the tool.
 
-### a) Configure – The space need to be configured by the user for the first time use which will
+### a) Configure – 
+The space need to be configured by the user for the first time use which will
 be stored in the browser of the user. With this the token will remain with the user and
 not the server of the tool.
 
@@ -23,7 +24,8 @@ not the server of the tool.
 1. Enter Space Name, Space ID and Management Token
 2. Click on Save. Multiple spaces can be configured by the user
 
-### b) Migrate - Migrate assets from one space to another in Contentful
+### b) Migrate - 
+Migrate assets from one space to another in Contentful
 #### Steps: -
 1. Select the source from the dropdown
 2. Choose the assets from the list
@@ -31,7 +33,8 @@ not the server of the tool.
 4. Confirm your selection
 5. Migrate the assets and see the results
 
-### c) Contentful Upload - Upload multiple assets from another system to Contentful
+### c) Contentful Upload - 
+Upload multiple assets from another system to Contentful
 requiring only its hosted URL. The destination and locale are fixed for all the assets 
 added to the list for a single upload. This is useful only if specific locale assets are to be
 uploaded. It is advisable to first upload the assets of the default locale into the space.
@@ -52,7 +55,8 @@ Steps: -
 
 4. Make a list of assets and then click on Upload button. The assets will be uploaded to Contentful with results on the screen.
 
-### d) Bulk Upload – Just make an MS Excel or Open Office spreadsheet document of the
+### d) Bulk Upload – 
+Just make an MS Excel or Open Office spreadsheet document of the
 assets to be uploaded to Contentful in the specified format and find them in your space.
 The format can be downloaded from the screen.
 #### Steps: -
