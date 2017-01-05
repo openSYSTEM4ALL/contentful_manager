@@ -1,6 +1,6 @@
-# CONTENT MANAGER
+# CONTENTFUL MANAGER
 ### Overview
-Content Manager is a tool for migrating assets from a Space in Contentful to another Space.
+Contentful Manager is a tool for migrating assets from a Space in Contentful to another Space.
 The tool can also be used to upload assets from other systems like Crownpeak, Kaltura and any
 other system with the hosted assets to Contentful. The tool is simple to use for the developers
 as well as for the Webmasters.
