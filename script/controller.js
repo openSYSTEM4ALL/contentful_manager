@@ -75,7 +75,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         }
     });
     $scope.$watch('selectedfiles', function () {
-        $scope.checkCount = $("input:checked").length;
+        $scope.checkCount = $("input:checked.check-count").length;
     }, true);
 
     //Fetch dest space - Can be edited if all destination assets are required to be fetched

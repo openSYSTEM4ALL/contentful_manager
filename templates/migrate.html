@@ -74,7 +74,7 @@
                         <ul ng-repeat="x in names" ng-init="count=$index" id="sourceAssets">
                             <li ng-repeat="(filelocale,value) in x.fields.file">
                                 <span class="new badge" data-badge-caption="">{{count +1}}</span>
-                                <input type="checkbox" class="filled-in" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
+                                <input type="checkbox" class="filled-in check-count" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
                                 />
                                 <label class="grey-text text-accent-2" for="{{filelocale + value.fileName}}">{{filelocale + ' : ' + value.fileName}}</label>
                                 <p> <a href="{{value.url}}" class="dont-break-out blue-text text-accent-4" target="_blank">{{value.url}}</a></p>
