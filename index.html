@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Contentful Manager</title>
     <!--Import Google Icon Font-->
@@ -7,7 +8,7 @@
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/ghpages-materialize.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="css/style.css" media="screen,projection" />
-    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -29,13 +30,22 @@
             </nav>
         </div>
         <ul class="side-nav fixed">
-            <li class="logo">
-                <a id="logo-container" href="#/" class="brand-logo">
-                    <object id="front-page-logo" type="image/png" data="images/logo.png">Your browser does not support Images</object></a>
-            </li>
+            <nav class="light-blue">
+                <div class="container">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <img src="images/logo-ta.png" alt="" style="padding-top: 17px;">
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="logo">
+                <div id="logo-container" class="brand-logo center">
+                    <object id="front-page-logo" type="image/png" data="images/logo.png">Your browser does not support Images</object>
+                </div>
+            </div>
             <div class="divider"></div>
-            <li><span class="new badge" data-badge-caption="">Guest</span></li>
-            <li><a href="#/login" class="waves-effect waves-teal">Login</a> </li>
+            <li><a href="#/login" class="waves-effect waves-teal"><span class="new badge" data-badge-caption="">Guest</span>Login</a> </li>
             <div class="divider"></div>
             <li><a href="#/" class="waves-effect waves-teal">Home</a></li>
             <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
@@ -45,6 +55,15 @@
         </ul>
         <!--SideNav fro mobile-->
         <ul class="side-nav" id="nav-mobile">
+            <nav class="light-blue">
+                <div class="container">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <img src="images/logo-ta.png" alt="" style="padding-top: 17px;">
+                        </div>
+                    </div>
+                </div>
+            </nav>
             <li class="logo">
                 <a id="logo-container" href="#/" class="brand-logo">
                     <object id="front-page-logo" type="image/png" data="images/logo.png">Your browser does not support Images</object></a>
@@ -101,7 +120,7 @@
                         <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
                         <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>-->
                         <li><a class="btn-floating green" target="_blank" href="help/user_guide.pdf"><i class="material-icons">description</i></a></li>
-                    </ul>                 
+                    </ul>
                 </div>
             </div>
         </div>
@@ -118,7 +137,7 @@
                         <li><a class="grey-text text-lighten-3" href="#/configure">Configure</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/migrate">Migrate</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/upload">Contentful Upload</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#/bulkupload" >Bulk Upload</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/bulkupload">Bulk Upload</a></li>
                     </ul>
                 </div>
             </div>
@@ -140,9 +159,9 @@
     <script src="js/xlsx.full.min.js"></script>
     <script src="js/ods.js"></script>
     <script>
-     if (GetIEVersion() > 0) {
-        window.location.replace("templates/unsupported.html");
-    }
+        if (GetIEVersion() > 0) {
+            window.location.replace("templates/unsupported.html");
+        }
     </script>
 </body>
 
