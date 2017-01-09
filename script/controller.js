@@ -11,7 +11,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     };
 
     $scope.spaces = spac;
+    $scope.totalAssets = 0;
     $scope.selectedfiles = {};
+    $scope.parseInt = parseInt;
     $scope.publishedAsset = [];
     $scope.resultSet = [];
     $scope.checkCount = 0;
@@ -43,8 +45,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.srcClient.getSpace($scope.srcSpaceId)
                 .then((space) => {
                     // Now that we have a space, we can get assets from that space
-                    space.getAssets()
+                    space.getAssets({skip:"0", order:"sys.createdAt"})
                         .then((assets) => {
+                            $scope.totalAssets = assets.total;
                             $scope.names = assets.items;
                             $scope.$apply();
                         }).catch((err) => {
