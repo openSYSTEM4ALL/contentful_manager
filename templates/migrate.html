@@ -110,7 +110,7 @@
                         <ul>
                             <li ng-repeat="(value,key) in selectedfiles">
                                 <span>{{(key==true ? value.split("$")[0] : null)}}</span>
-                                <span class="new badge" data-badge-caption="">{{parseInt((key==true ? value.split("$").pop() : null)) + 1}}</span>
+                                <span class="new badge" data-badge-caption="">{{(key==true ? parseInt(value.split("$").pop()) + 1 : null)}}</span>
                                 <div class="divider"></div>
                             </li>
                         </ul>
