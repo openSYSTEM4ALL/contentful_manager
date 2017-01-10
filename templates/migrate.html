@@ -60,8 +60,8 @@
                         <label for="selectsource">  Source : </label>
                         <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
                             ng-change="changedValue(selectedSource)">
-                        <option value="" disabled selected>-- Select Source --</option>
-				       </select>
+                            <option value="" disabled selected>-- Select Source --</option>
+                            </select>
                     </div>
                 </div>
                 <!--Fetch all published assets and keep it in selectedfiles variable -->
@@ -69,6 +69,15 @@
                     <div class="input-field col s12 m6 l6" data-ng-show="names.length>0">
                         <input id="searchAsset" type="text" ng-model="searchText" class="validate">
                         <label for="search"><i class="material-icons">search</i>Search</label>
+                    </div>
+                    <div class="col s12">
+                        <ul class="responsive-table">
+                            <li>
+                                <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="isAllSelected"/>
+                                <label for="selectAllCheckbox" class="teal-text">Select All</label>
+                            </li>
+                        </ul>
+                        <div class="divider"></div>
                     </div>
                     <div class="col s12">
                         <ul ng-repeat="x in names" ng-init="count=$index" id="sourceAssets">
