@@ -1,0 +1,13 @@
+<body>
+	<div style="margin: 20px">
+		CONTENTFUL_MANAGEMENT_TOKEN is - <span id="token"></span>
+	</div>
+
+	<script>
+		var data = document.location.hash.substring(1, document.location.hash.length); //remove # from start of hash
+
+	   	var access_token = data.split("&")[0].split("=")[1]; // hash is in format access_token=xyz&token_type=bearer
+	    document.getElementById('token').innerHTML = access_token;
+	</script>
+</body>
+</html>
