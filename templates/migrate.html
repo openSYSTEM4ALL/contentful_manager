@@ -71,7 +71,7 @@
                         <label for="search"><i class="material-icons">search</i>Search</label>
                     </div>
                     <div class="col s12">
-                        <ul class="responsive-table">
+                        <ul class="responsive-table" data-ng-show="names.length>0">
                             <li>
                                 <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="isAllSelected"/>
                                 <label for="selectAllCheckbox" class="teal-text">Select All</label>
