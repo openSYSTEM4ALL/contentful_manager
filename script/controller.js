@@ -36,10 +36,26 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $('.filled-in.check-count').prop('checked', false);
         }
 
-        angular.forEach($scope.selectedfiles, function (value, key) {
-            itm.selected = toggleStatus;
+        angular.forEach($scope.selectedfiles, function (key,value) {
+           $scope.selectedfiles[value] = $scope.isAllSelected;
         });
 
+    }
+    $scope.toggleSelectAll = function () {
+        var keepGoing = true;
+        angular.forEach($scope.selectedfiles, function (key, value) {
+            if (keepGoing) {
+                console.log("value" + value);
+                if ($scope.selectedfiles[value] != true) {
+                    $scope.isAllSelected = false;
+                    keepGoing = false;
+                }
+                else {
+                    $scope.isAllSelected = true;
+                }
+            }
+            });
+        
     }
     //Fetch all assets of the selected Source Space
     $scope.changedValue = function (srcitem) {
@@ -94,7 +110,19 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         }
     });
     $scope.$watch('selectedfiles', function () {
+      
         $scope.checkCount = $("input:checked.check-count").length;
+      
+       
+        //if ($scope.checkCount == $("input:checked.check-count").length) {
+        //    $scope.isAllSelected = true;
+
+        //}
+        //else {
+        //    $scope.isAllSelected = false;
+        //}
+       
+
     }, true);
 
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
