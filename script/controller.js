@@ -12,6 +12,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     $scope.spaces = spac;
     $scope.totalAssets = 0;
+    $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
     $scope.parseInt = parseInt;
     $scope.publishedAsset = [];
@@ -80,7 +81,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     })
                     .then((assets) => {
                         $scope.totalAssets = assets.total;
-                        $scope.names = assets.items;
+                        $scope.names = assets.items;                        
+                        $scope.countSourceAssets();
                         $scope.$apply();
                     }).catch((err) => {
                         var e = JSON.parse(err.message);
@@ -112,18 +114,17 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     $scope.$watch('selectedfiles', function () {
       
         $scope.checkCount = $("input:checked.check-count").length;
-      
-       
-        //if ($scope.checkCount == $("input:checked.check-count").length) {
-        //    $scope.isAllSelected = true;
-
-        //}
-        //else {
-        //    $scope.isAllSelected = false;
-        //}
-       
-
     }, true);
+
+    $scope.countSourceAssets = function() {
+        var totalCount = 0;
+        angular.forEach($scope.names, function(asset) {
+            angular.forEach(asset.fields.file, function(localeFile) {
+                totalCount += 1;
+            })
+        })
+        $scope.totalAssetCount = totalCount;
+    }
 
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
     $scope.getDestAssets = function (destitem) {
