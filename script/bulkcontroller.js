@@ -42,12 +42,32 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
         accessToken: $scope.destAccessToken
       });
-
       $scope.destClient.getSpace($scope.destSpaceId)
         .then((space) => {
           // Now that we have a space, we can get locales from that space
+          $scope.defaultDestLocale = "";
           $scope.destSpace = space;
+          $scope.$apply();
+          space.getLocales()
+            .then((locales) => {
+              $scope.destLocales = locales.items;
+
+              // find default locale
+              var defaultFound = false;
+              angular.forEach($scope.destLocales, function (destLocale) {
+                if (!defaultFound) {
+                  if (destLocale.default == true) {
+                    $scope.defaultDestLocale = destLocale.code;
+                    $scope.$apply();
+                    defaultFound = true;
+                  }
+                }
+              });
+            })
+
         }).catch((err) => {
+          $scope.defaultDestLocale = "";
+          $scope.$apply();
           console.log(err);
         });
     }
@@ -71,7 +91,11 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         .then((asset) => {
           asset.processForAllLocales()
             .then((assetProcessed) => {
-              assetProcessed.publish()
+              $scope.destSpace.getAsset(assetProcessed.sys.id)
+                .then((asset) => {
+                  asset.publish()
+                })
+              //assetProcessed.publish()
                 .then((assetPublished) => {
                   selectedAsset.status = 'published';
                   $scope.setassetstatus(selectedAsset.asset_name, 'published', 'published');
@@ -112,7 +136,12 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                 .then((assetUpdated) => {
                   assetUpdated.processForAllLocales()
                     .then((assetProcessed) => {
-                      assetProcessed.publish()
+                      //twek to esolve 409 confict
+                      $scope.destSpace.getAsset(assetProcessed.sys.id)
+                        .then((asset) => {
+                          asset.publish()
+                        })
+                        //assetProcessed.publish()
                         .then((assetPublished) => {
                           selectedAsset.status = 'published';
                           console.log(assetPublished);
@@ -297,25 +326,25 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       //loop for traversing selected items 
       var interval = 0;
 
-   /*   for (i = 0; i < $scope.selectedValues.length; i++) {
-        console.log('value of i ' + i);
-        if (i != $scope.selectedValues.length - 1 && $scope.selectedValues[i].asset_name == $scope.selectedValues[i + 1].asset_name) {
-          $scope.selectedValues[i].status = 'start';
-          //just skip the duplicate
-        } else {
-          $scope.selectedValues[i].status = 'start';
-          $scope.uploadAsset($scope.selectedValues[i]);
+      /*   for (i = 0; i < $scope.selectedValues.length; i++) {
+           console.log('value of i ' + i);
+           if (i != $scope.selectedValues.length - 1 && $scope.selectedValues[i].asset_name == $scope.selectedValues[i + 1].asset_name) {
+             $scope.selectedValues[i].status = 'start';
+             //just skip the duplicate
+           } else {
+             $scope.selectedValues[i].status = 'start';
+             $scope.uploadAsset($scope.selectedValues[i]);
 
-        }
-      }  */
+           }
+         }  */
       var assetprev = '';
       angular.forEach($scope.selectedValues, function (selectedAsset) {
 
         selectedAsset.status = 'start';
         if (selectedAsset.asset_name != assetprev) {
-          console.log('interval:' + interval +'assetname'+selectedAsset.asset_name);
+          console.log('interval:' + interval + 'assetname' + selectedAsset.asset_name);
           $timeout(function () {
-          $scope.uploadAsset(selectedAsset);
+            $scope.uploadAsset(selectedAsset);
           }, interval);
           interval = interval + 2000;
           assetprev = selectedAsset.asset_name;
@@ -357,6 +386,14 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
 
               //$scope.opts.data = data;
               $scope.opts.data = $filter('orderBy')(data, 'asset_name');
+              var defLocale = $("#defaultLocale").val();
+              for (z = $scope.opts.data.length - 1; z > 0; z--) {
+                if ($scope.opts.data[z].asset_name == $scope.opts.data[z - 1].asset_name && $scope.opts.data[z].locale == defLocale) {
+                  var asset = $scope.opts.data[z - 1];
+                  $scope.opts.data[z - 1] = $scope.opts.data[z];
+                  $scope.opts.data[z] = asset;
+                }
+              }
 
               $elm.val(null);
             });
