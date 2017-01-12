@@ -49,7 +49,7 @@
                             <td><span class="dont-break-out">{{asset.content_type}}</span></td>
                             <td><span class="dont-break-out">{{asset.locale}}</span></td>
                             <td><span class="dont-break-out">{{asset.url}}</span></td>
-                            <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.asset_name)'><i class="material-icons">delete</i> </button>
+                            <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.asset_name,asset.locale)'><i class="material-icons">delete</i> </button>
                             </td>
                             <td>
                                 <div class="preloader-wrapper small active" data-ng-show="asset.status == 'start'">

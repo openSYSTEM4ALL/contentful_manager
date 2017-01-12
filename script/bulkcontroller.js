@@ -19,9 +19,9 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
     $scope.spaces = spac;
     $scope.result = {};
 
-    $scope.deleteAssetFromList = function (name) {
+    $scope.deleteAssetFromList = function (name,locale) {
       for (var a in $scope.result.data) {
-        if ($scope.result.data[a].asset_name == name) {
+        if ($scope.result.data[a].asset_name == name && $scope.result.data[a].locale == locale) {
           $scope.result.data.splice(a, 1);
           //localStorage.setItem('StoredData', JSON.stringify(spac));
           Materialize.toast('Hi, Gone to trash', 4000);
