@@ -37,8 +37,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $('.filled-in.check-count').prop('checked', false);
         }
 
-        angular.forEach($scope.selectedfiles, function (key,value) {
-           $scope.selectedfiles[value] = $scope.isAllSelected;
+        angular.forEach($scope.selectedfiles, function (key, value) {
+            $scope.selectedfiles[value] = $scope.isAllSelected;
         });
 
     }
@@ -50,13 +50,12 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 if ($scope.selectedfiles[value] != true) {
                     $scope.isAllSelected = false;
                     keepGoing = false;
-                }
-                else {
+                } else {
                     $scope.isAllSelected = true;
                 }
             }
-            });
-        
+        });
+
     }
     //Fetch all assets of the selected Source Space
     $scope.changedValue = function (srcitem) {
@@ -81,7 +80,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     })
                     .then((assets) => {
                         $scope.totalAssets = assets.total;
-                        $scope.names = assets.items;                        
+                        $scope.names = assets.items;
                         $scope.countSourceAssets();
                         $scope.$apply();
                     }).catch((err) => {
@@ -112,14 +111,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         }
     });
     $scope.$watch('selectedfiles', function () {
-      
+
         $scope.checkCount = $("input:checked.check-count").length;
     }, true);
 
-    $scope.countSourceAssets = function() {
+    $scope.countSourceAssets = function () {
         var totalCount = 0;
-        angular.forEach($scope.names, function(asset) {
-            angular.forEach(asset.fields.file, function(localeFile) {
+        angular.forEach($scope.names, function (asset) {
+            angular.forEach(asset.fields.file, function (localeFile) {
                 totalCount += 1;
             })
         })
@@ -209,25 +208,31 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             .then((asset) => {
                 asset.processForAllLocales()
                     .then((processedAsset) => {
-                        processedAsset.publish()
-                            .then((assetPublished) => {
-                                $scope.publishedAsset.push(assetPublished);
-                                for (var x in $scope.resultSet) {
-                                    if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
-                                        $scope.resultSet[x].status = "Published";
-                                    }
-                                }
-                                $scope.$apply();
+                        $scope.destSpace.getAsset(processedAsset.sys.id)
+                            .then((assetReturned) => {
+                                assetReturned.publish()
+                                    .then((assetPublished) => {
+                                        $scope.publishedAsset.push(assetPublished);
+                                        for (var x in $scope.resultSet) {
+                                            if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                                $scope.resultSet[x].status = "Published";
+                                            }
+                                        }
+                                        $scope.$apply();
+                                    }).catch((err) => {
+                                        var e = JSON.parse(err.message);
+                                        console.log(e.status + ':' + e.statusText);
+                                        for (var y in $scope.resultSet) {
+                                            if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                                $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                            }
+                                        }
+                                        $scope.$apply();
+                                    });
                             }).catch((err) => {
                                 var e = JSON.parse(err.message);
                                 console.log(e.status + ':' + e.statusText);
-                                for (var y in $scope.resultSet) {
-                                    if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                        $scope.resultSet[y].status = e.status + ':' + e.statusText;
-                                    }
-                                }
-                                $scope.$apply();
-                            });
+                            })
                     }).catch((err) => {
                         var e = JSON.parse(err.message);
                         console.log(e.status + ':' + e.statusText);
