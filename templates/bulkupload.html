@@ -5,7 +5,7 @@
             <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestSpace(selectedDest)">
                         <option value="" disabled selected>-- Select Destination --</option>
                         </select>
-            <label>Destination:<span class="new badge" data-badge-caption="">{{defaultDestLocale}}</span></label>
+            <label>Destination:<span class="new badge hide" data-badge-caption="">{{defaultDestLocale}}</span></label>
             <input type="text" id="defaultLocale" ng-model="defaultDestLocale" class="hide">
         </div>
     </div>
