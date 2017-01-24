@@ -35,7 +35,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       $scope.destitem = destSpaceSelected;
       $scope.destitem = $filter('filter')($scope.spaces, {
         space: destSpaceSelected
-      })[0];
+      }, true)[0];
       $scope.destSpaceId = $scope.destitem.value;
       $scope.destAccessToken = $scope.destitem.token;
       $scope.destClient = contentfulManagement.createClient({
@@ -196,7 +196,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       $scope.multiple = [];
       $scope.multiple = $filter('filter')($scope.selectedValues, {
         asset_name: selectedAsset.asset_name
-      });
+      }, true);
       var json = {
         fields: {
           file: {

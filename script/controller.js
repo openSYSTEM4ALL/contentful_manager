@@ -82,7 +82,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
         $scope.srcitem = $filter('filter')($scope.spaces, {
             space: srcitem
-        })[0];
+        }, true)[0];
         $scope.srcSpaceId = $scope.srcitem.value;
         $scope.srcAccessToken = $scope.srcitem.token;
 
@@ -141,7 +141,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.destitem = destitem;
         $scope.destitem = $filter('filter')($scope.spaces, {
             space: destitem
-        })[0];
+        }, true)[0];
         $scope.destSpaceId = $scope.destitem.value;
         $scope.destAccessToken = $scope.destitem.token;
 
