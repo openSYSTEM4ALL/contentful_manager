@@ -15,11 +15,11 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         $scope.getDestSpace($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
       }
     });
-
     $scope.spaces = spac;
     $scope.result = {};
+    $scope.selectedLocale = "";
 
-    $scope.deleteAssetFromList = function (name,locale) {
+    $scope.deleteAssetFromList = function (name, locale) {
       for (var a in $scope.result.data) {
         if ($scope.result.data[a].asset_name == name && $scope.result.data[a].locale == locale) {
           $scope.result.data.splice(a, 1);
@@ -95,7 +95,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                 .then((asset) => {
                   asset.publish()
                 })
-              //assetProcessed.publish()
+                //assetProcessed.publish()
                 .then((assetPublished) => {
                   selectedAsset.status = 'published';
                   $scope.setassetstatus(selectedAsset.asset_name, 'published', 'published');
@@ -353,6 +353,27 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       }); //end of traversal loop 
 
     }; //end of upload function
+
+    $scope.getUrls = function (url) {
+      $http({
+        method: 'GET',
+        url: url
+      }).then(function successCallback(response) {
+        consolr.log(response)
+      }, function errorCallback(response) {
+
+      });
+    }
+
+
+    $scope.checkDest = function () {
+      if (angular.isUndefinedOrNullOrEmpty($scope.destSpace)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   }])
   .directive("fileread", ['$filter', function ($filter) {
     return {
