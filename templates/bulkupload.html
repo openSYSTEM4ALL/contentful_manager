@@ -36,7 +36,7 @@
     <div class="row" ng-show="methodOfUpload == 'fetchurl'">
         <div class="col s12">
             <div class="input-field">
-                <input type="text" id="txtFetchUrl" ng-model="url" />
+                <input type="text" id="txtFetchUrl" ng-model="url" class="validate" />
                 <label for="txtFetchUrl">Enter Fetch URL</label>
             </div>
         </div>
@@ -44,13 +44,13 @@
             <label for="selectAssetLocale"> Select Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
         </div>
         <div class="col s8">
-            <select name="selectAssetLocale" id="ddlAssetLocale" class="browser-default" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales">
-                    <option value="" disabled selected>-- Select Locale --</option>
+            <select name="selectAssetLocale" id="ddlAssetLocale" class="browser-default" name="ddlAssetLocale" ng-model="localeToUpload" >
+                <option value="0" disabled selected>-- Select Locale --</option>
+                <option value="{{l.code}}" ng-repeat="l in destLocales">{{l.code}}</option>
                 </select>
         </div>
         <div class="col s4">
-            <input id="btnFetchUrl" class="waves-effect waves-light btn" type="button" value="Fetch" ng-click="getUrls()" 
-                />
+            <input id="btnFetchUrl" class="waves-effect waves-light btn" type="button" value="Fetch" ng-click="getUrls(url)" />
         </div>
     </div>
 </div>

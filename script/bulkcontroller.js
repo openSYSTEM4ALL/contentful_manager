@@ -18,6 +18,17 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
     $scope.spaces = spac;
     $scope.result = {};
     $scope.selectedLocale = "";
+    $scope.localeToUpload = "";
+    $scope.urlList = [];
+    var contentTypeList = {
+      "jpg": "image/jpeg",
+      "png": "image/png",
+      "bmp": "image/bmp",
+      "ico": "image/x-icon",
+      "doc": "application/msword",
+      "pdf": "application/pdf",
+      "mp4": "video/mpeg"
+    }
 
     $scope.deleteAssetFromList = function (name, locale) {
       for (var a in $scope.result.data) {
@@ -359,10 +370,35 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         method: 'GET',
         url: url
       }).then(function successCallback(response) {
-        consolr.log(response)
+        console.log(response);
+        $scope.temp = response.data;
+        dom = parseXml(response.data);
+        $scope.urlList = dom.childNodes[0].textContent.split(' ');
+        var fetchedAssetList = [];
+
+        for (var i = 1; i < $scope.urlList.length; i++) {
+
+
+          var name = $scope.urlList[i].split('/').pop().trim();
+
+          var locale = $scope.localeToUpload || defaultDestLocale;
+          var extn = name.split('.').pop().toLowerCase();
+
+          fetchedAssetList.push({
+            asset_name: name,
+            asset_title: name,
+            content_type: contentTypeList[extn] || "attachment",
+            locale: locale,
+            url: $scope.urlList[i]
+          })
+        }
+
+        $scope.result.data = fetchedAssetList[1];
+
       }, function errorCallback(response) {
 
       });
+
     }
 
 
