@@ -53,9 +53,27 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             $scope.selectedAll = false;
         }
         angular.forEach($scope.names, function (x) {
+            console.log(x);
             x.selected = $scope.selectedAll;
         });
     };
+    //unselect select all in case any item gets unchecked.
+    $scope.toggleSelectAll = function () {
+        var keepGoing = true;
+        angular.forEach($scope.names, function (x) {
+            if (keepGoing) {
+                
+                if (x.selected != true) {
+                    $scope.selectedAll = false;
+                    keepGoing = false;
+                } else {
+                    $scope.selectedAll = true;
+                }
+            }
+        });
+
+    }
+    
 
 
 

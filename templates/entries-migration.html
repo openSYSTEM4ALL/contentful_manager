@@ -70,7 +70,7 @@
                     <div class="col s12">
                         <ul class="responsive-table" data-ng-show="names.length>0">
                             <li>
-                                <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="selectedAll"/>
+                                <input type="checkbox" id="selectAllCheckbox" class="filled-in"  ng-click="toggleAll()" ng-model="selectedAll"/>
                                 <label for="selectAllCheckbox" class="teal-text">Select All</label>
                             </li>
                         </ul>
@@ -132,7 +132,7 @@
                 </div>
                 <div class="row">
                     <div class="col s12 right-align">
-                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-click="migratecontent(selectedfiles)">Migrate <i class="material-icons right">send</i></a>
+                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-click="migratecontent(names)">Migrate <i class="material-icons right">send</i></a>
                     </div>
                 </div>
                 <!-- Switch -->
