@@ -5,7 +5,7 @@
                 <div class="card-content teal lighten-2">
                     <div class="container">
                         <p class="card-title white-text">Total entries</p>
-                        <h5>100
+                        <h5>{{names.length>0?names.length:0}}
                             <span class="teal-text">.</span>
                         </h5>
                     </div>
@@ -17,7 +17,7 @@
                 <div class="card-content cyan darken-2">
                     <div class="container">
                         <p class="card-title white-text">Selected</p>
-                        <h5>100
+                        <h5>{{(names | filter: { selected: true}).length}}
                             <span class="teal-text">.</span>
                         </h5>
                     </div>
