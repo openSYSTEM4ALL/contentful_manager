@@ -44,9 +44,18 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 var skipValue = 0;
                 $scope.getAllEntries(space, skipValue);
             });
-    } 
+    }
     // end of changedvalue 
-
+    $scope.toggleAll = function () {
+        if ($scope.selectedAll) {
+            $scope.selectedAll = true;
+        } else {
+            $scope.selectedAll = false;
+        }
+        angular.forEach($scope.names, function (x) {
+            x.selected = $scope.selectedAll;
+        });
+    };
 
 
 
