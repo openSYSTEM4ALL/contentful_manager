@@ -73,8 +73,43 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         });
 
     }
-    
+     //Migrate Button Click - Migrate enteries from source to Destination
+    $scope.migratecontent = function () {
 
+        
+        $scope.tags = [];
+        $scope.publishedAsset = [];
+        $scope.resultSet = [];
+        var space = $scope.selectedDest;
+        
+        console.log(space);
 
+        //loop for traversing selected items 
+        angular.forEach($scope.names, function (x) {
+
+            if (x.selected == true) {
+
+                var contenTypeID = x.sys.contentType.sys.id;
+                var fields = x.fields;
+                var fieldobj = {};
+                fieldobj.fields = fields;
+                console.log(fieldobj);
+                $scope.srcClient = contentfulManagement.createClient({
+                    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+                    accessToken: space.token
+                });
+                $scope.srcClient.getSpace(space.value)
+                    .then((space) => {
+                        // Now that we have a space, we can get enteries from that space
+                        space.createEntry(contenTypeID,
+                           fieldobj)
+                    .then(e => e.publish()
+	            .then(entry => console.log(entry.sys.publishedVersion))
+                    )});
+              
+            }
+        }); //end of migrate function
+
+        }
 
 }]);
