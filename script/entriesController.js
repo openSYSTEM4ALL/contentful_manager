@@ -87,6 +87,16 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         //loop for traversing selected items 
         angular.forEach($scope.names, function (x) {
 
+    //search 
+        $(function () {
+        $('#searchAsset').keyup(function () {
+            var matches = $('ul#sourceAssets').find('li:contains(' + $(this).val() + ') ');
+            $('li', 'ul#sourceAssets').not(matches).slideUp();
+            matches.slideDown();
+        });
+    });
+    
+
             if (x.selected == true) {
 
                 var contenTypeID = x.sys.contentType.sys.id;
