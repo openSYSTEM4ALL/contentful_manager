@@ -90,33 +90,47 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         $scope.resultSet = [];
         var space = $scope.selectedDest;
         
-        console.log(space);
+        $scope.srcClient = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: space.token
+        });
 
         //loop for traversing selected items 
         angular.forEach($scope.names, function (x) {
 
-   
-    
-
             if (x.selected == true) {
 
                 var contenTypeID = x.sys.contentType.sys.id;
+                var entryid = x.sys.id;
                 var fields = x.fields;
                 var fieldobj = {};
+                var entry = {};
                 fieldobj.fields = fields;
-                console.log(fieldobj);
-                $scope.srcClient = contentfulManagement.createClient({
-                    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-                    accessToken: space.token
-                });
+                //console.log(fieldobj);
+                
+               // console.log(entryid);
                 $scope.srcClient.getSpace(space.value)
                     .then((space) => {
                         // Now that we have a space, we can get enteries from that space
-                        space.createEntry(contenTypeID,
-                           fieldobj)
-                    .then(e => e.publish()
-	            .then(entry => console.log(entry.sys.publishedVersion))
-                    )});
+                        space.getEntry(entryid)
+	                         .then(entry => {
+	                             console.log(entry);
+	                             entry.fields = fields;
+	                             entry.update()
+                                 .then((updatedentry) => updatedentry.publish()
+                                 .then(uentry => console.log("updated entry version:"+uentry.sys.publishedVersion)))
+
+	                         }
+                        ).catch((notfoundentry) => {
+                            space.createEntryWithId(contenTypeID, entryid,
+                               fieldobj)
+                        .then(newentry => newentry.publish()
+                    .then(entry => console.log("new entry version"+entry.sys.publishedVersion))
+                    )
+                        })
+                        
+                     
+                       });
               
             }
         }); //end of migrate function
