@@ -10,9 +10,9 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
 
     $scope.getAllEntries = function (space, skipValue) {
         space.getEntries({
-            skip: skipValue,
-            order: "sys.createdAt"
-        })
+                skip: skipValue,
+                order: "sys.createdAt"
+            })
             .then((assets) => {
                 $scope.totalEntries = assets.total;
                 $scope.names = $scope.names.concat(assets.items);
@@ -97,10 +97,14 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         $scope.srcClient.getSpace(space.value)
             .then((space) => {
                 //loop for traversing selected items 
+                var interval =0;
                 angular.forEach($scope.names, function (x) {
                     if (x.selected == true) {
-                        x.status = "Started"
-                        migrateEntry(space, x);
+                        x.status = "Started";
+                        $timeout(function () {
+                             migrateEntry(space, x);
+                        }, interval);
+                        interval = interval + 1000;
                     }
                 }); //end of migrate function
             });
@@ -157,13 +161,13 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                                 $scope.$apply();
                             });
                     })
-                .catch((err) => {
-                    //catch if theres any error in creating a new entry 
-                    var e = JSON.parse(err.message);
-                    console.log(e.status + ':' + e.statusText);
-                    x.status = e.status + ':' + e.statusText;
-                    $scope.$apply();
-                });
+                    .catch((err) => {
+                        //catch if theres any error in creating a new entry 
+                        var e = JSON.parse(err.message);
+                        console.log(e.status + ':' + e.statusText);
+                        x.status = e.status + ':' + e.statusText;
+                        $scope.$apply();
+                    });
             })
     }
 
