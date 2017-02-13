@@ -62,7 +62,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         var keepGoing = true;
         angular.forEach($scope.names, function (x) {
             if (keepGoing) {
-                
+
                 if (x.selected != true) {
                     $scope.selectedAll = false;
                     keepGoing = false;
@@ -81,15 +81,15 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             matches.slideDown();
         });
     });
-     //Migrate Button Click - Migrate enteries from source to Destination
+    //Migrate Button Click - Migrate entries from source to Destination
     $scope.migratecontent = function () {
 
-        
+
         $scope.tags = [];
         $scope.publishedAsset = [];
         $scope.resultSet = [];
         var space = $scope.selectedDest;
-        
+
         $scope.srcClient = contentfulManagement.createClient({
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
             accessToken: space.token
@@ -107,34 +107,77 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 var entry = {};
                 fieldobj.fields = fields;
                 //console.log(fieldobj);
-                
-               // console.log(entryid);
+
+                // console.log(entryid);
                 $scope.srcClient.getSpace(space.value)
                     .then((space) => {
                         // Now that we have a space, we can get enteries from that space
                         space.getEntry(entryid)
-	                         .then(entry => {
-	                             console.log(entry);
-	                             entry.fields = fields;
-	                             entry.update()
-                                 .then((updatedentry) => updatedentry.publish()
-                                 .then(uentry => console.log("updated entry version:"+uentry.sys.publishedVersion)))
+                            .then(entry => {
+                                console.log(entry);
+                                entry.fields = fields;
+                                entry.update()
+                                    .then((updatedentry) => updatedentry.publish()
+                                        .then(uentry => console.log("updated entry version:" + uentry.sys.publishedVersion)))
 
-	                         }
-                        ).catch((notfoundentry) => {
-                            space.createEntryWithId(contenTypeID, entryid,
-                               fieldobj)
-                        .then(newentry => newentry.publish()
-                    .then(entry => console.log("new entry version"+entry.sys.publishedVersion))
-                    )
-                        })
-                        
-                     
-                       });
-              
+                            }).catch((notfoundentry) => {
+                                space.createEntryWithId(contenTypeID, entryid,
+                                        fieldobj)
+                                    .then(newentry => newentry.publish()
+                                        .then(entry => console.log("new entry version" + entry.sys.publishedVersion))
+                                    )
+                            })
+
+
+                    });
+
             }
         }); //end of migrate function
 
-        }
+    };
 
+    $scope.migrateContentRecursive = function () {
+
+        if ($scope.selectedDest.token.length > 0) {
+            $scope.srcClient = contentfulManagement.createClient({
+                accessToken: $scope.selectedDest.token
+            });
+            $scope.srcClient.getSpace(space.value)
+                .then((space) => {
+                    migrateEntriesRecur(space, 0);
+                });
+
+        } else {
+            Materialize.toast('Please check for valid destination space or valid token!', 4000);
+        }
+    };
+
+    function migrateEntriesRecur(space, i) {
+        if (i > $scope.names.length) {
+            return; // do nothing
+        } else {
+            if ($scope.names[i].selected == true) {
+                space.getEntry(entryid)
+                    .then(entry => {
+                        console.log(entry);
+                        entry.fields = fields;
+                        entry.update()
+                            .then((updatedentry) => updatedentry.publish()
+                                .then(uentry => console.log("updated entry version:" + uentry.sys.publishedVersion)))
+                        migrateEntriesRecur(space, i++);
+                    }).catch((notfoundentry) => {
+                        space.createEntryWithId(contenTypeID, entryid,
+                                fieldobj)
+                            .then(newentry => newentry.publish()
+                                .then(entry => console.log("new entry version" + entry.sys.publishedVersion))
+                            )
+                        migrateEntriesRecur(space, i++);
+                    });
+            } // end if
+            else {
+                migrateEntriesRecur(space, i++);
+            }
+
+        } // end else
+    }
 }]);
