@@ -15,13 +15,25 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         $scope.getDestSpace($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
       }
     });
-
     $scope.spaces = spac;
+    $scope.defaultDestLocale = "";
     $scope.result = {};
+    $scope.selectedLocale = "";
+    $scope.localeToUpload = "";
+    $scope.urlList = [];
+    var contentTypeList = {
+      "jpg": "image/jpeg",
+      "png": "image/png",
+      "bmp": "image/bmp",
+      "ico": "image/x-icon",
+      "doc": "application/msword",
+      "pdf": "application/pdf",
+      "mp4": "video/mpeg"
+    }
 
-    $scope.deleteAssetFromList = function (name) {
+    $scope.deleteAssetFromList = function (name, locale) {
       for (var a in $scope.result.data) {
-        if ($scope.result.data[a].asset_name == name) {
+        if ($scope.result.data[a].asset_name == name && $scope.result.data[a].locale == locale) {
           $scope.result.data.splice(a, 1);
           //localStorage.setItem('StoredData', JSON.stringify(spac));
           Materialize.toast('Hi, Gone to trash', 4000);
@@ -35,19 +47,39 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       $scope.destitem = destSpaceSelected;
       $scope.destitem = $filter('filter')($scope.spaces, {
         space: destSpaceSelected
-      })[0];
+      }, true)[0];
       $scope.destSpaceId = $scope.destitem.value;
       $scope.destAccessToken = $scope.destitem.token;
       $scope.destClient = contentfulManagement.createClient({
         // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
         accessToken: $scope.destAccessToken
       });
-
       $scope.destClient.getSpace($scope.destSpaceId)
         .then((space) => {
           // Now that we have a space, we can get locales from that space
+          $scope.defaultDestLocale = "";
           $scope.destSpace = space;
+          $scope.$apply();
+          space.getLocales()
+            .then((locales) => {
+              $scope.destLocales = locales.items;
+
+              // find default locale
+              var defaultFound = false;
+              angular.forEach($scope.destLocales, function (destLocale) {
+                if (!defaultFound) {
+                  if (destLocale.default == true) {
+                    $scope.defaultDestLocale = destLocale.code;
+                    $scope.$apply();
+                    defaultFound = true;
+                  }
+                }
+              });
+            })
+
         }).catch((err) => {
+          $scope.defaultDestLocale = "";
+          $scope.$apply();
           console.log(err);
         });
     }
@@ -71,7 +103,11 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         .then((asset) => {
           asset.processForAllLocales()
             .then((assetProcessed) => {
-              assetProcessed.publish()
+              $scope.destSpace.getAsset(assetProcessed.sys.id)
+                .then((asset) => {
+                  asset.publish()
+                })
+                //assetProcessed.publish()
                 .then((assetPublished) => {
                   selectedAsset.status = 'published';
                   $scope.setassetstatus(selectedAsset.asset_name, 'published', 'published');
@@ -112,7 +148,12 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                 .then((assetUpdated) => {
                   assetUpdated.processForAllLocales()
                     .then((assetProcessed) => {
-                      assetProcessed.publish()
+                      //twek to esolve 409 confict
+                      $scope.destSpace.getAsset(assetProcessed.sys.id)
+                        .then((asset) => {
+                          asset.publish()
+                        })
+                        //assetProcessed.publish()
                         .then((assetPublished) => {
                           selectedAsset.status = 'published';
                           console.log(assetPublished);
@@ -167,7 +208,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       $scope.multiple = [];
       $scope.multiple = $filter('filter')($scope.selectedValues, {
         asset_name: selectedAsset.asset_name
-      });
+      }, true);
       var json = {
         fields: {
           file: {
@@ -297,25 +338,25 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       //loop for traversing selected items 
       var interval = 0;
 
-   /*   for (i = 0; i < $scope.selectedValues.length; i++) {
-        console.log('value of i ' + i);
-        if (i != $scope.selectedValues.length - 1 && $scope.selectedValues[i].asset_name == $scope.selectedValues[i + 1].asset_name) {
-          $scope.selectedValues[i].status = 'start';
-          //just skip the duplicate
-        } else {
-          $scope.selectedValues[i].status = 'start';
-          $scope.uploadAsset($scope.selectedValues[i]);
+      /*   for (i = 0; i < $scope.selectedValues.length; i++) {
+           console.log('value of i ' + i);
+           if (i != $scope.selectedValues.length - 1 && $scope.selectedValues[i].asset_name == $scope.selectedValues[i + 1].asset_name) {
+             $scope.selectedValues[i].status = 'start';
+             //just skip the duplicate
+           } else {
+             $scope.selectedValues[i].status = 'start';
+             $scope.uploadAsset($scope.selectedValues[i]);
 
-        }
-      }  */
+           }
+         }  */
       var assetprev = '';
       angular.forEach($scope.selectedValues, function (selectedAsset) {
 
         selectedAsset.status = 'start';
         if (selectedAsset.asset_name != assetprev) {
-          console.log('interval:' + interval +'assetname'+selectedAsset.asset_name);
+          console.log('interval:' + interval + 'assetname' + selectedAsset.asset_name);
           $timeout(function () {
-          $scope.uploadAsset(selectedAsset);
+            $scope.uploadAsset(selectedAsset);
           }, interval);
           interval = interval + 2000;
           assetprev = selectedAsset.asset_name;
@@ -324,6 +365,52 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       }); //end of traversal loop 
 
     }; //end of upload function
+
+    $scope.getUrls = function (url) {
+      $http({
+        method: 'GET',
+        url: url
+      }).then(function successCallback(response) {
+        console.log(response);
+        $scope.temp = response.data;
+        dom = parseXml(response.data);
+        $scope.urlList = dom.childNodes[0].textContent.split(' ');
+        var fetchedAssetList = [];
+
+        for (var i = 0; i < 50; i++) {
+
+          if ($scope.urlList[i].length > 7) {
+            var name = $scope.urlList[i].split('/').pop().trim();
+            var locale = $scope.localeToUpload || $scope.defaultDestLocale;
+            var extn = name.split('.').pop().toLowerCase();
+
+            fetchedAssetList.push({
+              asset_name: name,
+              asset_title: name,
+              content_type: contentTypeList[extn] || "attachment",
+              locale: locale,
+              url: $scope.urlList[i]
+            })
+          }
+        }
+
+        $scope.result.data = fetchedAssetList;
+
+      }, function errorCallback(response) {
+
+      });
+
+    }
+
+
+    $scope.checkDest = function () {
+      if (angular.isUndefinedOrNullOrEmpty($scope.destSpace)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   }])
   .directive("fileread", ['$filter', function ($filter) {
     return {
@@ -357,6 +444,14 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
 
               //$scope.opts.data = data;
               $scope.opts.data = $filter('orderBy')(data, 'asset_name');
+              var defLocale = $("#defaultLocale").val();
+              for (z = $scope.opts.data.length - 1; z > 0; z--) {
+                if ($scope.opts.data[z].asset_name == $scope.opts.data[z - 1].asset_name && $scope.opts.data[z].locale == defLocale) {
+                  var asset = $scope.opts.data[z - 1];
+                  $scope.opts.data[z - 1] = $scope.opts.data[z];
+                  $scope.opts.data[z] = asset;
+                }
+              }
 
               $elm.val(null);
             });

@@ -1,12 +1,12 @@
-<div id="layoutContainer" ng-controller="layoutController as ctrl" ng-cloak>
+<div id="layoutContainer" ng-cloak>
     <div class="divider"></div>
     <div class="row">
         <div class="col s4">
             <div class="card-small white-text z-depth-2">
                 <div class="card-content teal lighten-2">
                     <div class="container">
-                        <p class="card-title white-text">Total assets</p>
-                        <h5>{{names.length>0?names.length:0}}</h5>
+                        <p class="card-title white-text">Total Assets</p>
+                        <h5>{{names.length>0?names.length:0}}</h5>                        
                     </div>
                 </div>
             </div>
@@ -15,18 +15,18 @@
             <div class="card-small white-text z-depth-2">
                 <div class="card-content blue-grey">
                     <div class="container">
-                        <p class="card-title white-text">Selected</p>
-                        <h5>{{checkCount}}</h5>
+                        <p class="card-title white-text">Assets(Locale)</p>
+                        <h5>{{totalAssetCount}}</h5>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col s4">
             <div class="card-small white-text z-depth-2">
-                <div class="card-content deep-purple">
+                <div class="card-content cyan darken-2">
                     <div class="container">
-                        <p class="card-title white-text">Migration</p>
-                        <h5>{{srcSpac+'->'+desSpac}}</h5>
+                        <p class="card-title white-text">Selected</p>
+                        <h5>{{checkCount}}</h5>
                     </div>
                 </div>
             </div>
@@ -38,9 +38,9 @@
         <div class="row">
             <div class="">
                 <ul class="tabs grey lighten-3">
-                    <li class="tab col s3"><a id="assetslistid" href="#assetslist" class="red-text bold">Source</a></li>
-                    <li class="tab col s3"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Selected Files</a></li>
-                    <li class="tab col s3"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
+                    <li class="tab col s4"><a id="assetslistid" href="#assetslist" class="red-text bold">Source</a></li>
+                    <li class="tab col s4"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Destination</a></li>
+                    <li class="tab col s4"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
                 </ul>
             </div>
             <div id="assetslist" class="col s12">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="row ">
                     <div class="col s6">
-                        <a class="waves-effect waves-light btn" href="#/configure">Configure--> </a>
+                        <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
                     </div>
                     <div class="col s6 right-align">
                         <a class="waves-effect waves-light btn" onclick="$('#selectedAssetid').click()">Next--> </a>
@@ -60,8 +60,8 @@
                         <label for="selectsource">  Source : </label>
                         <select class="filled-in" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces"
                             ng-change="changedValue(selectedSource)">
-                        <option value="" disabled selected>-- Select Source --</option>
-				       </select>
+                            <option value="" disabled selected>-- Select Source --</option>
+                            </select>
                     </div>
                 </div>
                 <!--Fetch all published assets and keep it in selectedfiles variable -->
@@ -71,10 +71,19 @@
                         <label for="search"><i class="material-icons">search</i>Search</label>
                     </div>
                     <div class="col s12">
+                        <ul class="responsive-table" data-ng-show="names.length>0">
+                            <li data-ng-show="searchText == undefined || searchText.length <=0">
+                                <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="isAllSelected"/>
+                                <label for="selectAllCheckbox" class="teal-text">Select All</label>
+                            </li>
+                        </ul>
+                        <div class="divider"></div>
+                    </div>
+                    <div class="col s12">
                         <ul ng-repeat="x in names" ng-init="count=$index" id="sourceAssets">
                             <li ng-repeat="(filelocale,value) in x.fields.file">
                                 <span class="new badge" data-badge-caption="">{{count +1}}</span>
-                                <input type="checkbox" class="filled-in check-count" id="{{filelocale + value.fileName}}" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
+                                <input type="checkbox" class="filled-in check-count" id="{{filelocale + value.fileName}}" ng-init="selectedfiles[filelocale +':'+ value.fileName + '$' + count]=false" ng-change="toggleSelectAll()" ng-model="selectedfiles[filelocale +':'+ value.fileName + '$' + count]"
                                 />
                                 <label class="grey-text text-accent-2" for="{{filelocale + value.fileName}}">{{filelocale + ' : ' + value.fileName}}</label>
                                 <p> <a href="{{value.url}}" class="dont-break-out blue-text text-accent-4" target="_blank">{{value.url}}</a></p>
@@ -110,7 +119,7 @@
                         <ul>
                             <li ng-repeat="(value,key) in selectedfiles">
                                 <span>{{(key==true ? value.split("$")[0] : null)}}</span>
-                                <span class="new badge" data-badge-caption="">{{(key==true ? value.split("$").pop() : null)}}</span>
+                                <span class="new badge" data-badge-caption="">{{(key==true ? parseInt(value.split("$").pop()) + 1 : null)}}</span>
                                 <div class="divider"></div>
                             </li>
                         </ul>

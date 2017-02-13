@@ -5,10 +5,19 @@
             <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestSpace(selectedDest)">
                         <option value="" disabled selected>-- Select Destination --</option>
                         </select>
-            <label>Destination:</label>
+            <label>Destination:<span class="new badge hide" data-badge-caption="">{{defaultDestLocale}}</span></label>
+            <input type="text" id="defaultLocale" ng-model="defaultDestLocale" class="hide">
+            <p ng-init="methodOfUpload = 'file'">
+                <input name="rbgroupMethod" class="validate" type="radio" id="uploadfile" value="file" ng-model="methodOfUpload" ng-disabled="checkDest()"
+                />
+                <label for="uploadfile">Upload File</label>
+                <input name="rbgroupMethod" class="validate" type="radio" id="fetchurl" value="fetchurl" ng-model="methodOfUpload" ng-disabled="checkDest()"
+                />
+                <label for="fetchurl">Enter Fetch Url</label>
+            </p>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-show="methodOfUpload == 'file'">
         <div class="col s8 m6 l6">
             <div class="file-field input-field">
                 <div class="btn">
@@ -24,61 +33,82 @@
             <a href="help/format.xlsx" class="icon-thunder-cloud">Download format <i class="material-icons">description</i></a>
         </div>
     </div>
-    <div class="divider"></div><br>
-    <div class="row" data-ng-if="result.data.length > 0">
+    <div class="row" ng-show="methodOfUpload == 'fetchurl'">
         <div class="col s12">
-            <div class="row" data-ng-if="result.data.length > 0">
-                <div class="input-field col s12 m6 l6">
-                    <input id="search" type="text" ng-model="searchText" class="validate">
-                    <label for="search"><i class="material-icons">search</i>Search</label>
-                </div>
-                <div class="col s12">
-                    <table class="responsive-table bordered">
-                        <tr class="teal-text grey lighten-3">
-                            <th>Asset Name</th>
-                            <th>Title</th>
-                            <th>Content Type</th>
-                            <th>Locale</th>
-                            <th>Source URL</th>
-                            <th colspan="2">Delete</th>
-                        </tr>
-                        <tr ng-repeat="asset in result.data | filter:searchText">
-                            <td><span class="dont-break-out">{{asset.asset_name}}</span></td>
-                            <td><span class="dont-break-out">{{asset.asset_title}}</span></td>
-                            <td><span class="dont-break-out">{{asset.content_type}}</span></td>
-                            <td><span class="dont-break-out">{{asset.locale}}</span></td>
-                            <td><span class="dont-break-out">{{asset.url}}</span></td>
-                            <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.asset_name)'><i class="material-icons">delete</i> </button>
-                            </td>
-                            <td>
-                                <div class="preloader-wrapper small active" data-ng-show="asset.status == 'start'">
-                                    <div class="spinner-layer spinner-green-only">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="has-error" data-ng-show="asset.status == 'error'">
-                                    <p> <span class="new badge red" data-badge-caption="">{{asset.error}}</span></p>
-                                </div>
-                                <div class="" data-ng-show="asset.status == 'published'">
-                                    <p> <span class="new badge" data-badge-caption="">{{asset.status}}</span></p>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="bulkUploadToContentful()"
-                        ng-show="result.data.length > 0" />
-                </div>
+            <div class="input-field">
+                <input type="text" id="txtFetchUrl" ng-model="url" class="validate" />
+                <label for="txtFetchUrl">Enter Fetch URL</label>
             </div>
         </div>
+        <div class="col s12">
+            <label for="selectAssetLocale"> Select Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
+        </div>
+        <div class="col s8">
+            <select name="selectAssetLocale" id="ddlAssetLocale" class="browser-default" name="ddlAssetLocale" ng-model="localeToUpload" >
+                <option value="0" disabled selected>-- Select Locale --</option>
+                <option value="{{l.code}}" ng-repeat="l in destLocales">{{l.code}}</option>
+                </select>
+        </div>
+        <div class="col s4">
+            <input id="btnFetchUrl" class="waves-effect waves-light btn" type="button" value="Fetch" ng-click="getUrls(url)" />
+        </div>
+    </div>
+</div>
+<div class="divider"></div><br>
+<div class="row" data-ng-if="result.data.length > 0">
+    <div class="col s12">
+        <div class="row" data-ng-if="result.data.length > 0">
+            <div class="input-field col s12 m6 l6">
+                <input id="search" type="text" ng-model="searchText" class="validate">
+                <label for="search"><i class="material-icons">search</i>Search</label>
+            </div>
+            <div class="col s12">
+                <table class="responsive-table bordered">
+                    <tr class="teal-text grey lighten-3">
+                        <th>Asset Name</th>
+                        <th>Title</th>
+                        <th>Content Type</th>
+                        <th>Locale</th>
+                        <th>Source URL</th>
+                        <th colspan="2">Delete</th>
+                    </tr>
+                    <tr ng-repeat="asset in result.data | filter:searchText">
+                        <td><span class="dont-break-out">{{asset.asset_name}}</span></td>
+                        <td><span class="dont-break-out">{{asset.asset_title}}</span></td>
+                        <td><span class="dont-break-out">{{asset.content_type}}</span></td>
+                        <td><span class="dont-break-out">{{asset.locale}}</span></td>
+                        <td><span class="dont-break-out">{{asset.url}}</span></td>
+                        <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.asset_name,asset.locale)'><i class="material-icons">delete</i> </button>
+                        </td>
+                        <td>
+                            <div class="preloader-wrapper small active" data-ng-show="asset.status == 'start'">
+                                <div class="spinner-layer spinner-green-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="has-error" data-ng-show="asset.status == 'error'">
+                                <p> <span class="new badge red" data-badge-caption="">{{asset.error}}</span></p>
+                            </div>
+                            <div class="" data-ng-show="asset.status == 'published'">
+                                <p> <span class="new badge" data-badge-caption="">{{asset.status}}</span></p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="bulkUploadToContentful()"
+                    ng-show="result.data.length > 0" />
+            </div>
+        </div>
+    </div>

@@ -11,7 +11,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     };
 
     $scope.spaces = spac;
+    $scope.names=[];
+    $scope.totalAssets = 0;
+    $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
+    $scope.parseInt = parseInt;
     $scope.publishedAsset = [];
     $scope.resultSet = [];
     $scope.checkCount = 0;
@@ -21,38 +25,80 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         option2: "Will show only those assets which are published successfully"
     };
 
+
     $scope.$on('$viewContentLoaded', function () {
         //call it here
         $('select').material_select();
     });
+    $scope.toggleAll = function () {
+        var toggleStatus = !$scope.isAllSelected;
+        if (!toggleStatus) {
+            $('.filled-in.check-count').prop('checked', true);
+        } else {
+            $('.filled-in.check-count').prop('checked', false);
+        }
 
+        angular.forEach($scope.selectedfiles, function (key, value) {
+            $scope.selectedfiles[value] = $scope.isAllSelected;
+        });
+
+    }
+    $scope.toggleSelectAll = function () {
+        var keepGoing = true;
+        angular.forEach($scope.selectedfiles, function (key, value) {
+            if (keepGoing) {
+                console.log("value" + value);
+                if ($scope.selectedfiles[value] != true) {
+                    $scope.isAllSelected = false;
+                    keepGoing = false;
+                } else {
+                    $scope.isAllSelected = true;
+                }
+            }
+        });
+
+    }
+    $scope.getAllAssets = function (space, skipValue) {
+        space.getAssets({
+                skip: skipValue,
+                order: "sys.createdAt"
+            })
+            .then((assets) => {
+                $scope.totalAssets = assets.total;
+                $scope.names = $scope.names.concat(assets.items);
+                if($scope.names.length< $scope.totalAssets){
+                    skipValue = skipValue + 100;
+                    $scope.getAllAssets(space, skipValue);
+                }
+                $scope.countSourceAssets();
+                $scope.$apply();
+            }).catch((err) => {
+                var e = JSON.parse(err.message);
+                console.log(e.status + ':' + e.statusText);
+            })
+    }
     //Fetch all assets of the selected Source Space
     $scope.changedValue = function (srcitem) {
 
-            $scope.srcitem = $filter('filter')($scope.spaces, {
-                space: srcitem
-            })[0];
-            $scope.srcSpaceId = $scope.srcitem.value;
-            $scope.srcAccessToken = $scope.srcitem.token;
+        $scope.srcitem = $filter('filter')($scope.spaces, {
+            space: srcitem
+        }, true)[0];
+        $scope.srcSpaceId = $scope.srcitem.value;
+        $scope.srcAccessToken = $scope.srcitem.token;
 
-            $scope.srcClient = contentfulManagement.createClient({
-                // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-                accessToken: $scope.srcAccessToken
-            })
-
-            $scope.srcClient.getSpace($scope.srcSpaceId)
-                .then((space) => {
-                    // Now that we have a space, we can get assets from that space
-                    space.getAssets()
-                        .then((assets) => {
-                            $scope.names = assets.items;
-                            $scope.$apply();
-                        }).catch((err) => {
-                            var e = JSON.parse(err.message);
-                            console.log(e.status + ':' + e.statusText);
-                        })
-                });
-        } // end of changedvalue  
+        $scope.srcClient = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: $scope.srcAccessToken
+        })
+        $scope.srcClient.getSpace($scope.srcSpaceId)
+            .then((space) => {
+                // Now that we have a space, we can get assets from that space
+                $scope.names=[];
+                $scope.totalAssets =0;
+                var skipValue = 0;
+                $scope.getAllAssets(space, skipValue);
+            });
+    } // end of changedvalue  
 
     //changed values
     $('#ddlSrcSpace').on('change', function (e) {
@@ -75,33 +121,44 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         }
     });
     $scope.$watch('selectedfiles', function () {
+
         $scope.checkCount = $("input:checked.check-count").length;
     }, true);
+
+    $scope.countSourceAssets = function () {
+        var totalCount = 0;
+        angular.forEach($scope.names, function (asset) {
+            angular.forEach(asset.fields.file, function (localeFile) {
+                totalCount += 1;
+            })
+        })
+        $scope.totalAssetCount = totalCount;
+    }
 
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
     $scope.getDestAssets = function (destitem) {
 
-            $scope.destitem = destitem;
-            $scope.destitem = $filter('filter')($scope.spaces, {
-                space: destitem
-            })[0];
-            $scope.destSpaceId = $scope.destitem.value;
-            $scope.destAccessToken = $scope.destitem.token;
+        $scope.destitem = destitem;
+        $scope.destitem = $filter('filter')($scope.spaces, {
+            space: destitem
+        }, true)[0];
+        $scope.destSpaceId = $scope.destitem.value;
+        $scope.destAccessToken = $scope.destitem.token;
 
-            $scope.destClient = contentfulManagement.createClient({
-                // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-                accessToken: $scope.destAccessToken
+        $scope.destClient = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: $scope.destAccessToken
+        });
+
+        $scope.destClient.getSpace($scope.destSpaceId)
+            .then((space) => {
+                // Now that we have a space, we can get assets from that space
+                $scope.destSpace = space;
+            }).catch((err) => {
+                var e = JSON.parse(err.message);
+                console.log(e.status + ':' + e.statusText);
             });
-
-            $scope.destClient.getSpace($scope.destSpaceId)
-                .then((space) => {
-                    // Now that we have a space, we can get assets from that space
-                    $scope.destSpace = space;
-                }).catch((err) => {
-                    var e = JSON.parse(err.message);
-                    console.log(e.status + ':' + e.statusText);
-                });
-        } //end of getDestAssets
+    } //end of getDestAssets
 
     // This method can be used after create as well as update operation to process the asset for multiple locales
     $scope.processAfterCreateOrUpdate = function (updatedAsset, locale) {
@@ -161,25 +218,31 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             .then((asset) => {
                 asset.processForAllLocales()
                     .then((processedAsset) => {
-                        processedAsset.publish()
-                            .then((assetPublished) => {
-                                $scope.publishedAsset.push(assetPublished);
-                                for (var x in $scope.resultSet) {
-                                    if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
-                                        $scope.resultSet[x].status = "Published";
-                                    }
-                                }
-                                $scope.$apply();
+                        $scope.destSpace.getAsset(processedAsset.sys.id)
+                            .then((assetReturned) => {
+                                assetReturned.publish()
+                                    .then((assetPublished) => {
+                                        $scope.publishedAsset.push(assetPublished);
+                                        for (var x in $scope.resultSet) {
+                                            if ($scope.resultSet[x].id === assetPublished.sys.id && assetPublished.isPublished()) {
+                                                $scope.resultSet[x].status = "Published";
+                                            }
+                                        }
+                                        $scope.$apply();
+                                    }).catch((err) => {
+                                        var e = JSON.parse(err.message);
+                                        console.log(e.status + ':' + e.statusText);
+                                        for (var y in $scope.resultSet) {
+                                            if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                                $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                            }
+                                        }
+                                        $scope.$apply();
+                                    });
                             }).catch((err) => {
                                 var e = JSON.parse(err.message);
                                 console.log(e.status + ':' + e.statusText);
-                                for (var y in $scope.resultSet) {
-                                    if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                        $scope.resultSet[y].status = e.status + ':' + e.statusText;
-                                    }
-                                }
-                                $scope.$apply();
-                            });
+                            })
                     }).catch((err) => {
                         var e = JSON.parse(err.message);
                         console.log(e.status + ':' + e.statusText);
@@ -258,56 +321,56 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     //Migrate Button Click - Migrate assets from source to Destination
     $scope.migratecontent = function (item) {
 
-            $scope.selectedvalues = item;
-            $scope.tags = [];
-            $scope.publishedAsset = [];
-            $scope.resultSet = [];
+        $scope.selectedvalues = item;
+        $scope.tags = [];
+        $scope.publishedAsset = [];
+        $scope.resultSet = [];
 
-            //loop for traversing selected items 
-            angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
-                //if key is true as in asset is selected
-                if (key == true) {
-                    $scope.locale = selectedAssets.split("$")[0].split(":")[0];
-                    $scope.selectedIndex = selectedAssets.split("$")[1];
-                    $scope.assetID = $scope.names[$scope.selectedIndex].sys.id;
+        //loop for traversing selected items 
+        angular.forEach($scope.selectedvalues, function (key, selectedAssets) {
+            //if key is true as in asset is selected
+            if (key == true) {
+                $scope.locale = selectedAssets.split("$")[0].split(":")[0];
+                $scope.selectedIndex = selectedAssets.split("$")[1];
+                $scope.assetID = $scope.names[$scope.selectedIndex].sys.id;
 
-                    console.log('assetID:' + $scope.selectedIndex + $scope.locale);
+                console.log('assetID:' + $scope.selectedIndex + $scope.locale);
 
-                    var tag = {
-                        index: $scope.selectedIndex,
-                        locale: $scope.locale,
-                        assetID: $scope.assetID
-                    }
-                    $scope.tags.push(tag);
-                } //end of key=true if 
-            }); //end of traversal loop 
-
-            $scope.sortedtags = $filter('orderBy')($scope.tags, 'assetID');
-            var samplelasttag = {
-                index: '',
-                locale: '',
-                assetID: ''
-            }
-            $scope.sortedtags.push(samplelasttag);
-            var locs = [];
-
-            for (var i = 0; i < $scope.sortedtags.length - 1; i++) {
-                if ($scope.sortedtags[i].assetID == $scope.sortedtags[i + 1].assetID) {
-                    locs.push($scope.sortedtags[i].locale);
-                } else {
-                    console.log('process asset : ' + $scope.sortedtags[i].assetID);
-                    locs.push($scope.sortedtags[i].locale);
-                    $scope.resultSet.push({
-                        id: $scope.sortedtags[i].assetID,
-                        status: "Started"
-                    });
-                    
-                    $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
-                    
-                    locs = [];
+                var tag = {
+                    index: $scope.selectedIndex,
+                    locale: $scope.locale,
+                    assetID: $scope.assetID
                 }
+                $scope.tags.push(tag);
+            } //end of key=true if 
+        }); //end of traversal loop 
+
+        $scope.sortedtags = $filter('orderBy')($scope.tags, 'assetID');
+        var samplelasttag = {
+            index: '',
+            locale: '',
+            assetID: ''
+        }
+        $scope.sortedtags.push(samplelasttag);
+        var locs = [];
+
+        for (var i = 0; i < $scope.sortedtags.length - 1; i++) {
+            if ($scope.sortedtags[i].assetID == $scope.sortedtags[i + 1].assetID) {
+                locs.push($scope.sortedtags[i].locale);
+            } else {
+                console.log('process asset : ' + $scope.sortedtags[i].assetID);
+                locs.push($scope.sortedtags[i].locale);
+                $scope.resultSet.push({
+                    id: $scope.sortedtags[i].assetID,
+                    status: "Started"
+                });
+
+                $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
+
+                locs = [];
             }
-        } //end of migrate function
+        }
+    } //end of migrate function
 
     $.expr[":"].contains = $.expr.createPseudo(function (arg) {
         return function (elem) {
