@@ -72,7 +72,7 @@
                     </div>
                     <div class="col s12">
                         <ul class="responsive-table" data-ng-show="names.length>0">
-                            <li>
+                            <li data-ng-show="searchText == undefined || searchText.length <=0">
                                 <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="isAllSelected"/>
                                 <label for="selectAllCheckbox" class="teal-text">Select All</label>
                             </li>
