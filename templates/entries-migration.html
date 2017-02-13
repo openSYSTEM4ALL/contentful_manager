@@ -49,7 +49,7 @@
                         <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" onclick="$('#selectedAssetid').click()">Next--> </a>
+                        <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined" onclick="$('#selectedAssetid').click()">Next--> </a>
                     </div>
                 </div>
                 <div class="row">
@@ -100,7 +100,7 @@
                             <--Back</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" onclick="$('#migratedAssetid').click()">Confirm--></a>
+                        <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined" onclick="$('#migratedAssetid').click()">Confirm--></a>
                     </div>
                 </div>
                 <div class="row">
