@@ -149,24 +149,25 @@
                 </div>
                 <div class="divider"></div>
                 <div class="row">
-                    <div class="col s12" ng-show="publishedAsset.length > 0 && showActivity == false">
+                    <!--<div class="col s12" ng-show= && showActivity == false">
                         <ul>
                             <li ng-repeat="asset in publishedAsset">
                                 <p> <span class="new badge right-align" data-badge-caption="">Published</span>{{asset.sys.id}}</p>
                             </li>
                             <div class="divider"></div>
                         </ul>
-                    </div>
-                    <div class="col s12" ng-show="resultSet.length > 0 && showActivity == true">
+                    </div>-->
+                    <!--<div class="col s12" ng-show="(names|filter:{selected:'true'}).length > 0 && showActivity == true">-->
                         <ul>
-                            <li ng-repeat="asset in resultSet">
+                            <li ng-repeat="entry in names" ng-if="entry.status.length>0">
                                 <div class="col s10">
-                                    <span class="left-align">{{asset.id}}</span>
+                                    <span class="left-align">{{entry.sys.id}}</span>
+                                    
                                 </div>
                                 <div class="col s2">
-                                    <span class="new badge right-align" data-badge-caption="" ng-show="asset.status == 'Published'">{{asset.status}}</span>
-                                    <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>
-                                    <div class="preloader-wrapper small active" ng-show="asset.status == 'Started'">
+                                    <span class="new badge right-align" data-badge-caption="" ng-show="entry.status == 'Published'">{{entry.status}}</span>
+                                    <span class="new badge red right-align" data-badge-caption="" ng-show="entry.status != 'Published'">{{entry.status}}</span>
+                                    <div class="preloader-wrapper small active" ng-show="entry.status == 'Started'">
                                         <div class="spinner-layer spinner-green-only">
                                             <div class="circle-clipper left">
                                                 <div class="circle"></div>
@@ -182,7 +183,7 @@
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    <!--</div>-->
                 </div>
             </div>
         </div>

@@ -4,15 +4,15 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
     $scope.spaces = spac;
     $scope.names = [];
     $scope.totalEntries = 0;
-
+    $scope.showActivity = true;
 
     //functions
 
     $scope.getAllEntries = function (space, skipValue) {
         space.getEntries({
-                skip: skipValue,
-                order: "sys.createdAt"
-            })
+            skip: skipValue,
+            order: "sys.createdAt"
+        })
             .then((assets) => {
                 $scope.totalEntries = assets.total;
                 $scope.names = $scope.names.concat(assets.items);
@@ -99,6 +99,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 //loop for traversing selected items 
                 angular.forEach($scope.names, function (x) {
                     if (x.selected == true) {
+                        x.status = "Started"
                         migrateEntry(space, x);
                     }
                 }); //end of migrate function
@@ -116,15 +117,53 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 console.log(entry);
                 entry.fields = fields;
                 entry.update()
-                    .then((updatedentry) => updatedentry.publish()
-                        .then(uentry => console.log("updated entry version:" + uentry.sys.publishedVersion)))
+                    .then((updatedentry) => {
+                        updatedentry.publish()
+                            .then(uentry => {
+                                console.log("updated entry version:" + uentry.sys.publishedVersion)
+                                x.status = "Published";
+                                $scope.$apply();
+                            }).catch((err) => {
+                                //catch if there is any publishing error 
+                                var e = JSON.parse(err.message);
+                                console.log(e.status + ':' + e.statusText);
+                                x.status = e.status + ':' + e.statusText;
+                                $scope.$apply();
+                            });
+
+                    }).catch((err) => {
+                        //catch if there is any error in update
+                        var e = JSON.parse(err.message);
+                        console.log(e.status + ':' + e.statusText);
+                        x.status = e.status + ':' + e.statusText;
+                        $scope.$apply();
+                    });
 
             }).catch((notfoundentry) => {
                 space.createEntryWithId(contenTypeID, entryid,
                         fieldobj)
-                    .then(newentry => newentry.publish()
-                        .then(entry => console.log("new entry version" + entry.sys.publishedVersion))
-                    )
+                    .then(newentry => {
+                        newentry.publish()
+                            .then(entry => {
+                                console.log("new entry version" + entry.sys.publishedVersion)
+                                x.status = "Published";
+                                $scope.$apply();
+                            })
+                            .catch((err) => {
+                                //catch if theres any error in publishing a new entry 
+                                var e = JSON.parse(err.message);
+                                console.log(e.status + ':' + e.statusText);
+                                x.status = e.status + ':' + e.statusText;
+                                $scope.$apply();
+                            });
+                    })
+                .catch((err) => {
+                    //catch if theres any error in creating a new entry 
+                    var e = JSON.parse(err.message);
+                    console.log(e.status + ':' + e.statusText);
+                    x.status = e.status + ':' + e.statusText;
+                    $scope.$apply();
+                });
             })
     }
 
