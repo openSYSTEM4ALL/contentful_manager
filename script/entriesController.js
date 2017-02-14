@@ -91,15 +91,19 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
         $scope.publishedAsset = [];
         $scope.resultSet = [];
         var space = $scope.selectedDest;
+        var sourcespace = $scope.selectedSource;
 
-        $scope.srcClient = contentfulManagement.createClient({
+        $scope.destClient = contentfulManagement.createClient({
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
             accessToken: space.token
         });
 
+        $scope.srcClient = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: sourcespace.token
+        });
 
-
-        $scope.srcClient.getSpace(space.value)
+        $scope.destClient.getSpace(space.value)
             .then((space) => {
                 //loop for traversing selected items 
                 var interval = 0;
@@ -107,24 +111,18 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                     if (x.selected == true) {
                         x.status = "Started";
                         $timeout(function () {
-                            createContentType(space, x);
-                           
+                            createContentType(space,sourcespace, x);  
                         }, interval);
                         interval = interval + 1000;
                     }
                 }); //end of migrate function
             });
     };
-    function createContentType(space, x) {
-        var sourcespace = $scope.selectedSource;
+    function createContentType(space,sourcespace, x) {
+       
         var contenTypeID = x.sys.contentType.sys.id;
         var fieldData = {};
         var data;
-        $scope.Client = contentfulManagement.createClient({
-            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: sourcespace.token
-        });
-
         space.getContentType(contenTypeID)
        .then(contenType => {
            console.log("Content type exists")
@@ -133,7 +131,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             .catch((contentTypeNotFound) => {
                 console.log("content type not found")
                 //get field object and name of 
-                $scope.Client.getSpace(sourcespace.value)
+                $scope.srcClient.getSpace(sourcespace.value)
                             .then((srcspace) => {
                                 srcspace.getContentType(contenTypeID)
                                     .then(contenType => {
