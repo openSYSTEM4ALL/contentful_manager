@@ -9,10 +9,11 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
     //functions
 
     $scope.getAllEntries = function (space, skipValue) {
+
         space.getEntries({
-                skip: skipValue,
-                order: "sys.createdAt"
-            })
+            skip: skipValue,
+            order: "sys.createdAt"
+        })
             .then((assets) => {
                 $scope.totalEntries = assets.total;
                 $scope.names = $scope.names.concat(assets.items);
@@ -42,6 +43,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 $scope.names = [];
                 $scope.totalEntries = 0;
                 var skipValue = 0;
+
                 $scope.getAllEntries(space, skipValue);
             });
     }
@@ -94,28 +96,78 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
             accessToken: space.token
         });
+
+
+
         $scope.srcClient.getSpace(space.value)
             .then((space) => {
                 //loop for traversing selected items 
-                var interval =0;
+                var interval = 0;
                 angular.forEach($scope.names, function (x) {
                     if (x.selected == true) {
                         x.status = "Started";
                         $timeout(function () {
-                             migrateEntry(space, x);
+                            createContentType(space, x);
+                           
                         }, interval);
                         interval = interval + 1000;
                     }
                 }); //end of migrate function
             });
     };
+    function createContentType(space, x) {
+        var sourcespace = $scope.selectedSource;
+        var contenTypeID = x.sys.contentType.sys.id;
+        var fieldData = {};
+        var data;
+        $scope.Client = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: sourcespace.token
+        });
 
+        space.getContentType(contenTypeID)
+       .then(contenType => {
+           console.log("Content type exists")
+           migrateEntry(space, x);
+                           })
+            .catch((contentTypeNotFound) => {
+                console.log("content type not found")
+                //get field object and name of 
+                $scope.Client.getSpace(sourcespace.value)
+                            .then((srcspace) => {
+                                srcspace.getContentType(contenTypeID)
+                                    .then(contenType => {
+                                        console.log("source content data");
+                                        data = contenType.fields;
+                                        fieldData.fields = data;
+                                        fieldData.name = contenType.name;
+                                        console.log(fieldData)
+                                        space.createContentTypeWithId(contenTypeID, fieldData)
+                                             .then((ct) => {
+                                                 ct.publish()
+                                                 .then((pct) => {
+                                                     migrateEntry(space, x);
+                                                 })
+                                                 .catch((err) => {
+                                                     //catch if there is any publishing error 
+                                                     var e = JSON.parse(err.message);
+                                                     console.log(e.status + ':' + e.statusText);
+                                                     x.status = e.status + ':' + e.statusText;
+                                                     $scope.$apply();
+                                                 });
+                 
+                                        })
+                                })
+                  })
+          })
+    }
     function migrateEntry(space, x) {
         var contenTypeID = x.sys.contentType.sys.id;
         var entryid = x.sys.id;
         var fields = x.fields;
         var fieldobj = {};
         fieldobj.fields = fields;
+
         space.getEntry(entryid)
             .then(entry => {
                 console.log(entry);
@@ -144,6 +196,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                     });
 
             }).catch((notfoundentry) => {
+                
                 space.createEntryWithId(contenTypeID, entryid,
                         fieldobj)
                     .then(newentry => {
