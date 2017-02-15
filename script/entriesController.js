@@ -134,11 +134,13 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 $scope.srcClient.getSpace(sourcespace.value)
                             .then((srcspace) => {
                                 srcspace.getContentType(contenTypeID)
-                                    .then(contenType => {
+                                    .then(contentType => {
                                         console.log("source content data");
-                                        data = contenType.fields;
+                                       
+                                        data = contentType.fields;
                                         fieldData.fields = data;
-                                        fieldData.name = contenType.name;
+                                        fieldData.name = contentType.name;
+                                        fieldData.displayField = contentType.displayField
                                         console.log(fieldData)
                                         space.createContentTypeWithId(contenTypeID, fieldData)
                                              .then((ct) => {
