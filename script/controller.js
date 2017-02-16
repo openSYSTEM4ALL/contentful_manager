@@ -11,7 +11,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     };
 
     $scope.spaces = spac;
-    $scope.names=[];
+    $scope.names = [];
+    $scope.namesT= [];
     $scope.totalAssets = 0;
     $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
@@ -65,8 +66,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             })
             .then((assets) => {
                 $scope.totalAssets = assets.total;
-                $scope.names = $scope.names.concat(assets.items);
-                if($scope.names.length< $scope.totalAssets){
+                $scope.namesT = $scope.namesT.concat(assets.items);
+                $scope.names = [];
+                angular.forEach($scope.namesT, function (asset) {
+                    if (asset.isUpdated() || asset.isDraft() || asset.isArchived()) {
+                        // do nothing just skip   
+                    } else {
+                        $scope.names.push(asset);
+                    }
+                });
+                if ($scope.names.length < $scope.totalAssets) {
                     skipValue = skipValue + 100;
                     $scope.getAllAssets(space, skipValue);
                 }
@@ -93,8 +102,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.srcClient.getSpace($scope.srcSpaceId)
             .then((space) => {
                 // Now that we have a space, we can get assets from that space
-                $scope.names=[];
-                $scope.totalAssets =0;
+                $scope.names = [];
+                $scope.namesT = [];
+                $scope.totalAssets = 0;
                 var skipValue = 0;
                 $scope.getAllAssets(space, skipValue);
             });
@@ -147,7 +157,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
         $scope.destClient = contentfulManagement.createClient({
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: $scope.destAccessToken
+            accessToken: $scope.destAccessToken,
+            rateLimit: 3,
+            maxRetries: 3
         });
 
         $scope.destClient.getSpace($scope.destSpaceId)
