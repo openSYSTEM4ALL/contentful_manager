@@ -165,10 +165,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.destClient.getSpace($scope.destSpaceId)
             .then((space) => {
                 // Now that we have a space, we can get assets from that space
-                $scope.destSpace = space;
+                $scope.$apply(function () {
+                    $scope.destSpace = space;
+                });
             }).catch((err) => {
                 var e = JSON.parse(err.message);
                 console.log(e.status + ':' + e.statusText);
+                Materialize.toast('Space is invalid', 4000);
+                $scope.$apply(function () {
+                    $scope.destSpace = "";
+                });
             });
     } //end of getDestAssets
 
