@@ -433,14 +433,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         space: $scope.spaceName,
                         token: $scope.mgmntToken
                     });
+                }
+            }
                     localStorage.setItem('StoredData', JSON.stringify(spac));
 
                     $scope.spaceName = "";
                     $scope.mgmntToken = "";
                     $scope.spaceID = "";
                     Materialize.toast('Congrats! Your operation was successfull', 2000);
-                }
-            }
+                
+            
         }
     }
     $scope.editValues = function (value, space, token) {
