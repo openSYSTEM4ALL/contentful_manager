@@ -12,7 +12,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     $scope.spaces = spac;
     $scope.names = [];
-    $scope.namesT= [];
+    $scope.namesT = [];
     $scope.totalAssets = 0;
     $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
@@ -416,7 +416,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     }
                 }
                 btnSave.value = "Save";
-
+                localStorage.setItem('StoredData', JSON.stringify(spac));
+                Materialize.toast('Congrats! Your update operation was successful', 2000);
+                $scope.spaceName = '';
+                $scope.spaceID = '';
+                $scope.mgmntToken = '';
             } else {
                 var duplicate = false;
                 for (var v in spac) {
@@ -438,7 +442,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     $scope.spaceName = "";
                     $scope.mgmntToken = "";
                     $scope.spaceID = "";
-                    Materialize.toast('Congrats! Your operation was successfull', 2000);
+                    Materialize.toast('Congrats! Your operation was successful', 2000);
                 }
             }
         }
