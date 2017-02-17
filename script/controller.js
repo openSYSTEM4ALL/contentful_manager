@@ -196,18 +196,21 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                             var e = JSON.parse(err.message);
                             console.log(e.status + ':' + e.statusText);
                             for (var y in $scope.resultSet) {
-                                if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
+                                if ($scope.resultSet[y].id === processedAsset.sys.id ) {
                                     if (e.status == 422)
                                     {
-                                        $scope.resultSet[y].status = "Process default locale(en-GB) before this."
+                                        $scope.resultSet[y].status = "Process default locale before this."
 
                                     }
+                                    else
+                                        $scope.resultSet[y].status = e.status +": " + e.statusText
                                    
                                 }
                             }
                             $scope.$apply();
                         });
                 }).catch((err) => {
+                    console.log("caught");
                     var e = JSON.parse(err.message);
                     console.log(e.status + ':' + e.statusText);
                 });
@@ -257,7 +260,12 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                                         console.log(e.status + ':' + e.statusText);
                                         for (var y in $scope.resultSet) {
                                             if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                                $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                                if (e.status == 422) {
+                                                    $scope.resultSet[y].status = "Process default locale before this."
+
+                                                }
+                                                else
+                                                    $scope.resultSet[y].status = e.status + ": " + e.statusText
                                             }
                                         }
                                         $scope.$apply();
@@ -292,6 +300,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                 $scope.processAfterCreateOrUpdate(updatedAsset, locale);
             }).catch((err) => {                
                 var e = JSON.parse(err.message);
+                console.log("erro")
                 console.log(e.status + ':' + e.statusText);
             });
     }
