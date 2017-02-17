@@ -12,7 +12,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
     $scope.spaces = spac;
     $scope.names = [];
-    $scope.namesT= [];
+    $scope.namesT = [];
     $scope.totalAssets = 0;
     $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
@@ -311,6 +311,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             });
     }
 
+    $scope.processAssetMock = function (locale, selectedIndex, assetID) {
+
+        $timeout(function () {
+            $scope.processAsset(locale, selectedIndex, assetID);
+            console.log('timeout:'+ selectedIndex+assetID);
+        }, selectedIndex*1000);
+        
+    };
     //This method decides where to send the asset for migration
     $scope.processAsset = function (locale, selectedIndex, assetID) {
 
@@ -383,7 +391,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     status: "Started"
                 });
 
-                $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
+                $scope.processAssetMock(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
 
                 locs = [];
             }
@@ -441,14 +449,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     });
                 }
             }
-                    localStorage.setItem('StoredData', JSON.stringify(spac));
+            localStorage.setItem('StoredData', JSON.stringify(spac));
 
-                    $scope.spaceName = "";
-                    $scope.mgmntToken = "";
-                    $scope.spaceID = "";
-                    Materialize.toast('Congrats! Your operation was successfull', 2000);
-                
-            
+            $scope.spaceName = "";
+            $scope.mgmntToken = "";
+            $scope.spaceID = "";
+            Materialize.toast('Congrats! Your operation was successfull', 2000);
+
+
         }
     }
     $scope.editValues = function (value, space, token) {
