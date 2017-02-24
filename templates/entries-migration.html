@@ -133,19 +133,10 @@
                     <a class="waves-effect waves-light btn" id="btnMigrate" ng-click="migratecontent()">Migrate <i class="material-icons right">send</i></a>
                 </div>
             </div>
-            <!-- Switch -->
+           
             <div class="divider"></div>
             <div class="row">
-                <!--<div class="col s12" ng-show= && showActivity == false">
-                        <ul>
-                            <li ng-repeat="asset in publishedAsset">
-                                <p> <span class="new badge right-align" data-badge-caption="">Published</span>{{asset.sys.id}}</p>
-                            </li>
-                            <div class="divider"></div>
-                        </ul>
-                    </div>-->
-                <!--<div class="col s12" ng-show="(names|filter:{selected:'true'}).length > 0 && showActivity == true">-->
-                <ul>
+                 <ul>
                     <li ng-repeat="entry in names | filter: { selected: true}" ng-if="entry.status.length>0">
                         <div class="col s10">
                             <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{entry.sys.id}}</label>
