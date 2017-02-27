@@ -47,8 +47,7 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     };
 
     $scope.getDestLocales = function (destSpaceSelected) {
-
-        $scope.destitem = destSpaceSelected;
+       
         $scope.destitem = $filter('filter')($scope.spaces, {
             space: destSpaceSelected
         }, true)[0];

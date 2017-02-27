@@ -58,7 +58,6 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
 
     $scope.getDestSpace = function (destSpaceSelected) {
 
-      $scope.destitem = destSpaceSelected;
       $scope.destitem = $filter('filter')($scope.spaces, {
         space: destSpaceSelected
       }, true)[0];

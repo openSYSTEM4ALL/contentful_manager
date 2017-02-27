@@ -94,7 +94,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" ng-disabled="assetList.length < 1"
+            <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" ng-disabled="assetList.length < 1 || destitem == undefined"
             />
         </div>
     </div>

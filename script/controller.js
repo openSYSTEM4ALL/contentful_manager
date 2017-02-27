@@ -148,7 +148,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
     $scope.getDestAssets = function (destitem) {
 
-        $scope.destitem = destitem;
         $scope.destitem = $filter('filter')($scope.spaces, {
             space: destitem
         }, true)[0];
