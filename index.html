@@ -41,7 +41,7 @@
                 <div class="container">
                     <div class="nav-wrapper">
                         <div class="col s12">
-                            <img src="images/tacos_logo.png" alt="" style="padding-left:25px"/>
+                            <img src="images/tacos_logo.png" alt="" style="padding-left:25px" />
                         </div>
                     </div>
                 </div>
@@ -58,8 +58,8 @@
             <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
             <li><a href="#/migrate" class="waves-effect waves-teal">Migrate Assets</a></li>
             <li><a href="#/migrate-entries" class="waves-effect waves-teal">Migrate Entries</a></li>
-            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
             <li><a href="#/bulkupload" class="waves-effect waves-teal">Bulk Upload</a></li>
+            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
         </ul>
         <!--SideNav fro mobile-->
         <ul class="side-nav" id="nav-mobile">
@@ -67,7 +67,7 @@
                 <div class="container">
                     <div class="nav-wrapper">
                         <div class="col s12">
-                            <img src="images/tacos_logo.png" alt="" style="padding-right:15px; height: 55px;"/>
+                            <img src="images/tacos_logo.png" alt="" style="padding-right:15px; height: 55px;" />
                         </div>
                     </div>
                 </div>
@@ -84,8 +84,8 @@
             <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
             <li><a href="#/migrate" class="waves-effect waves-teal">Migrate Assets</a></li>
             <li><a href="#/migrate-entries" class="waves-effect waves-teal">Migrate Entries</a></li>
-            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
             <li><a href="#/bulkupload" class="waves-effect waves-teal">Bulk Upload</a></li>
+            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>            
         </ul>
         <!--Splash Screen-->
         <div id="splashscreen">
@@ -120,7 +120,7 @@
     <footer class="page-footer">
         <div class="container">
             <div class="row">
-                <div class="fixed-action-btn">
+                <div id="fab_info" class="fixed-action-btn">
                     <a class="btn-floating btn-large teal darken-3">
                         <i class="material-icons">info_outline</i>
                     </a>
@@ -144,9 +144,10 @@
                     <ul>
                         <li><a class="grey-text text-lighten-3" href="#/">Home</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/configure">Configure</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#/migrate">Migrate</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#/upload">Contentful Upload</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/migrate">Migrate Assets</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/migrate-entries">Migrate Entries</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/bulkupload">Bulk Upload</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/upload">Contentful Upload</a></li>
                     </ul>
                 </div>
             </div>
@@ -173,6 +174,19 @@
         if (GetIEVersion() > 0) {
             window.location.replace("templates/unsupported.html");
         }
+    </script>
+    <script>
+        var senseSpeed = 5;
+        var previousScroll = 0;
+        $(window).scroll(function (event) {
+            var scroller = $(this).scrollTop();
+            if (scroller - senseSpeed > previousScroll) {
+                $("#fab_info").filter(':not(:animated)').slideUp();
+            } else if (scroller + senseSpeed < previousScroll) {
+                $("#fab_info").filter(':not(:animated)').slideDown();
+            }
+            previousScroll = scroller;
+        });
     </script>
 </body>
 
