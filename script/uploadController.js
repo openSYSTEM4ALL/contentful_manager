@@ -1,6 +1,6 @@
 app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$filter', function ($scope, $http, $timeout, $window, $filter) {
     $('ul.tabs').tabs();
-    
+
     angular.isUndefinedOrNullOrEmpty = function (val) {
         return angular.isUndefined(val) || val === null || val === '';
     };
@@ -20,6 +20,7 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.selectedLocale = ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
+            $scope.$apply();
         }
     });
     $('#ddlContentType').on('change', function (e) {
@@ -33,6 +34,7 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
+            $scope.$apply();
         } else if ($scope.localeToUpload == "OtherLocale") {
             $scope.selectedLocale = null;
         }
@@ -144,9 +146,9 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         btnAdd.value = "Update";
     }
 
-    $scope.deleteAssetFromList = function (name) {
+    $scope.deleteAssetFromList = function (itemName) {
         for (var a in $scope.assetList) {
-            if ($scope.assetList[a].value == name) {
+            if ($scope.assetList[a].assetName.toLowerCase() === itemName.toLowerCase()) {
                 $scope.assetList.splice(a, 1);
                 //localStorage.setItem('StoredData', JSON.stringify(spac));
                 Materialize.toast('Hi, Gone to trash', 4000);
