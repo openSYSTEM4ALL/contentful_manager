@@ -12,6 +12,20 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $scope.reRender = function () {
         $('select').material_select();
     }
+
+    $scope.defaultDestLocale = null;
+    $scope.spaces = spac;
+    $scope.destLocales = [];
+    $scope.assetList = [];
+    $scope.successfulAssets = [];
+    $scope.resultSet = [];
+    $scope.showActivity = true;
+    $scope.displayTypeOptions = {
+        option1: "Will show activity from start till the end for each asset",
+        option2: "Will show only those assets which are published successfully"
+    };
+
+    
     $('#ddlDestSpace').on('change', function (e) {
         if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.getDestLocales($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
@@ -20,6 +34,7 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.selectedLocale = ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
+            $scope.setLocaleForEachAsset();
             $scope.$apply();
         }
     });
@@ -34,21 +49,14 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
-            $scope.$apply();
-        } else if ($scope.localeToUpload == "OtherLocale") {
-            $scope.selectedLocale = null;
+            $scope.setLocaleForEachAsset();
+        } 
+        else if ($scope.localeToUpload == "OtherLocale") {
+                $scope.selectedLocale = null;
+                $scope.reRender();                
         }
+        $scope.$apply();
     });
-    $scope.spaces = spac;
-    $scope.destLocales = [];
-    $scope.assetList = [];
-    $scope.successfulAssets = [];
-    $scope.resultSet = [];
-    $scope.showActivity = true;
-    $scope.displayTypeOptions = {
-        option1: "Will show activity from start till the end for each asset",
-        option2: "Will show only those assets which are published successfully"
-    };
 
     $scope.getDestLocales = function (destSpaceSelected) {
 
@@ -83,11 +91,18 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             if (!defaultFound) {
                 if (destLocale.default == true) {
                     $scope.defaultDestLocale = destLocale.code;
-                    $scope.$apply();
                     defaultFound = true;
                 }
             }
         });
+    }
+
+    $scope.setLocaleForEachAsset = function () {
+        if ($scope.assetList.length > 0) {
+            for (var a in $scope.assetList) {
+                $scope.assetList[a].locale = $scope.selectedLocale;
+            }
+        }
     }
 
     $scope.saveAssetToList = function () {
@@ -123,7 +138,7 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                     assetUrl: $scope.assetUrl,
                     locale: $scope.selectedLocale
                 }
-                $scope.assetList.push(currentAsset);              
+                $scope.assetList.push(currentAsset);
                 Materialize.toast('Congrats! Your operation was successfull', 3000);
             }
         }
