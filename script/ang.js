@@ -1,6 +1,10 @@
 var app = angular.module('myApp', ['ngRoute']);
 
 app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
+    $routeProvider.when("/migrate-content-types", {
+        controller: "contentTypeController",
+        templateUrl: "templates/content-types-migration.html"
+    });
     $routeProvider.when("/migrate-entries", {
         controller: "entriesController",
         templateUrl: "templates/entries-migration.html"
