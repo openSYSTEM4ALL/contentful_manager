@@ -50,7 +50,7 @@
                             <input type="checkbox" class="filled-in check-count" id="{{x.sys.id+(names.indexOf(x)+1)}}" ng-init="" ng-change="toggleSelectAll()"
                                 ng-model="x.selected" />
                             <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{x.sys.id}}</label>
-                            <p> Content Type: <span class="blue-text"> {{x.sys.contentType.sys.id}}</span></p>
+                            <p> Field count: <span class="blue-text"> {{x.fields.length}}</span></p>                            
                             <div class="divider"></div>
                         </li>
                     </ul>
@@ -86,7 +86,7 @@
                             <input type="checkbox" class="filled-in check-count" id="{{x.sys.id+(names.indexOf(x)+1)}}" ng-init="" ng-change="toggleSelectAll()"
                                 ng-model="x.selected" />
                             <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{x.sys.id}}</label>
-                            <p> Content Type: <span class="blue-text"> {{x.sys.contentType.sys.id}}</span></p>
+                            <p> Field count: <span class="blue-text">{{x.fields.length}}</span></p>
                             <div class="divider"></div>
                         </li>
                     </ul>
@@ -110,16 +110,16 @@
             <div class="divider"></div>
             <div class="row">
                  <ul>
-                    <li ng-repeat="entry in names | filter: { selected: true}" ng-if="entry.status.length>0">
+                    <li ng-repeat="ctype in names | filter: { selected: true}" ng-if="ctype.status.length>0">
                         <div class="col s10">
-                            <label class="grey-text text-accent-2" for="{{entry.sys.id+(names.indexOf(x)+1)}}">{{entry.sys.id}}</label>
-                            <p> Content Type: <span class="blue-text"> {{entry.sys.contentType.sys.id}}</span></p>
+                            <label class="grey-text text-accent-2" for="{{ctype.sys.id+(names.indexOf(x)+1)}}">{{ctype.sys.id}}</label>
+                            <p> Field count: <span class="blue-text">{{x.fields.length}}</span></p>
                             <div class="divider"></div>
                         </div>
                         <div class="col s2">
-                            <span class="new badge right-align" data-badge-caption="" ng-show="entry.status == 'Published'">{{entry.status}}</span>
-                            <span class="new badge red right-align" data-badge-caption="" ng-show="entry.status != 'Published'">{{entry.status}}</span>
-                            <div class="preloader-wrapper small active" ng-show="entry.status == 'Started'">
+                            <span class="new badge right-align" data-badge-caption="" ng-show="ctype.status == 'Published'">{{ctype.status}}</span>
+                            <span class="new badge red right-align" data-badge-caption="" ng-show="ctype.status != 'Published'">{{ctype.status}}</span>
+                            <div class="preloader-wrapper small active" ng-show="ctype.status == 'Started'">
                                 <div class="spinner-layer spinner-green-only">
                                     <div class="circle-clipper left">
                                         <div class="circle"></div>
