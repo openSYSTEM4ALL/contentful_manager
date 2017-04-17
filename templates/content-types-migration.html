@@ -113,7 +113,7 @@
                     <li ng-repeat="ctype in names | filter: { selected: true}" ng-if="ctype.status.length>0">
                         <div class="col s10">
                             <label class="grey-text text-accent-2" for="{{ctype.sys.id+(names.indexOf(x)+1)}}">{{ctype.sys.id}}</label>
-                            <p> Field count: <span class="blue-text">{{x.fields.length}}</span></p>
+                            <p> Field count: <span class="blue-text">{{ctype.fields.length}}</span></p>
                             <div class="divider"></div>
                         </div>
                         <div class="col s2">

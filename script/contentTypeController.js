@@ -149,7 +149,7 @@ app.controller('contentTypeController', ['$scope', '$http', '$q', '$timeout', '$
                         var srcEditorIFControls;
                         contentType.getEditorInterface()
                             .then((editorIF) => {
-                                console.log(editorIF);
+                                //console.log(editorIF);
                                 srcEditorIFControls = editorIF.controls;
                             })
                         $scope.destSpace.createContentTypeWithId(contenTypeID, fieldData)
@@ -158,14 +158,29 @@ app.controller('contentTypeController', ['$scope', '$http', '$q', '$timeout', '$
                                     .then((pct) => {
                                         pct.getEditorInterface()
                                             .then((destEditorIF) => {
-                                                console.log(destEditorIF);
+                                                //console.log(destEditorIF);
                                                 destEditorIF.controls = srcEditorIFControls;
-                                                destEditorIF.update((updatedEditor) => {
-                                                    updatedEditor.sys.contentType.status = "Published";
-                                                    console.log(updatedEditor);
-                                                })                                                
+                                                destEditorIF.update()
+                                                    .then((updatedEditor) => {
+                                                        //***** The following commented code also works fine; it just makes a fresh request for content type
+                                                        
+                                                        // $scope.destSpace.getContentType(updatedEditor.sys.contentType.sys.id).
+                                                        // then((returnedContentType) => {
+                                                        //     if (returnedContentType.isUpdated() || returnedContentType.isDraft()) {
+                                                        //         //skip 
+                                                        //     } else {
+                                                        //         for (var x in $scope.names) {
+                                                        //             if ($scope.names[x].sys.id === returnedContentType.sys.id) {
+                                                        //                 $scope.names[x].status = "Published";
+                                                        //             }
+                                                        //             $scope.$apply();
+                                                        //         }
+                                                        //     }
+                                                        // })
+                                                        ctype.status = "Published";
+                                                        $scope.$apply();
+                                                    })
                                             })
-
                                     })
                                     .catch((err) => {
                                         //catch if there is any publishing error 
