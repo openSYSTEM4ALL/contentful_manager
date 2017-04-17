@@ -132,8 +132,39 @@ app.controller('contentTypeController', ['$scope', '$http', '$q', '$timeout', '$
         var fieldData = {};
         var data;
         $scope.destSpace.getContentType(contenTypeID)
-            .then((contenType) => {
+            .then((contentType) => {
                 console.log("Content type exists")
+                ctype.status = "Exists - Updating";
+                $scope.$apply();
+                //get field object and name of src content type
+
+                data = ctype.fields;
+                contentType.fields = ctype.fields;
+                contentType.name = ctype.name;
+                contentType.description = ctype.description;
+                contentType.displayField = ctype.displayField;
+                contentType.update()
+                    .then((updatedCT) => {
+                        updatedCT.publish()
+                            .then((publishedCT) => {
+                                var srcEditorIFControls;
+                                ctype.getEditorInterface()
+                                    .then((editorIF) => {
+                                        //console.log(editorIF);
+                                        srcEditorIFControls = editorIF.controls;
+                                        publishedCT.getEditorInterface()
+                                            .then((destEditorIF) => {
+                                                //console.log(destEditorIF);
+                                                destEditorIF.controls = srcEditorIFControls;
+                                                destEditorIF.update()
+                                                    .then((updatedEditor) => {
+                                                        ctype.status = "Published";
+                                                        $scope.$apply();
+                                                    })
+                                            })
+                                    })
+                            })
+                    })
             })
             .catch((contentTypeNotFound) => {
                 console.log("content type not found")
@@ -163,7 +194,7 @@ app.controller('contentTypeController', ['$scope', '$http', '$q', '$timeout', '$
                                                 destEditorIF.update()
                                                     .then((updatedEditor) => {
                                                         //***** The following commented code also works fine; it just makes a fresh request for content type
-                                                        
+
                                                         // $scope.destSpace.getContentType(updatedEditor.sys.contentType.sys.id).
                                                         // then((returnedContentType) => {
                                                         //     if (returnedContentType.isUpdated() || returnedContentType.isDraft()) {

@@ -118,8 +118,9 @@
                         </div>
                         <div class="col s2">
                             <span class="new badge right-align" data-badge-caption="" ng-show="ctype.status == 'Published'">{{ctype.status}}</span>
-                            <span class="new badge red right-align" data-badge-caption="" ng-show="ctype.status != 'Published'">{{ctype.status}}</span>
-                            <div class="preloader-wrapper small active" ng-show="ctype.status == 'Started'">
+                            <span class="new badge blue right-align" data-badge-caption="" ng-show="ctype.status == 'Exists - Updating'">{{ctype.status}}</span>
+                            <span class="new badge red right-align" data-badge-caption="" ng-show="ctype.status != 'Published' && ctype.status != 'Exists - Updating'">{{ctype.status}}</span>
+                            <div class="preloader-wrapper small active" ng-show="ctype.status == 'Started' || ctype.status == 'Exists - Updating'">
                                 <div class="spinner-layer spinner-green-only">
                                     <div class="circle-clipper left">
                                         <div class="circle"></div>
