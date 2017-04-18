@@ -53,25 +53,26 @@
             </div>
             <div class="divider"></div>
             <li class="no-padding">
-                <ul class="collapsible" data-collapsible="accordion">
+                <ul class="collapsible menu" data-collapsible="accordion" id="menu">
                     <li ng-hide="true"><a href="#/login" class="collapsible-header waves-effect waves-teal"><span class="new badge" data-badge-caption="">Guest</span>Login</a></li>
                     <div class="divider" ng-hide="true"></div>
                     <li><a href="#/" class="collapsible-header waves-effect waves-teal">Home</a></li>
                     <li><a href="#/configure" class="collapsible-header waves-effect waves-teal">Configure</a></li>
                     <li><a href="" class="collapsible-header waves-effect waves-teal">Migrate</a>
-                    <div class="collapsible-body">
-                        <ul>
-                            <li><a href="#/migrate" class="waves-effect waves-teal">Assets</a></li>
-                            <li><a href="#/migrate-entries" class="waves-effect waves-teal">Entries</a></li>
-                            <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Content Types</a></li>
-                        </ul>
-                    </div></li>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="#/migrate" class="waves-effect waves-teal">Assets</a></li>
+                                <li><a href="#/migrate-entries" class="waves-effect waves-teal">Entries</a></li>
+                                <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Content Types</a></li>
+                            </ul>
+                        </div>
+                    </li>
                     <li><a href="#/bulkupload" class="collapsible-header waves-effect waves-teal">Bulk Upload</a></li>
                     <li><a href="#/upload" class="collapsible-header waves-effect waves-teal">Contentful Upload</a></li>
                 </ul>
             </li>
         </ul>
-        <!--SideNav fro mobile-->
+        <!--SideNav for mobile-->
         <ul class="side-nav" id="nav-mobile">
             <nav class="light-blue">
                 <div class="container">
@@ -88,15 +89,25 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <li ng-hide="true"><a href="#/login" class="waves-effect waves-teal"><span class="new badge" data-badge-caption="">Guest</span>Login</a></li>
-            <div class="divider" ng-hide="true"></div>
-            <li><a href="#/" class="waves-effect waves-teal">Home</a></li>
-            <li><a href="#/configure" class="waves-effect waves-teal">Configure</a></li>
-            <li><a href="#/migrate" class="waves-effect waves-teal">Migrate Assets</a></li>
-            <li><a href="#/migrate-entries" class="waves-effect waves-teal">Migrate Entries</a></li>
-            <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Migrate Content Types</a></li>
-            <li><a href="#/bulkupload" class="waves-effect waves-teal">Bulk Upload</a></li>
-            <li><a href="#/upload" class="waves-effect waves-teal">Contentful Upload</a></li>
+            <li class="no-padding">
+                <ul class="collapsible menu" data-collapsible="accordion" id="menuMobile">
+                    <li ng-hide="true"><a href="#/login" class="collapsible-header waves-effect waves-teal"><span class="new badge" data-badge-caption="">Guest</span>Login</a></li>
+                    <div class="divider" ng-hide="true"></div>
+                    <li><a href="#/" class="collapsible-header waves-effect waves-teal">Home</a></li>
+                    <li><a href="#/configure" class="collapsible-header waves-effect waves-teal">Configure</a></li>
+                    <li><a href="" class="collapsible-header waves-effect waves-teal">Migrate</a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="#/migrate" class="waves-effect waves-teal">Assets</a></li>
+                                <li><a href="#/migrate-entries" class="waves-effect waves-teal">Entries</a></li>
+                                <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Content Types</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><a href="#/bulkupload" class="collapsible-header waves-effect waves-teal">Bulk Upload</a></li>
+                    <li><a href="#/upload" class="collapsible-header waves-effect waves-teal">Contentful Upload</a></li>
+                </ul>
+            </li>
         </ul>
         <!--Splash Screen-->
         <div id="splashscreen">
