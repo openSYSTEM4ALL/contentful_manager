@@ -4,7 +4,7 @@
             <div class="card-small white-text z-depth-2">
                 <div class="card-content teal lighten-2">
                     <div class="container">
-                        <p class="card-title white-text">Total entries</p>
+                        <p class="card-title white-text">Total Entries</p>
                         <h5>{{names.length>0?names.length:0}}
                             <span class="teal-text">.</span>
                         </h5>
@@ -46,7 +46,7 @@
                     <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
                 </div>
                 <div class="col s6 right-align">
-                    <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined" onclick="$('#selectedAssetid').click()">Next--> </a>
+                    <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#selectedAssetid').click()">Next--> </a>
                 </div>
             </div>
             <div class="row">
@@ -97,7 +97,7 @@
                         <--Back</a>
                 </div>
                 <div class="col s6 right-align">
-                    <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined" onclick="$('#migratedAssetid').click()">Confirm--></a>
+                    <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#migratedAssetid').click()">Confirm--></a>
                 </div>
             </div>
             <div class="row">
@@ -130,14 +130,14 @@
             </div>
             <div class="row">
                 <div class="col s12 right-align">
-                    <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="selectedSource == undefined || selectedDest == undefined" ng-click="migratecontent()">Migrate <i class="material-icons right">send</i></a>
+                    <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="selectedSource == undefined || selectedDest == undefined || (names | filter: { selected: true}).length <= 0" ng-click="migratecontent()">Migrate <i class="material-icons right">send</i></a>
                 </div>
             </div>
            
             <div class="divider"></div>
             <div class="row">
                  <ul>
-                    <li ng-repeat="entry in names | filter: { selected: true}" ng-if="entry.status.length>0">
+                    <li ng-repeat="entry in names | filter: { selected: true}" ng-if="entry.status.length > 0">
                         <div class="col s10">
                             <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{entry.sys.id}}</label>
                             <p> Content Type: <span class="blue-text"> {{entry.sys.contentType.sys.id}}</span></p>
