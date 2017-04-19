@@ -107,8 +107,7 @@
         </div>
         <div class="row">
             <div class="col s12">
-                <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="bulkUploadToContentful()"
-                    ng-show="result.data.length > 0" />
+                <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="bulkUploadToContentful()" ng-show="result.data.length > 0" ng-disabled="destitem == undefined" />
             </div>
         </div>
     </div>

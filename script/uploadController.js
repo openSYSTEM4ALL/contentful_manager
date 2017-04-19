@@ -1,4 +1,6 @@
 app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$filter', function ($scope, $http, $timeout, $window, $filter) {
+    $('ul.tabs').tabs();
+
     angular.isUndefinedOrNullOrEmpty = function (val) {
         return angular.isUndefined(val) || val === null || val === '';
     };
@@ -10,6 +12,20 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $scope.reRender = function () {
         $('select').material_select();
     }
+
+    $scope.defaultDestLocale = null;
+    $scope.spaces = spac;
+    $scope.destLocales = [];
+    $scope.assetList = [];
+    $scope.successfulAssets = [];
+    $scope.resultSet = [];
+    $scope.showActivity = true;
+    $scope.displayTypeOptions = {
+        option1: "Will show activity from start till the end for each asset",
+        option2: "Will show only those assets which are published successfully"
+    };
+
+    
     $('#ddlDestSpace').on('change', function (e) {
         if ($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.getDestLocales($('#ddlDestSpace').siblings('.dropdown-content').find('li.active>span').text());
@@ -18,6 +34,8 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.selectedLocale = ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
+            $scope.setLocaleForEachAsset();
+            $scope.$apply();
         }
     });
     $('#ddlContentType').on('change', function (e) {
@@ -31,24 +49,17 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
-        } else if ($scope.localeToUpload == "OtherLocale") {
-            $scope.selectedLocale = null;
+            $scope.setLocaleForEachAsset();
+        } 
+        else if ($scope.localeToUpload == "OtherLocale") {
+                $scope.selectedLocale = null;
+                $scope.reRender();                
         }
+        $scope.$apply();
     });
-    $scope.spaces = spac;
-    $scope.destLocales = [];
-    $scope.assetList = [];
-    $scope.successfulAssets = [];
-    $scope.resultSet = [];
-    $scope.showActivity = true;
-    $scope.displayTypeOptions = {
-        option1: "Will show activity from start till the end for each asset",
-        option2: "Will show only those assets which are published successfully"
-    };
 
     $scope.getDestLocales = function (destSpaceSelected) {
 
-        $scope.destitem = destSpaceSelected;
         $scope.destitem = $filter('filter')($scope.spaces, {
             space: destSpaceSelected
         }, true)[0];
@@ -56,7 +67,9 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         $scope.destAccessToken = $scope.destitem.token;
         $scope.destClient = contentfulManagement.createClient({
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: $scope.destAccessToken
+            accessToken: $scope.destAccessToken,
+            rateLimit: 3,
+            maxRetries: 3
         });
 
         $scope.destClient.getSpace($scope.destSpaceId)
@@ -78,11 +91,18 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             if (!defaultFound) {
                 if (destLocale.default == true) {
                     $scope.defaultDestLocale = destLocale.code;
-                    $scope.$apply();
                     defaultFound = true;
                 }
             }
         });
+    }
+
+    $scope.setLocaleForEachAsset = function () {
+        if ($scope.assetList.length > 0) {
+            for (var a in $scope.assetList) {
+                $scope.assetList[a].locale = $scope.selectedLocale;
+            }
+        }
     }
 
     $scope.saveAssetToList = function () {
@@ -96,18 +116,31 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
                     $scope.assetList[a].assetUrl = $scope.assetUrl;
                     $scope.assetList[a].locale = $scope.selectedLocale;
                     txtAssetName.readOnly = false;
+                    Materialize.toast('Congrats! Your operation was successfull', 3000);
                 }
             }
             btnAdd.value = "Add";
         } else if (btnAdd.value == "Add") {
-            var currentAsset = {
-                assetName: $scope.assetName,
-                assetTitle: $scope.assetTitle,
-                assetContentType: $scope.assetContentType,
-                assetUrl: $scope.assetUrl,
-                locale: $scope.selectedLocale
+
+            var duplicate = false;
+            for (var a in $scope.assetList) {
+                if ($scope.assetList[a].assetName.toLowerCase() == $scope.assetName.toLowerCase()) {
+                    Materialize.toast('Asset Name already present in  list', 3000);
+                    duplicate = true;
+                    break;
+                }
             }
-            $scope.assetList.push(currentAsset);
+            if (!duplicate) {
+                var currentAsset = {
+                    assetName: $scope.assetName,
+                    assetTitle: $scope.assetTitle,
+                    assetContentType: $scope.assetContentType,
+                    assetUrl: $scope.assetUrl,
+                    locale: $scope.selectedLocale
+                }
+                $scope.assetList.push(currentAsset);
+                Materialize.toast('Congrats! Your operation was successfull', 3000);
+            }
         }
 
         $scope.assetName = "";
@@ -115,7 +148,6 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         $scope.assetContentType = "";
         $scope.assetUrl = "";
         //$scope.selectedLocale = "";  //Not working for select
-        Materialize.toast('Congrats! Your operation was successfull', 4000);
     }
 
     $scope.editAssetInList = function (name, title, contentType, locale, uploadUrl) {
@@ -129,9 +161,9 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         btnAdd.value = "Update";
     }
 
-    $scope.deleteAssetFromList = function (name) {
+    $scope.deleteAssetFromList = function (itemName) {
         for (var a in $scope.assetList) {
-            if ($scope.assetList[a].value == name) {
+            if ($scope.assetList[a].assetName.toLowerCase() === itemName.toLowerCase()) {
                 $scope.assetList.splice(a, 1);
                 //localStorage.setItem('StoredData', JSON.stringify(spac));
                 Materialize.toast('Hi, Gone to trash', 4000);
@@ -142,16 +174,16 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
 
     $scope.resetData = function () {
 
-            btnAdd.value = "Add";
-            $scope.assetName = "";
-            $scope.assetTitle = "";
-            $scope.assetContentType = "";
-            $scope.assetUrl = "";
-            //$scope.selectedLocale = ""; //Not working for select
-            txtAssetName.readOnly = false;
-            Materialize.toast('Oh! That vanished!', 4000);
-        }
-        /* End of Configuration methods */
+        btnAdd.value = "Add";
+        $scope.assetName = "";
+        $scope.assetTitle = "";
+        $scope.assetContentType = "";
+        $scope.assetUrl = "";
+        //$scope.selectedLocale = ""; //Not working for select
+        txtAssetName.readOnly = false;
+        Materialize.toast('Oh! That vanished!', 4000);
+    }
+    /* End of Configuration methods */
 
     /* ######################################################################## */
 
@@ -260,18 +292,22 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
             });
     }
     $scope.uploadToContentful = function () {
-            $scope.successfulAssets = [];
-            $scope.resultSet = [];
-            $scope.selectedValues = $scope.assetList;
-            //loop for traversing selected items 
-            angular.forEach($scope.selectedValues, function (selectedAsset) {
-                $scope.resultSet.push({
-                    id: selectedAsset.assetName.replace(/\s+/g, '').toLowerCase(),
-                    status: "Started"
-                });
+        $scope.successfulAssets = [];
+        $scope.resultSet = [];
+        $scope.selectedValues = $scope.assetList;
+        var interval = 0;
+        //loop for traversing selected items 
+        angular.forEach($scope.selectedValues, function (selectedAsset) {
+            $scope.resultSet.push({
+                id: selectedAsset.assetName.replace(/\s+/g, '').toLowerCase(),
+                status: "Started"
+            });
+            $timeout(function () {
                 $scope.uploadAsset(selectedAsset);
-            }); //end of traversal loop 
-        } //end of upload function
+            }, interval);
+            interval = interval + 1000;
+        }); //end of traversal loop 
+    } //end of upload function
 
     $scope.checkLocale = function () {
         if (angular.isUndefinedOrNullOrEmpty($scope.selectedLocale)) {

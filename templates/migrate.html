@@ -6,7 +6,7 @@
                 <div class="card-content teal lighten-2">
                     <div class="container">
                         <p class="card-title white-text">Total Assets</p>
-                        <h5>{{names.length>0?names.length:0}}</h5>                        
+                        <h5 ng-cloak="">{{namesT.length>0?namesT.length+'T=>':''}}{{names.length>0?names.length+'P':0}}</h5>                        
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 <ul class="tabs grey lighten-3">
                     <li class="tab col s4"><a id="assetslistid" href="#assetslist" class="red-text bold">Source</a></li>
                     <li class="tab col s4"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Destination</a></li>
-                    <li class="tab col s4"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
+                    <li class="tab col s3"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
                 </ul>
             </div>
             <div id="assetslist" class="col s12">
@@ -52,7 +52,7 @@
                         <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" onclick="$('#selectedAssetid').click()">Next--> </a>
+                        <a class="waves-effect waves-light btn" ng-disabled="srcitem == undefined" onclick="$('#selectedAssetid').click()">Next--> </a>
                     </div>
                 </div>
                 <div class="row">
@@ -103,7 +103,7 @@
                             <--Back</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" onclick="$('#migratedAssetid').click()">Confirm--></a>
+                        <a class="waves-effect waves-light btn" ng-disabled="destitem == undefined" onclick="$('#migratedAssetid').click()">Confirm--></a>
                     </div>
                 </div>
                 <div class="row">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="row">
                     <div class="col s12 right-align">
-                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-click="migratecontent(selectedfiles)">Migrate <i class="material-icons right">send</i></a>
+                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="srcitem == undefined || destitem == undefined" ng-click="migratecontent(selectedfiles)">Migrate <i class="material-icons right">send</i></a>
                     </div>
                 </div>
                 <!-- Switch -->

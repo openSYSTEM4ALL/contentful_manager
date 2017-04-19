@@ -11,7 +11,8 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     };
 
     $scope.spaces = spac;
-    $scope.names=[];
+    $scope.names = [];
+    $scope.namesT = [];
     $scope.totalAssets = 0;
     $scope.totalAssetCount = 0;
     $scope.selectedfiles = {};
@@ -65,8 +66,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             })
             .then((assets) => {
                 $scope.totalAssets = assets.total;
-                $scope.names = $scope.names.concat(assets.items);
-                if($scope.names.length< $scope.totalAssets){
+                $scope.namesT = $scope.namesT.concat(assets.items);
+                $scope.names = [];
+                angular.forEach($scope.namesT, function (asset) {
+                    if (asset.isUpdated() || asset.isDraft() || asset.isArchived()) {
+                        // do nothing just skip   
+                    } else {
+                        $scope.names.push(asset);
+                    }
+                });
+                if ($scope.names.length < $scope.totalAssets) {
                     skipValue = skipValue + 100;
                     $scope.getAllAssets(space, skipValue);
                 }
@@ -93,8 +102,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.srcClient.getSpace($scope.srcSpaceId)
             .then((space) => {
                 // Now that we have a space, we can get assets from that space
-                $scope.names=[];
-                $scope.totalAssets =0;
+                $scope.names = [];
+                $scope.namesT = [];
+                $scope.totalAssets = 0;
                 var skipValue = 0;
                 $scope.getAllAssets(space, skipValue);
             });
@@ -138,7 +148,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
     //Fetch dest space - Can be edited if all destination assets are required to be fetched
     $scope.getDestAssets = function (destitem) {
 
-        $scope.destitem = destitem;
         $scope.destitem = $filter('filter')($scope.spaces, {
             space: destitem
         }, true)[0];
@@ -147,16 +156,24 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
 
         $scope.destClient = contentfulManagement.createClient({
             // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: $scope.destAccessToken
+            accessToken: $scope.destAccessToken,
+            rateLimit: 3,
+            maxRetries: 3
         });
 
         $scope.destClient.getSpace($scope.destSpaceId)
             .then((space) => {
                 // Now that we have a space, we can get assets from that space
-                $scope.destSpace = space;
+                $scope.$apply(function () {
+                    $scope.destSpace = space;
+                });
             }).catch((err) => {
                 var e = JSON.parse(err.message);
                 console.log(e.status + ':' + e.statusText);
+                Materialize.toast('Space is invalid', 4000);
+                $scope.$apply(function () {
+                    $scope.destSpace = "";
+                });
             });
     } //end of getDestAssets
 
@@ -178,13 +195,21 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                             var e = JSON.parse(err.message);
                             console.log(e.status + ':' + e.statusText);
                             for (var y in $scope.resultSet) {
-                                if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                    $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                if ($scope.resultSet[y].id === processedAsset.sys.id ) {
+                                    if (e.status == 422)
+                                    {
+                                        $scope.resultSet[y].status = "Process default locale before this."
+
+                                    }
+                                    else
+                                        $scope.resultSet[y].status = e.status +": " + e.statusText
+                                   
                                 }
                             }
                             $scope.$apply();
                         });
                 }).catch((err) => {
+                    console.log("caught");
                     var e = JSON.parse(err.message);
                     console.log(e.status + ':' + e.statusText);
                 });
@@ -234,7 +259,12 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                                         console.log(e.status + ':' + e.statusText);
                                         for (var y in $scope.resultSet) {
                                             if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                                $scope.resultSet[y].status = e.status + ':' + e.statusText;
+                                                if (e.status == 422) {
+                                                    $scope.resultSet[y].status = "Process default locale before this."
+
+                                                }
+                                                else
+                                                    $scope.resultSet[y].status = e.status + ": " + e.statusText
                                             }
                                         }
                                         $scope.$apply();
@@ -267,8 +297,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         asset.update()
             .then((updatedAsset) => {
                 $scope.processAfterCreateOrUpdate(updatedAsset, locale);
-            }).catch((err) => {
+            }).catch((err) => {                
                 var e = JSON.parse(err.message);
+                console.log("erro")
                 console.log(e.status + ':' + e.statusText);
             });
     }
@@ -293,6 +324,14 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             });
     }
 
+    $scope.processAssetMock = function (locale, selectedIndex, assetID) {
+
+        $timeout(function () {
+            $scope.processAsset(locale, selectedIndex, assetID);
+            console.log('timeout:'+ selectedIndex+assetID);
+        }, selectedIndex*1000);
+        
+    };
     //This method decides where to send the asset for migration
     $scope.processAsset = function (locale, selectedIndex, assetID) {
 
@@ -365,7 +404,7 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                     status: "Started"
                 });
 
-                $scope.processAsset(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
+                $scope.processAssetMock(locs, $scope.sortedtags[i].index, $scope.sortedtags[i].assetID);
 
                 locs = [];
             }
@@ -421,14 +460,16 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                         space: $scope.spaceName,
                         token: $scope.mgmntToken
                     });
-                    localStorage.setItem('StoredData', JSON.stringify(spac));
-
-                    $scope.spaceName = "";
-                    $scope.mgmntToken = "";
-                    $scope.spaceID = "";
-                    Materialize.toast('Congrats! Your operation was successfull', 2000);
                 }
             }
+            localStorage.setItem('StoredData', JSON.stringify(spac));
+
+            $scope.spaceName = "";
+            $scope.mgmntToken = "";
+            $scope.spaceID = "";
+            Materialize.toast('Congrats! Your operation was successfull', 2000);
+
+
         }
     }
     $scope.editValues = function (value, space, token) {

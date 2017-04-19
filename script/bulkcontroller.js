@@ -25,10 +25,24 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
       "jpg": "image/jpeg",
       "png": "image/png",
       "bmp": "image/bmp",
+      "gif": "image/gif",
       "ico": "image/x-icon",
+      "tiff": "image/x-tiff",
+      "svg": "image/svg+xml",
+      "mp4": "video/mpeg",
+      "avi": "video/avi",
+      "css": "text/css",
+      "html": "text/html",
+      "rtf": "text/richtext",
+      "txt": "text/plain",
       "doc": "application/msword",
+      "ppt": "application/mspowerpoint",
       "pdf": "application/pdf",
-      "mp4": "video/mpeg"
+      "js": "application/javascript",
+      "json": "application/json",
+      "eot": "application/vnd.ms-fontobject",
+      "ttf": "application/x-font-truetype",
+      "woff": "application/font-woff"
     }
 
     $scope.deleteAssetFromList = function (name, locale) {
@@ -44,7 +58,6 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
 
     $scope.getDestSpace = function (destSpaceSelected) {
 
-      $scope.destitem = destSpaceSelected;
       $scope.destitem = $filter('filter')($scope.spaces, {
         space: destSpaceSelected
       }, true)[0];
@@ -93,7 +106,6 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
             selectedAsset.status = status;
             selectedAsset.error = msg;
           }
-
         }
       });
     };
@@ -148,7 +160,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
                 .then((assetUpdated) => {
                   assetUpdated.processForAllLocales()
                     .then((assetProcessed) => {
-                      //twek to esolve 409 confict
+                      //tweak to resolve 409 confict
                       $scope.destSpace.getAsset(assetProcessed.sys.id)
                         .then((asset) => {
                           asset.publish()
@@ -234,9 +246,6 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         $scope.multiplelocaleupload($scope.multiple, json, selectedAsset);
 
       } else {
-
-
-
         var fileName = selectedAsset.asset_name;
         var assetID = selectedAsset.asset_name.replace(/\s+/g, '').toLowerCase();
         var title = selectedAsset.asset_title;
@@ -397,7 +406,7 @@ app.controller('bulkController', ['$scope', '$http', '$q', '$timeout', '$window'
         $scope.result.data = fetchedAssetList;
 
       }, function errorCallback(response) {
-
+            console.log(response);
       });
 
     }

@@ -1,134 +1,228 @@
-<div class="container">
-    <br>
-    <form name="newForm" novalidate>
-        <div class="row">
-            <div class="input-field col s12 m10 l8">
-                <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)">
-                <option value="" disabled selected>-- Select Destination --</option>
-                </select>
-                <label>Destination:</label>
-                <p>
-                    <input name="rbgroupLocale" class="validate" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
-                    />
-                    <label for="default">Default Locale <span ng-show="localeToUpload === 'DefaultLocale'">{{"(" + defaultDestLocale + ")"}}</span> </label>
-                    <input name="rbgroupLocale" class="validate" type="radio" id="rest" value="OtherLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
-                    />
-                    <label for="rest">Other Locale</label>
-                </p>
+<div class="">
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col s4">
+            <div class="card-small white-text z-depth-2">
+                <div class="card-content teal lighten-2">
+                    <div class="container">
+                        <p class="card-title white-text">Destination</p>
+                        <h5 ng-show="destSpace == undefined">-</h5>
+                        <h5 ng-show="destSpace != undefined">{{destitem.space}}</h5>   
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row" ng-show="localeToUpload === 'OtherLocale'">
-            <div class="col s12 m10 l8">
-                <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
-                <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
-                    ng-change="setAssetLocale(selectedLocale)">
-                    <option value="" disabled selected>-- Select Locale --</option>
-                </select>
+        <div class="col s4">
+            <div class="card-small white-text z-depth-2">
+                <div class="card-content blue-grey">
+                    <div class="container">
+                        <p class="card-title white-text">Locale</p>
+                        <h5 ng-show="selectedLocale == undefined || selectedLocale==null">-</h5>
+                        <h5 ng-show="selectedLocale != undefined">{{selectedLocale}}</h5>                        
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="input-field col s12 m5 l4">
-                <input id="txtAssetName" class="validate" name="txtAssetName" ng-model="assetName" type="text" required/>
-                <label for="txtAssetName">Asset Name <span class="error red-text" ng-show="newForm.txtAssetName.$error.required">*</span></label>
+        <div class="col s4">
+            <div class="card-small white-text z-depth-2">
+                <div class="card-content cyan darken-2">
+                    <div class="container">
+                        <p class="card-title white-text">Asset Count</p>
+                        <h5>{{assetList.length}}</h5>
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s12 m5 l4">
-                <input id="txttitleName" class="validate" name="txttitleName" ng-model="assetTitle" type="text" required/>
-                <label for="txttitleName">Title <span class="error red-text" ng-show="newForm.txttitleName.$error.required">*</span></label>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+        <!--tabs Screen-->
+        <form name="newForm" novalidate>
+            <div class="">
+                <ul class="tabs grey lighten-3">
+                    <li class="tab col s4"><a id="destAndLocale" href="#tabDestAndLocale" class="red-text bold">Destination</a></li>
+                    <li class="tab col s4"><a id="makeList" href="#tabMakeList" class="red-text bold accent-2">List</a></li>
+                    <li class="tab col s3"><a id="upload" href="#tabUpload" class="red-text bold accent-2">Result</a></li>
+                </ul>
             </div>
-            <div class="col s12 m10 l8">
-                <label for="selectContentType">Content Type: </label>
-                <select name="selectContentType" id="ddlContentType" ng-model="assetContentType" class="browser-default"> 
-                    <option value="" disabled selected>-- Select Content Type --</option>
-                    <option value="image/jpeg" >image/jpeg</option>
-                    <option value="image/png" >image/png</option>
-                    <option value="image/bmp" >image/bmp</option>
-                    <option value="image/gif" >image/gif</option>
-                    <option value="image/x-icon">image/x-icon</option>
-                    <option value="image/tiff">image/tiff</option>
-                    <option value="text/plain">text/plain</option>
-                    <option value="text/richtext">text/richtext</option>
-                    <option value="code/html">code/html</option>
-                    <option value="code/css">code/css</option>
-                    <option value="code/javascript">code/javascript</option>
-                    <option value="application/pdf">application/pdf</option>
-                    <option value="application/msword">application/msword</option>
-                    <option value="application/mspowerpoint">application/mspowerpoint</option>
-                    <option value="video/avi">video/avi</option>
-                    <option value="video/mpeg">video/mpeg</option>
+            <!--tab1-->
+            <div id="tabDestAndLocale" class="col s12">
+                <div class="row ">
+                </div>
+                <div class="row">
+                     <div class="col s12 right-align">
+                        <a class="waves-effect waves-light btn" ng-disabled="destSpace == undefined || selectedLocale == undefined" onclick="$('#makeList').click()">Next--> </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m10 l8">
+                        <select name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces" ng-change="getDestLocales(selectedDest)">
+                    <option value="" disabled selected>-- Select Destination --</option>
                     </select>
+                        <label>Destination:</label>
+                        <p>
+                            <input name="rbgroupLocale" class="validate" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
+                            />
+                            <label for="default">Default Locale <span ng-show="localeToUpload === 'DefaultLocale'">{{"(" + defaultDestLocale + ")"}}</span> </label>
+                            <input name="rbgroupLocale" class="validate" type="radio" id="rest" value="OtherLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
+                            />
+                            <label for="rest">Other Locale</label>
+                        </p>
+                    </div>
+                </div>
+                <div class="row" ng-show="localeToUpload === 'OtherLocale'">
+                    <div class="col s12 m10 l8">
+                        <label for="selectAssetLocale"> Select Asset Locale: <span class="error red-text" ng-show="newForm.ddlAssetLocale.$error.required">*</span> </label>
+                        <select name="selectAssetLocale" id="ddlAssetLocale" name="ddlAssetLocale" ng-model="selectedLocale" ng-options="l.code for l in destLocales"
+                            ng-change="setAssetLocale(selectedLocale)">
+                        <option value="" disabled selected>-- Select Locale --</option>
+                    </select>
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s12 m10 l8">
-                <input id="txtAssetUrl" class="validate" name="txtAssetUrl" ng-model="assetUrl" type="text" required/>
-                <label for="txtAssetUrl">Source URL<span class="error red-text" ng-show="newForm.txtAssetUrl.$error.required">*</span></label>
+            <!--tab2-->
+            <div id="tabMakeList" class="col s12">
+                <div class="row ">
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <a class="waves-effect waves-light btn" onclick="$('#destAndLocale').click()">
+                            <--Back</a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <a class="waves-effect waves-light btn" ng-disabled="destSpace == undefined || selectedLocale == undefined || assetList.length == 0" onclick="$('#upload').click()">Next--> </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m5 l4">
+                        <input id="txtAssetName" class="validate" name="txtAssetName" ng-model="assetName" type="text" required/>
+                        <label for="txtAssetName">Asset Name <span class="error red-text" ng-show="newForm.txtAssetName.$error.required">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m5 l4">
+                        <input id="txttitleName" class="validate" name="txttitleName" ng-model="assetTitle" type="text" required/>
+                        <label for="txttitleName">Title <span class="error red-text" ng-show="newForm.txttitleName.$error.required">*</span></label>
+                    </div>
+                    <div class="col s12 m10 l8">
+                        <label for="selectContentType">Content Type: </label>
+                        <select name="selectContentType" id="ddlContentType" ng-model="assetContentType" class="browser-default"> 
+                        <option value="" disabled selected>-- Select Content Type --</option>
+                        <option value="image/jpeg" >image/jpeg</option>
+                        <option value="image/png" >image/png</option>
+                        <option value="image/bmp" >image/bmp</option>
+                        <option value="image/gif" >image/gif</option>
+                        <option value="image/x-icon">image/x-icon</option>
+                        <option value="image/tiff">image/tiff</option>
+                        <option value="text/plain">text/plain</option>
+                        <option value="text/richtext">text/richtext</option>
+                        <option value="code/html">code/html</option>
+                        <option value="code/css">code/css</option>
+                        <option value="code/javascript">code/javascript</option>
+                        <option value="application/pdf">application/pdf</option>
+                        <option value="application/msword">application/msword</option>
+                        <option value="application/mspowerpoint">application/mspowerpoint</option>
+                        <option value="video/avi">video/avi</option>
+                        <option value="video/mpeg">video/mpeg</option>
+                        </select>
+                    </div>
+                    <div class="input-field col s12 m10 l8">
+                        <input id="txtAssetUrl" class="validate" name="txtAssetUrl" ng-model="assetUrl" type="text" required/>
+                        <label for="txtAssetUrl">Source URL<span class="error red-text" ng-show="newForm.txtAssetUrl.$error.required">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m8 l8">
+                        <br><br>
+                        <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid"
+                        />
+                        <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <table class="responsive-table bordered" data-ng-if="assetList.length > 0">
+                            <tr class="teal-text grey lighten-3">
+                                <th>Asset Name</th>
+                                <th>Title</th>
+                                <th>Content Type</th>
+                                <th>Locale</th>
+                                <th>Source URL</th>
+                                <th colspan="2">Edit/Delete</th>
+                            </tr>
+                            <tr ng-repeat="asset in assetList track by $index">
+                                <td><span class="dont-break-out" ng-model="asset.assetName">{{asset.assetName}}</span></td>
+                                <td><span class="dont-break-out" ng-model="asset.assetTitle">{{asset.assetTitle}}</span></td>
+                                <td><span class="dont-break-out" ng-model="asset.assetContentType">{{asset.assetContentType}}</span></td>
+                                <td><span class="dont-break-out" ng-model="asset.locale">{{asset.locale}}</span></td>
+                                <td><span class="dont-break-out" ng-model="asset.assetUrl">{{asset.assetUrl}}</span></td>
+                                <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.assetName,asset.assetTitle,asset.assetContentType,asset.locale,asset.assetUrl)'><i class="material-icons">mode_edit</i></button></td>
+                                <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.assetName)'><i class="material-icons">delete</i> </button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="input-field col s12 m8 l8">
-                <br><br>
-                <input id="btnAdd" class="waves-effect waves-light btn" type="button" value="Add" ng-click="saveAssetToList()" ng-disabled="newForm.$invalid"
-                />
-                <input id="btnReset" class="waves-effect waves-light btn" type="button" value="Reset" ng-click="resetData()" />
-            </div>
-        </div>
-    </form>
-    <div class="row">
-        <div class="col s12">
-            <table class="responsive-table bordered" data-ng-if="assetList.length > 0">
-                <tr class="teal-text grey lighten-3">
-                    <th>Asset Name</th>
-                    <th>Title</th>
-                    <th>Content Type</th>
-                    <th>Locale</th>
-                    <th>Source URL</th>
-                    <th colspan="2">Edit/Delete</th>
-                </tr>
-                <tr ng-repeat="asset in assetList track by $index">
-                    <td><span class="dont-break-out" ng-model="asset.assetName">{{asset.assetName}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.assetTitle">{{asset.assetTitle}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.assetContentType">{{asset.assetContentType}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.locale">{{asset.locale}}</span></td>
-                    <td><span class="dont-break-out" ng-model="asset.assetUrl">{{asset.assetUrl}}</span></td>
-                    <td><button id="btnEdit" class="waves-effect waves-light btn-floating" value="Edit" ng-click='editAssetInList(asset.assetName,asset.assetTitle,asset.assetContentType,asset.locale,asset.assetUrl)'><i class="material-icons">mode_edit</i></button></td>
-                    <td><button id="btnDelete" class="waves-effect waves-light btn red accent-2" value="Delete" ng-click='deleteAssetFromList(asset.name)'><i class="material-icons">delete</i> </button></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" ng-disabled="assetList.length < 1"
-            />
-        </div>
-    </div>
-    <!-- Switch -->
-    <div class="divider"></div>
-    <div class="switch" ng-cloak>
-        <h6>Show Activity
-            <label>
-                <input type="checkbox" ng-model="showActivity" ng-checked="true" />
-                <span class="lever right"></span>
-            </label>
-            <p><label ng-show="showActivity == true">{{displayTypeOptions.option1}}</label>
-                <label ng-show="showActivity == false">{{displayTypeOptions.option2}}</label></p>
-        </h6>
-    </div>
-    <div class="divider"></div>
-    <div class="row">
-        <div class="col s12" ng-show="successfulAssets.length > 0 && showActivity == false">
-            <ul>
-                <li ng-repeat="asset in successfulAssets">
-                    <p> <span class="new badge right-align" data-badge-caption="">Published</span>{{asset.sys.id}}</p>
-                </li>
-            </ul>
-        </div>
-        <div class="col s12" ng-show="resultSet.length > 0 && showActivity == true">
-            <ul>
-                <li ng-repeat="asset in resultSet">
-                    <p>
-                        <span class="new badge right-align" data-badge-caption="" ng-show="asset.status == 'Published'">{{asset.status}}</span>
-                        <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>{{asset.id}}
-                    </p>
-                </li>
+            <!--tab3-->
+            <div id="tabUpload" class="col s12">
+                <div class="row ">
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <a class="waves-effect waves-light btn" onclick="$('#makeList').click()">
+                            <--Back</a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <input id="btnUpload" class="waves-effect waves-light btn" type="button" value="Upload" ng-click="uploadToContentful()" ng-disabled="assetList.length == 0 || destSpace == undefined ||  selectedLocale == undefined" />
+                    </div>
+                </div>
+                <!-- Switch -->
                 <div class="divider"></div>
-            </ul>
-        </div>
+                <div class="switch" ng-cloak>
+                    <h6>Show Activity
+                        <label>
+                            <input type="checkbox" ng-model="showActivity" ng-checked="true" />
+                            <span class="lever right"></span>
+                        </label>
+                        <p><label ng-show="showActivity == true">{{displayTypeOptions.option1}}</label>
+                            <label ng-show="showActivity == false">{{displayTypeOptions.option2}}</label></p>
+                    </h6>
+                </div>
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="col s12" ng-show="successfulAssets.length > 0 && showActivity == false">
+                        <ul>
+                            <li ng-repeat="asset in successfulAssets">
+                                <p> <span class="new badge right-align" data-badge-caption="">Published</span>{{asset.sys.id}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col s12" ng-show="resultSet.length > 0 && showActivity == true">
+                        <ul>
+                            <li ng-repeat="asset in resultSet">
+                                <div class="col s10">
+                                    <span class="left-align">{{asset.id}}</span>
+                                </div>
+                                <div class="col s2">
+                                    <span class="new badge right-align" data-badge-caption="" ng-show="asset.status == 'Published'">{{asset.status}}</span>
+                                    <span class="new badge red right-align" data-badge-caption="" ng-show="asset.status != 'Published'">{{asset.status}}</span>
+                                    <div class="preloader-wrapper small active" ng-show="asset.status == 'Started'">
+                                        <div class="spinner-layer spinner-green-only">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div>
+                                            <div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <div class="divider"></div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+
 </div>

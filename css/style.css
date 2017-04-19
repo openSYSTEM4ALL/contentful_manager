@@ -2,11 +2,14 @@ li.active {
     background-color: #03a9f4 !important;
 }
 
-li.active a {
+li.active > a {
     color: #fff !important;
 }
 li.active span {
     color: #fff !important;
+}
+.menu > li > a.active {
+    background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
 .parallax-container {

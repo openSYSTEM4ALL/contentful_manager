@@ -1,0 +1,174 @@
+<div>
+    <div>
+        <div class="row">
+            <div class="col s6 m4 offset-m2">
+                <div class="card-small white-text z-depth-2">
+                    <div class="card-content teal lighten-2">
+                        <div class="container">
+                            <p class="card-title white-text">Total Content Types</p>
+                            <h5>{{names.length>0?names.length:0}}
+                                <span class="teal-text">.</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6 m4">
+                <div class="card-small white-text z-depth-2">
+                    <div class="card-content cyan darken-2">
+                        <div class="container">
+                            <p class="card-title white-text">Selected</p>
+                            <h5>{{(names | filter: { selected: true}).length}}
+                                <span class="teal-text">.</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+    </div>
+    <!--tabs Screen-->
+    <div class="row">
+        <div>
+            <ul class="tabs grey lighten-3" style="overflow-x: hidden;">
+                <li class="tab col s4"><a id="tabContentTypeList" href="#contentTypeList" class="red-text bold">Source</a></li>
+                <li class="tab col s4"><a id="tabSelectedContentType" href="#selectedContentType" class="red-text bold accent-2">Destination</a></li>
+                <li class="tab col s4"><a id="tabMigratedCTList" href="#migratedCTList" class="red-text bold accent-2">Migrate</a></li>
+            </ul>
+        </div>
+        <!--tab1-->
+        <div id="contentTypeList" class="col s12">
+            <div class="row ">
+            </div>
+            <div class="row ">
+                <div class="col s6">
+                    <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#tabSelectedContentType').click()">Next--> </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s10 m6 l6">
+                    <label for="selectsource">  Source : </label>
+                    <select class="filled-in browser-default" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces track by x.value"
+                        ng-change="changedValue(selectedSource)">
+                        <option value="" disabled selected>-- Select Source --</option>
+                        </select>
+                </div>
+            </div>
+            <!--Fetch all published assets and keep it in selectedfiles variable -->
+            <div class="row">
+                <div class="input-field col s12 m6 l6" data-ng-show="names.length>0">
+                    <input id="searchContentType" type="text" ng-model="searchText" class="validate">
+                    <label for="search"><i class="material-icons">search</i>Search</label>
+                </div>
+                <div class="col s12">
+                    <ul class="responsive-table" data-ng-show="names.length>0">
+                        <li data-ng-show="searchText == undefined || searchText.length <=0">
+                            <input type="checkbox" id="selectAllCheckbox" class="filled-in" ng-click="toggleAll()" ng-model="selectedAll" />
+                            <label for="selectAllCheckbox" class="teal-text">Select All</label>
+                        </li>
+                    </ul>
+                    <div class="divider"></div>
+                </div>
+                <div class="col s12">
+                    <ul id="sourceContentType">
+                        <li ng-repeat="x in names" ng-init="count=$index">
+                            <span class="new badge" data-badge-caption="">{{(names.indexOf(x)+1)}}</span>
+                            <input type="checkbox" class="filled-in check-count" id="{{x.sys.id+(names.indexOf(x)+1)}}" ng-init="" ng-change="toggleSelectAll()"
+                                ng-model="x.selected" />
+                            <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{x.sys.id}}</label>
+                            <p> Field count: <span class="blue-text"> {{x.fields.length}}</span></p>
+                            <div class="divider"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--tab2 -->
+        <div id="selectedContentType" class="col s12">
+            <div class="row ">
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <a class="waves-effect waves-light btn" onclick="$('#tabContentTypeList').click()">
+                        <--Back</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#tabMigratedCTList').click()">Confirm--></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s10">
+                    <label for="selectDestSpace"> Select Destination: </label>
+                    <select class="browser-default" name="selectDestSpace" id="ddlDestSpace" ng-model="selectedDest" ng-options="x.space for x in spaces track by x.value">
+                        <option value="" disabled selected>-- Select Destination --</option>
+                        </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <ul>
+                        <li ng-repeat="x in names | filter: { selected: true}" ng-init="count=$index">
+                            <span class="new badge" data-badge-caption="">{{(names.indexOf(x)+1)}}</span>
+                            <input type="checkbox" class="filled-in check-count" id="{{x.sys.id+(names.indexOf(x)+1)}}" ng-init="" ng-change="toggleSelectAll()"
+                                ng-model="x.selected" />
+                            <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{x.sys.id}}</label>
+                            <p> Field count: <span class="blue-text">{{x.fields.length}}</span></p>
+                            <div class="divider"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--tab3 -->
+        <div id="migratedCTList" class="col s12">
+            <div class="row ">
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <a class="waves-effect waves-light btn" onclick="$('#tabSelectedContentType').click()">
+                        <--Back</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="selectedSource == undefined || selectedDest == undefined || (names | filter: { selected: true}).length <= 0"
+                        ng-click="migratecontent()">Migrate <i class="material-icons right">send</i></a>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="row">
+                <ul>
+                    <li ng-repeat="ctype in names | filter: { selected: true}" ng-if="ctype.status.length>0">
+                        <div class="col s10">
+                            <label class="grey-text text-accent-2" for="{{ctype.sys.id+(names.indexOf(x)+1)}}">{{ctype.sys.id}}</label>
+                            <p> Field count: <span class="blue-text">{{ctype.fields.length}}</span></p>
+                            <div class="divider"></div>
+                        </div>
+                        <div class="col s2">
+                            <span class="new badge right-align" data-badge-caption="" ng-show="ctype.status == 'Published'">{{ctype.status}}</span>
+                            <span class="new badge blue right-align" data-badge-caption="" ng-show="ctype.status == 'Exists - Updating'">{{ctype.status}}</span>
+                            <span class="new badge red right-align" data-badge-caption="" ng-show="ctype.status != 'Published' && ctype.status != 'Exists - Updating'">{{ctype.status}}</span>
+                            <div class="preloader-wrapper small active" ng-show="ctype.status == 'Started' || ctype.status == 'Exists - Updating'">
+                                <div class="spinner-layer spinner-green-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
