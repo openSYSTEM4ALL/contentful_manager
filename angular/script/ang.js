@@ -3,35 +3,35 @@ var app = angular.module('myApp', ['ngRoute']);
 app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
     $routeProvider.when("/migrate-content-types", {
         controller: "contentTypeController",
-        templateUrl: "templates/content-types-migration.html"
+        templateUrl: "angular/templates/content-types-migration.html"
     });
     $routeProvider.when("/migrate-entries", {
         controller: "entriesController",
-        templateUrl: "templates/entries-migration.html"
+        templateUrl: "angular/templates/entries-migration.html"
     });
     $routeProvider.when("/migrate", {
         controller: "layoutController",
-        templateUrl: "templates/migrate.html"
+        templateUrl: "angular/templates/migrate.html"
     });
     $routeProvider.when("/login", {
         controller: "loginController",
-        templateUrl:"templates/login.html"
+        templateUrl:"angular/templates/login.html"
     });
     $routeProvider.when("/configure", {
         controller: "layoutController",
-        templateUrl: "templates/configure.html"
+        templateUrl: "angular/templates/configure.html"
     });
     $routeProvider.when("/upload", {
         controller: "uploadController",
-        templateUrl: "templates/upload.html"
+        templateUrl: "angular/templates/upload.html"
     });
     $routeProvider.when("/bulkupload", {
         controller: "bulkController",
-        templateUrl:"templates/bulkupload.html"
+        templateUrl:"angular/templates/bulkupload.html"
     });
     $routeProvider.when("/", {
         controller: "landingController",
-        templateUrl:"templates/landing.html"
+        templateUrl:"angular/templates/landing.html"
     });
 
     $routeProvider.otherwise({

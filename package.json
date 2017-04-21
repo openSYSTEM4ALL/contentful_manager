@@ -1,0 +1,14 @@
+{
+  "author": "Ashutosh Sharma",
+  "name": "contentful_manager",
+  "homepage": "",
+  "version": "0.0.1",
+  
+  "dependencies": {
+    "express": "^4.14.0"
+    
+  },
+  "devDependencies": {
+
+  }
+}
