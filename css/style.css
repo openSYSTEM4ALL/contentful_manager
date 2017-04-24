@@ -69,3 +69,8 @@ li.active span {
   hyphens: auto;
 
 }
+
+.beta-icon {
+    content: url(/images/Beta-20.png);
+    height: 20px;
+}
