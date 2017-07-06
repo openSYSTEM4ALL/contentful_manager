@@ -3,6 +3,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
     //variables
     $scope.spaces = spac;
     $scope.names = [];
+    $scope.namesT = [];
     $scope.totalEntries = 0;
     $scope.showActivity = true;
 
@@ -16,7 +17,15 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             })
             .then((assets) => {
                 $scope.totalEntries = assets.total;
-                $scope.names = $scope.names.concat(assets.items);
+                $scope.namesT = $scope.namesT.concat(assets.items);
+                $scope.names = [];
+                angular.forEach($scope.namesT, function (entry) {
+                    if (entry.isUpdated() || entry.isDraft() || entry.isArchived()) {
+                        // do nothing just skip   
+                    } else {
+                        $scope.names.push(entry);
+                    }
+                });
                 if ($scope.names.length < $scope.totalEntries) {
                     skipValue = skipValue + 100;
                     $scope.getAllEntries(space, skipValue);
@@ -41,6 +50,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
             .then((space) => {
                 // Now that we have a space, we can get assets from that space
                 $scope.names = [];
+                $scope.namesT = [];
                 $scope.totalEntries = 0;
                 var skipValue = 0;
 
