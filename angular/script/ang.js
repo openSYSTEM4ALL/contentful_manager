@@ -9,6 +9,10 @@ app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $lo
         controller: "entriesController",
         templateUrl: "angular/templates/entries-migration.html"
     });
+    $routeProvider.when("/migrate-entries-locale", {
+        controller: "entriesLocaleController",
+        templateUrl: "angular/templates/entries-locale-migration.html"
+    });
     $routeProvider.when("/migrate", {
         controller: "layoutController",
         templateUrl: "angular/templates/migrate.html"
