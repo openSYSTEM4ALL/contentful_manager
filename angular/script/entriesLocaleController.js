@@ -323,8 +323,11 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
         var ctFields = $scope.selectedContentType.fields;
         var entryid = x.sys.id;
         var fields = x.fields;
-        var fieldobj = {};
-        fieldobj.fields = fields;
+        var fieldobj = { 
+            fields: {
+
+            }            
+    };
 
         space.getEntry(entryid)
             .then(entry => {
@@ -358,8 +361,12 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                     });
 
             }).catch((notfoundentry) => {
-                space.createEntryWithId(contenTypeID, entryid,
-                        fieldobj)
+                for (var k = 0; k < ctFields.length; k++){
+                    var fieldId = ctFields[k].id;
+                    fieldobj.fields[fieldId] = {};
+                    fieldobj.fields[fieldId][locale] = x.fields[fieldId][locale];
+                }
+                space.createEntryWithId(contenTypeID, entryid, fieldobj)
                     .then(newentry => {
                         newentry.publish()
                             .then(entry => {
