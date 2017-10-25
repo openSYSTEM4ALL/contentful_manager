@@ -55,6 +55,7 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                         $scope.srcSpace = space;
                         // Now that we have a space, we can get assets from that space
                         $scope.srcContentTypes = [];
+                        console.log($scope.srcContentTypes.length);
                         $scope.totalContentTypes = 0;
                         var skipValue = 0;
         
@@ -91,8 +92,10 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
         $scope.names = [];
         $scope.totalEntries = 0;
         var skipValue = 0;
-        $scope.selectedContentTypeId = selectedContentType.sys.id
-        $scope.getAllEntries($scope.srcSpace, $scope.selectedContentTypeId, skipValue);
+        if(selectedContentType != null) {
+            $scope.selectedContentTypeId = selectedContentType.sys.id
+            $scope.getAllEntries($scope.srcSpace, $scope.selectedContentTypeId, skipValue);
+        }        
     }
     // end of changedvalue 
 
@@ -107,7 +110,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
             $scope.selectedLocale = ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text());
-            $scope.setLocaleForEachAsset();
             $scope.$apply();
         }
     });
@@ -118,7 +120,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
-            //$scope.setLocaleForEachAsset();
         } 
         else if ($scope.localeToUpload == "OtherLocale") {
                 $scope.selectedLocale = null;
@@ -218,7 +219,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     });
     //Migrate Button Click - Migrate entries from source to Destination
     $scope.migratecontent = function () {
-
 
         $scope.tags = [];
         $scope.publishedAsset = [];
@@ -390,50 +390,5 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                         $scope.$apply();
                     });
             })
-    }
-
-    $scope.migrateContentRecursive = function () {
-
-        if ($scope.selectedDest.token.length > 0) {
-            $scope.srcClient = contentfulManagement.createClient({
-                accessToken: $scope.selectedDest.token
-            });
-            $scope.srcClient.getSpace(space.value)
-                .then((space) => {
-                    migrateEntriesRecur(space, 0);
-                });
-
-        } else {
-            Materialize.toast('Please check for valid destination space or valid token!', 4000);
-        }
-    };
-
-    function migrateEntriesRecur(space, i) {
-        if (i > $scope.names.length) {
-            return; // do nothing
-        } else {
-            if ($scope.names[i].selected == true) {
-                space.getEntry(entryid)
-                    .then(entry => {
-                        console.log(entry);
-                        entry.fields = fields;
-                        entry.update()
-                            .then((updatedentry) => updatedentry.publish()
-                                .then(uentry => console.log("updated entry version:" + uentry.sys.publishedVersion)))
-                        migrateEntriesRecur(space, i++);
-                    }).catch((notfoundentry) => {
-                        space.createEntryWithId(contenTypeID, entryid,
-                                fieldobj)
-                            .then(newentry => newentry.publish()
-                                .then(entry => console.log("new entry version" + entry.sys.publishedVersion))
-                            )
-                        migrateEntriesRecur(space, i++);
-                    });
-            } // end if
-            else {
-                migrateEntriesRecur(space, i++);
-            }
-
-        } // end else
     }
 }]);
