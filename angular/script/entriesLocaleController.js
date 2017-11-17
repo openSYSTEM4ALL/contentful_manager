@@ -24,50 +24,51 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
 
     //functions
     $scope.getAllContentTypes = function (space, skipValue) {
-        
-                space.getContentTypes({
-                        skip: skipValue,
-                        order: "sys.createdAt"
-                    })
-                    .then((contentTypes) => {
-                        $scope.totalContentTypes = contentTypes.total;
-                        $scope.srcContentTypes = $scope.srcContentTypes.concat(contentTypes.items);
-                        if ($scope.srcContentTypes.length < $scope.totalContentTypes) {
-                            skipValue = skipValue + 100;
-                            $scope.getAllContentTypes(space, skipValue);
-                        }
-                        //$scope.countSourceAssets();
-                        $scope.$apply();
-                    }).catch((err) => {
-                        var e = JSON.parse(err.message);
-                        console.log(e.status + ':' + e.statusText);
-                    })
-            }
+
+        space.getContentTypes({
+                skip: skipValue,
+                order: "sys.createdAt"
+            })
+            .then((contentTypes) => {
+                $scope.totalContentTypes = contentTypes.total;
+                $scope.srcContentTypes = $scope.srcContentTypes.concat(contentTypes.items);
+                if ($scope.srcContentTypes.length < $scope.totalContentTypes) {
+                    skipValue = skipValue + 100;
+                    $scope.getAllContentTypes(space, skipValue);
+                }
+                //$scope.countSourceAssets();
+                $scope.$apply();
+            }).catch((err) => {
+                var e = JSON.parse(err.message);
+                console.log(e.status + ':' + e.statusText);
+            })
+    }
 
     $scope.fetchContentTypes = function (srcitem) {
-               
-                $scope.srcClient = contentfulManagement.createClient({
-                    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-                    accessToken: srcitem.token
-                });
-                $scope.srcClient.getSpace(srcitem.value)
-                    .then((space) => {
-                        $scope.srcSpace = space;
-                        // Now that we have a space, we can get assets from that space
-                        $scope.srcContentTypes = [];
-                        console.log($scope.srcContentTypes.length);
-                        $scope.totalContentTypes = 0;
-                        var skipValue = 0;
-        
-                        $scope.getAllContentTypes(space, skipValue);
-                        $scope.reRender();
-                        $scope.$apply();
-                    });
-            }
-            // end of changedvalue 
-        
+
+        $scope.srcClient = contentfulManagement.createClient({
+            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+            accessToken: srcitem.token
+        });
+        $scope.srcClient.getSpace(srcitem.value)
+            .then((space) => {
+                $scope.srcSpace = space;
+                // Now that we have a space, we can get assets from that space
+                $scope.srcContentTypes = [];
+                console.log($scope.srcContentTypes.length);
+                $scope.totalContentTypes = 0;
+                var skipValue = 0;
+
+                $scope.getAllContentTypes(space, skipValue);
+                $scope.reRender();
+                $scope.$apply();
+            });
+    }
+    // end of changedvalue 
+
     $scope.getAllEntries = function (space, selectedContentType, skipValue) {
-        space.getEntries({content_type: selectedContentType,
+        space.getEntries({
+                content_type: selectedContentType,
                 skip: skipValue,
                 order: "sys.createdAt"
             })
@@ -92,20 +93,35 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
         $scope.names = [];
         $scope.totalEntries = 0;
         var skipValue = 0;
-        if(selectedContentType != null) {
+        if (selectedContentType != null) {
             $scope.selectedContentTypeId = selectedContentType.sys.id
             $scope.getAllEntries($scope.srcSpace, $scope.selectedContentTypeId, skipValue);
-        }        
+        }
     }
     // end of changedvalue 
 
-    function searchArrayOfObjects(nameKey, array){
-        for (var i=0; i < array.length; i++) {
+    function searchArrayOfObjects(nameKey, array) {
+        for (var i = 0; i < array.length; i++) {
             if (array[i].name === nameKey) {
                 return array[i];
             }
         }
     }
+
+    $('.modal').modal({
+        dismissible: false, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        inDuration: 300, // Transition in duration
+        outDuration: 200, // Transition out duration
+        startingTop: '4%', // Starting top style attribute
+        endingTop: '10%', // Ending top style attribute
+        ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+          console.log(modal, trigger);
+        },
+        complete: function() { 
+         } // Callback for Modal close
+      }
+    );
 
     $('#ddlAssetLocale').on('change', function (e) {
         if ($('#ddlAssetLocale').siblings('.dropdown-content').find('li.active>span').text() != "") {
@@ -113,17 +129,16 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
             $scope.$apply();
         }
     });
-    
+
     $("input[name='rbgroupLocale']").on('change', function (e) {
         if ($scope.localeToUpload == "DefaultLocale") {
             if (angular.isUndefinedOrNullOrEmpty($scope.defaultDestLocale)) {
                 $scope.findDefaultLocale();
             }
             $scope.selectedLocale = $scope.defaultDestLocale;
-        } 
-        else if ($scope.localeToUpload == "OtherLocale") {
-                $scope.selectedLocale = null;
-                $scope.reRender();                
+        } else if ($scope.localeToUpload == "OtherLocale") {
+            $scope.selectedLocale = null;
+            $scope.reRender();
         }
         $scope.$apply();
     });
@@ -219,7 +234,7 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     });
     //Migrate Button Click - Migrate entries from source to Destination
     $scope.migratecontent = function () {
-
+        //$('#confirmModal').modal('open');
         $scope.tags = [];
         $scope.publishedAsset = [];
         $scope.resultSet = [];
@@ -316,25 +331,32 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     function migrateEntry(space, x) {
         var locale = $scope.selectedLocale;
         var contenTypeID = x.sys.contentType.sys.id;
-        if($scope.selectedContentTypeId != contenTypeID) {
+        if ($scope.selectedContentTypeId != contenTypeID) {
             return null;
             console.log("Content Type mismatch error!")
         }
         var ctFields = $scope.selectedContentType.fields;
         var entryid = x.sys.id;
         var fields = x.fields;
-        var fieldobj = { 
+        var fieldobj = {
             fields: {
 
-            }            
-    };
+            }
+        };
 
         space.getEntry(entryid)
             .then(entry => {
                 console.log(entry);
-                for (var k = 0; k < ctFields.length; k++){
+                for (var k = 0; k < ctFields.length; k++) {
                     var fieldId = ctFields[k].id;
-                    entry.fields[fieldId][locale] = x.fields[fieldId][locale];
+                    fieldobj.fields[fieldId] = {};
+                    var fieldsPresent = Object.keys(x.fields);                    
+                    if (fieldsPresent.indexOf(fieldId) > -1) {
+                        var localesPresent = Object.keys(x.fields[fieldId]);
+                        if (localesPresent.indexOf(locale) > -1) {
+                            fieldobj.fields[fieldId][locale] = x.fields[fieldId][locale];
+                        }
+                    }
                 }
                 //entry.fields = fields;
                 entry.update()
@@ -361,10 +383,16 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                     });
 
             }).catch((notfoundentry) => {
-                for (var k = 0; k < ctFields.length; k++){
+                for (var k = 0; k < ctFields.length; k++) {
                     var fieldId = ctFields[k].id;
                     fieldobj.fields[fieldId] = {};
-                    fieldobj.fields[fieldId][locale] = x.fields[fieldId][locale];
+                    var fieldsPresent = Object.keys(x.fields);                    
+                    if (fieldsPresent.indexOf(fieldId) > -1) {
+                        var localesPresent = Object.keys(x.fields[fieldId]);
+                        if (localesPresent.indexOf(locale) > -1) {
+                            fieldobj.fields[fieldId][locale] = x.fields[fieldId][locale];
+                        }
+                    }
                 }
                 space.createEntryWithId(contenTypeID, entryid, fieldobj)
                     .then(newentry => {
@@ -390,5 +418,9 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                         $scope.$apply();
                     });
             })
+    }
+
+     $scope.closeModal = function () {
+        $('#confirmModal').modal('close');
     }
 }]);

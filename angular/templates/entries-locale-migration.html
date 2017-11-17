@@ -6,7 +6,7 @@
                     <div class="container">
                         <p class="card-title white-text">Total Entries</p>
                         <h5>{{names.length>0?names.length:0}}
-                            
+
                         </h5>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
                     <div class="container">
                         <p class="card-title white-text">Selected</p>
                         <h5>{{(names | filter: { selected: true}).length}}
-                            
+
                         </h5>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
         <div class="row">
             <div class="">
                 <ul class="tabs grey lighten-3">
-                    <li class="tab col s4"><a id="assetslistid" href="#assetslist" class="red-text bold">Source</a></li>
+                    <li class="tab col s4"><a id="assetslistid" href="#assetslist" class="red-text bold" >Source</a></li>
                     <li class="tab col s4"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Destination</a></li>
                     <li class="tab col s3"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
                 </ul>
@@ -56,7 +56,8 @@
                         <a class="waves-effect waves-light btn" href="#/configure">Configure</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined || selectedContentType == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#selectedAssetid').click()">Next--> </a>
+                        <a class="waves-effect waves-light btn" ng-disabled="selectedSource == undefined || selectedContentType == undefined || (names | filter: { selected: true}).length <= 0"
+                            onclick="$('#selectedAssetid').click()">Next--> </a>
                     </div>
                 </div>
                 <div class="row">
@@ -68,12 +69,12 @@
                             </select>
                     </div>
                     <div class="col s12 m6 l6" ng-hide="selectedSource == undefined || srcContentTypes.length == 0">
-                            <label for="selectContentType">  Content Type : </label>
-                            <select class="filled-in browser-default" name="selectContentType" id="ddlSrcContentType" ng-model="selectedContentType" ng-options="c.name for c in srcContentTypes track by c.sys.id"
-                                ng-change="changedValue(selectedContentType)">
+                        <label for="selectContentType">  Content Type : </label>
+                        <select class="filled-in browser-default" name="selectContentType" id="ddlSrcContentType" ng-model="selectedContentType"
+                            ng-options="c.name for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
                                 <option value="" disabled selected>-- Select Content Type --</option>
                                 </select>
-                     </div>
+                    </div>
                 </div>
                 <!--Fetch all published assets and keep it in selectedfiles variable -->
                 <div class="row">
@@ -114,7 +115,8 @@
                             <--Back</a>
                     </div>
                     <div class="col s6 right-align">
-                        <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined || selectedLocale == undefined || (names | filter: { selected: true}).length <= 0" onclick="$('#migratedAssetid').click()">Confirm--></a>
+                        <a class="waves-effect waves-light btn" ng-disabled="selectedDest == undefined || selectedLocale == undefined || (names | filter: { selected: true}).length <= 0"
+                            onclick="$('#migratedAssetid').click()">Confirm--></a>
                     </div>
                 </div>
                 <div class="row">
@@ -124,7 +126,7 @@
                             ng-change="getDestLocales(selectedDest)">
                             <option value="" disabled selected>-- Select Destination --</option>
                             </select>
-                            <p>
+                        <p>
                             <input name="rbgroupLocale" class="validate" type="radio" id="default" value="DefaultLocale" ng-model="localeToUpload" ng-disabled="checkDest()"
                             />
                             <label for="default">Default Locale <span ng-show="localeToUpload === 'DefaultLocale'">{{"(" + defaultDestLocale + ")"}}</span> </label>
@@ -164,13 +166,14 @@
                 </div>
                 <div class="row">
                     <div class="col s12 right-align">
-                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="selectedSource == undefined || selectedContentType == undefined || selectedDest == undefined || selectedLocale == undefined || (names | filter: { selected: true}).length <= 0" ng-click="migratecontent()">Migrate <i class="material-icons right">send</i></a>
+                        <a class="waves-effect waves-light btn" id="btnMigrate" ng-disabled="selectedSource == undefined || selectedContentType == undefined || selectedDest == undefined || selectedLocale == undefined || (names | filter: { selected: true}).length <= 0"
+                        data-target="confirmModal">Migrate <i class="material-icons right">send</i></a>
                     </div>
                 </div>
-               
+
                 <div class="divider"></div>
                 <div class="row">
-                     <ul>
+                    <ul>
                         <li ng-repeat="entry in names | filter: { selected: true}" ng-if="entry.status.length > 0">
                             <div class="col s10">
                                 <label class="grey-text text-accent-2" for="{{x.sys.id+(names.indexOf(x)+1)}}">{{entry.sys.id}}</label>
@@ -193,12 +196,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Modal Structure -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h4 class="">For Your Information</h4>
+            <p class="modal-text">This process will not update any existing content type at the destination, however, it will create the content type if not present. If there is any modifiation in the content type at source please use <em>Content Type Migration</em> option to update the content type at the destination. </p>
+        </div>
+        <div class="grey lighten-2 modal-footer">
+                <a id="modalAgree" href="" class="green darken-1 modal-button modal-action modal-close waves-effect waves-green btn" ng-click="migratecontent()">Go Ahead</a>
+            <a id="modalDisagree" href="" class="red lighten-1 modal-button modal-action modal-close waves-effect waves-red btn">Need to confirm</a>            
         </div>
     </div>
 </div>
