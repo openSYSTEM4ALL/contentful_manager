@@ -100,14 +100,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     }
     // end of changedvalue 
 
-    function searchArrayOfObjects(nameKey, array) {
-        for (var i = 0; i < array.length; i++) {
-            if (array[i].name === nameKey) {
-                return array[i];
-            }
-        }
-    }
-
     $('.modal').modal({
         dismissible: false, // Modal can be dismissed by clicking outside of the modal
         opacity: .5, // Opacity of modal background
@@ -234,7 +226,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     });
     //Migrate Button Click - Migrate entries from source to Destination
     $scope.migratecontent = function () {
-        //$('#confirmModal').modal('open');
         $scope.tags = [];
         $scope.publishedAsset = [];
         $scope.resultSet = [];
