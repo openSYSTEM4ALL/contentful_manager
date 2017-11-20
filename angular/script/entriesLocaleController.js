@@ -91,6 +91,7 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
 
         // Now that we have a space, we can get assets from that space
         $scope.names = [];
+        $scope.selectedAll = false;
         $scope.totalEntries = 0;
         var skipValue = 0;
         if (selectedContentType != null) {
@@ -338,18 +339,22 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
         space.getEntry(entryid)
             .then(entry => {
                 console.log(entry);
+                var fieldsPresent = Object.keys(x.fields);
                 for (var k = 0; k < ctFields.length; k++) {
-                    var fieldId = ctFields[k].id;
-                    fieldobj.fields[fieldId] = {};
-                    var fieldsPresent = Object.keys(x.fields);                    
+                    var fieldId = ctFields[k].id;                                       
                     if (fieldsPresent.indexOf(fieldId) > -1) {
                         var localesPresent = Object.keys(x.fields[fieldId]);
                         if (localesPresent.indexOf(locale) > -1) {
-                            fieldobj.fields[fieldId][locale] = x.fields[fieldId][locale];
+                            if(Object.keys(entry.fields).indexOf(fieldId) > -1) {
+                                entry.fields[fieldId][locale] = x.fields[fieldId][locale];
+                            }
+                            else {
+                                entry.fields[fieldId] = {};
+                                entry.fields[fieldId][locale] = x.fields[fieldId][locale];
+                            }                            
                         }
                     }
                 }
-                //entry.fields = fields;
                 entry.update()
                     .then((updatedentry) => {
                         updatedentry.publish()
