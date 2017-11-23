@@ -206,12 +206,12 @@
     <!-- Modal Structure -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
-            <h4 class="">For Your Information</h4>
+            <h4 class="">For Your Information Please</h4>
             <p class="modal-text">This process will not update any existing content type at the destination, however, it will create the content type if not present. If there is any modifiation in the content type at source please use <em>Content Type Migration</em> option to update the content type at the destination. </p>
         </div>
         <div class="grey lighten-2 modal-footer">
                 <a id="modalAgree" href="" class="green darken-1 modal-button modal-action modal-close waves-effect waves-green btn" ng-click="migratecontent()">Go Ahead</a>
-            <a id="modalDisagree" href="" class="red lighten-1 modal-button modal-action modal-close waves-effect waves-red btn">Need to confirm</a>            
+            <a id="modalDisagree" href="" class="red lighten-1 modal-button modal-action modal-close waves-effect waves-red btn" onclick="$('#assetslistid').click()">Need to confirm</a>            
         </div>
     </div>
 </div>
