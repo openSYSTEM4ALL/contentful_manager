@@ -17,6 +17,7 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
     $scope.spaces = spac;
     $scope.srcContentTypes = [];
     $scope.names = [];
+    $scope.namesT = [];
     $scope.defaultDestLocale = null;
     $scope.destLocales = [];
     $scope.totalEntries = 0;
@@ -64,7 +65,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                 $scope.$apply();
             });
     }
-    // end of changedvalue 
 
     $scope.getAllEntries = function (space, selectedContentType, skipValue) {
         space.getEntries({
@@ -74,7 +74,15 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
             })
             .then((assets) => {
                 $scope.totalEntries = assets.total;
-                $scope.names = $scope.names.concat(assets.items);
+                $scope.namesT = $scope.namesT.concat(assets.items);
+                $scope.names = [];
+                angular.forEach($scope.namesT, function (entry) {
+                    if (entry.isUpdated() || entry.isDraft() || entry.isArchived()) {
+                        // do nothing just skip   
+                    } else {
+                        $scope.names.push(entry);
+                    }
+                });
                 if ($scope.names.length < $scope.totalEntries) {
                     skipValue = skipValue + 100;
                     $scope.getAllEntries(space, selectedContentType, skipValue);
@@ -91,6 +99,7 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
 
         // Now that we have a space, we can get assets from that space
         $scope.names = [];
+        $scope.namesT = [];
         $scope.selectedAll = false;
         $scope.totalEntries = 0;
         var skipValue = 0;

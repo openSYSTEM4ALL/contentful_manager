@@ -50,12 +50,18 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col s10 m6 l6">
+                <div class="col s12 m6 l6">
                     <label for="selectsource">  Source : </label>
-                    <select class="filled-in browser-default" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces track by x.value"
-                        ng-change="changedValue(selectedSource)">
+                    <select class="filled-in browser-default" name="selectSrcSpace" id="ddlSrcSpace" ng-model="selectedSource" ng-options="x.space for x in spaces track by x.value" ng-change="fetchContentTypes(selectedSource)">
                         <option value="" disabled selected>-- Select Source --</option>
-                        </select>
+                    </select>
+                </div>
+                <div class="col s12 m6 l6" ng-hide="selectedSource == undefined || srcContentTypes.length == 0">
+                    <label for="selectContentType">  Content Type : </label>
+                    <select class="filled-in browser-default" name="selectContentType" id="ddlSrcContentType" ng-model="selectedContentType"
+                        ng-options="c.name for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
+                            <option value="" disabled selected>-- Select Content Type --</option>
+                            </select>
                 </div>
             </div>
             <!--Fetch all published assets and keep it in selectedfiles variable -->

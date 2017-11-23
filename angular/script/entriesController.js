@@ -1,17 +1,69 @@
 app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$window', '$filter', '$interval', function ($scope, $http, $q, $timeout, $window, $filter, $interval) {
     $('ul.tabs').tabs();
+
+    $scope.$on('$viewContentLoaded', function () {
+        //call it here
+        $scope.reRender();
+    });
+    $scope.reRender = function () {
+        $('select').material_select();
+    }
+
     //variables
     $scope.spaces = spac;
+    $scope.srcContentTypes = [];
     $scope.names = [];
     $scope.namesT = [];
     $scope.totalEntries = 0;
     $scope.showActivity = true;
 
     //functions
+    $scope.getAllContentTypes = function (space, skipValue) {
+        
+                space.getContentTypes({
+                        skip: skipValue,
+                        order: "sys.createdAt"
+                    })
+                    .then((contentTypes) => {
+                        $scope.totalContentTypes = contentTypes.total;
+                        $scope.srcContentTypes = $scope.srcContentTypes.concat(contentTypes.items);
+                        if ($scope.srcContentTypes.length < $scope.totalContentTypes) {
+                            skipValue = skipValue + 100;
+                            $scope.getAllContentTypes(space, skipValue);
+                        }
+                        //$scope.countSourceAssets();
+                        $scope.$apply();
+                    }).catch((err) => {
+                        var e = JSON.parse(err.message);
+                        console.log(e.status + ':' + e.statusText);
+                    })
+            }
+        
+            $scope.fetchContentTypes = function (srcitem) {
+        
+                $scope.srcClient = contentfulManagement.createClient({
+                    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+                    accessToken: srcitem.token
+                });
+                $scope.srcClient.getSpace(srcitem.value)
+                    .then((space) => {
+                        $scope.srcSpace = space;
+                        // Now that we have a space, we can get assets from that space
+                        $scope.srcContentTypes = [];
+                        console.log($scope.srcContentTypes.length);
+                        $scope.totalContentTypes = 0;
+                        var skipValue = 0;
+        
+                        $scope.getAllContentTypes(space, skipValue);
+                        $scope.reRender();
+                        $scope.$apply();
+                    });
+            }
 
-    $scope.getAllEntries = function (space, skipValue) {
+    $scope.getAllEntries = function (space, selectedContentType, skipValue) {
 
         space.getEntries({
+                content_type: selectedContentType,
                 skip: skipValue,
                 order: "sys.createdAt"
             })
@@ -39,23 +91,19 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
     }
 
 
-    $scope.changedValue = function (srcitem) {
+    $scope.changedValue = function (selectedContentType) {
 
+        // Now that we have a space, we can get assets from that space
+        $scope.names = [];
+        $scope.namesT = [];
+        $scope.selectedAll = false;
+        $scope.totalEntries = 0;
+        var skipValue = 0;
 
-        $scope.srcClient = contentfulManagement.createClient({
-            // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-            accessToken: srcitem.token
-        });
-        $scope.srcClient.getSpace(srcitem.value)
-            .then((space) => {
-                // Now that we have a space, we can get assets from that space
-                $scope.names = [];
-                $scope.namesT = [];
-                $scope.totalEntries = 0;
-                var skipValue = 0;
-
-                $scope.getAllEntries(space, skipValue);
-            });
+        if (selectedContentType != null) {
+            $scope.selectedContentTypeId = selectedContentType.sys.id
+            $scope.getAllEntries($scope.srcSpace, $scope.selectedContentTypeId, skipValue);
+        }
     }
     // end of changedvalue 
     $scope.toggleAll = function () {
@@ -95,7 +143,6 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
     });
     //Migrate Button Click - Migrate entries from source to Destination
     $scope.migratecontent = function () {
-
 
         $scope.tags = [];
         $scope.publishedAsset = [];
