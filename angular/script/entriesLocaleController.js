@@ -37,7 +37,6 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                     skipValue = skipValue + 100;
                     $scope.getAllContentTypes(space, skipValue);
                 }
-                //$scope.countSourceAssets();
                 $scope.$apply();
             }).catch((err) => {
                 var e = JSON.parse(err.message);
@@ -66,9 +65,9 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
             });
     }
 
-    $scope.getAllEntries = function (space, selectedContentType, skipValue) {
+    $scope.getAllEntries = function (space, selectedContentTypeId, skipValue) {
         space.getEntries({
-                content_type: selectedContentType,
+                content_type: selectedContentTypeId,
                 skip: skipValue,
                 order: "sys.createdAt"
             })
@@ -85,9 +84,8 @@ app.controller('entriesLocaleController', ['$scope', '$http', '$q', '$timeout', 
                 });
                 if ($scope.names.length < $scope.totalEntries) {
                     skipValue = skipValue + 100;
-                    $scope.getAllEntries(space, selectedContentType, skipValue);
+                    $scope.getAllEntries(space, selectedContentTypeId, skipValue);
                 }
-                //$scope.countSourceAssets();
                 $scope.$apply();
             }).catch((err) => {
                 var e = JSON.parse(err.message);

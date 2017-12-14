@@ -31,7 +31,15 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                             skipValue = skipValue + 100;
                             $scope.getAllContentTypes(space, skipValue);
                         }
-                        //$scope.countSourceAssets();
+                        var optionAll = {
+                            description : "Select All",
+                            displayField : "All Content Types",
+                            name : "All Content Types",
+                            sys : {
+                                    id: "All" 
+                            }
+                        }
+                        $scope.srcContentTypes.push(optionAll);  
                         $scope.$apply();
                     }).catch((err) => {
                         var e = JSON.parse(err.message);
@@ -60,13 +68,19 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                     });
             }
 
-    $scope.getAllEntries = function (space, selectedContentType, skipValue) {
+    $scope.getAllEntries = function (space, selectedContentTypeId, skipValue) {
 
-        space.getEntries({
-                content_type: selectedContentType,
-                skip: skipValue,
-                order: "sys.createdAt"
-            })
+        var parameters = {
+            skip: skipValue,
+            order: "sys.createdAt"
+        };
+
+        if(selectedContentTypeId != "All") {
+            parameters["content_type"] = selectedContentTypeId;
+        }
+
+        space.getEntries(parameters
+            )
             .then((assets) => {
                 $scope.totalEntries = assets.total;
                 $scope.namesT = $scope.namesT.concat(assets.items);
@@ -80,7 +94,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                 });
                 if ($scope.names.length < $scope.totalEntries) {
                     skipValue = skipValue + 100;
-                    $scope.getAllEntries(space, skipValue);
+                    $scope.getAllEntries(space, selectedContentTypeId, skipValue);
                 }
                 //$scope.countSourceAssets();
                 $scope.$apply();
