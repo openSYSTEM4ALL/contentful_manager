@@ -15,7 +15,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
     <script src="js/contentful-management.min.js"></script>
-    <script src="script/ang.js"></script>
+    <script src="../angular/script/ang.js"></script>
 </head>
 
 <body data-ng-app="myApp">
@@ -63,6 +63,7 @@
                             <ul>
                                 <li><a href="#/migrate" class="waves-effect waves-teal">Assets</a></li>
                                 <li><a href="#/migrate-entries" class="waves-effect waves-teal">Entries</a></li>
+                                <li><a href="#/migrate-entries-locale" class="waves-effect waves-teal">Entries - Locale Specific</a></li>
                                 <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Content Types</a></li>
                             </ul>
                         </div>
@@ -100,6 +101,7 @@
                             <ul>
                                 <li><a href="#/migrate" class="waves-effect waves-teal">Assets</a></li>
                                 <li><a href="#/migrate-entries" class="waves-effect waves-teal">Entries</a></li>
+                                <li><a href="#/migrate-entries-locale" class="waves-effect waves-teal">Entries - Locale Specific</a></li>
                                 <li><a href="#/migrate-content-types" class="waves-effect waves-teal">Content Types</a></li>
                             </ul>
                         </div>
@@ -168,6 +170,7 @@
                         <li><a class="grey-text text-lighten-3" href="#/configure">Configure</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/migrate">Migrate Assets</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/migrate-entries">Migrate Entries</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#/migrate-entries-locale">Migrate Entries - Locale Specific</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/migrate-content-types">Migrate Content Types</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/bulkupload">Bulk Upload</a></li>
                         <li><a class="grey-text text-lighten-3" href="#/upload">Contentful Upload</a></li>
@@ -185,18 +188,19 @@
     <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="script/app.js"></script>
-    <script type="text/javascript" src="script/controller.js"></script>
-    <script type="text/javascript" src="script/uploadController.js"></script>
-    <script type="text/javascript" src="script/bulkcontroller.js"></script>
-    <script type="text/javascript" src="script/entriesController.js"></script>
-    <script type="text/javascript" src="script/contentTypeController.js"></script>
+    <script type="text/javascript" src="../angular/script/app.js"></script>
+    <script type="text/javascript" src="../angular/script/controller.js"></script>
+    <script type="text/javascript" src="../angular/script/uploadController.js"></script>
+    <script type="text/javascript" src="../angular/script/bulkcontroller.js"></script>
+    <script type="text/javascript" src="../angular/script/entriesController.js"></script>
+    <script type="text/javascript" src="../angular/script/entriesLocaleController.js"></script>    
+    <script type="text/javascript" src="../angular/script/contentTypeController.js"></script>
     <script src="js/xlsx.full.min.js"></script>
     <script src="js/ods.js"></script>
     <script src="js/xml2json.js"></script>
     <script>
         if (GetIEVersion() > 0) {
-            window.location.replace("templates/unsupported.html");
+            window.location.replace("angular/templates/unsupported.html");
         }
     </script>
     <script>
