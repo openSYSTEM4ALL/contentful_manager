@@ -31,6 +31,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         //call it here
         $('select').material_select();
     });
+
+    $scope.updateTextFields = function updateTextFields() {
+        Materialize.updateTextFields();
+      };
+
     $scope.toggleAll = function () {
         var toggleStatus = !$scope.isAllSelected;
         if (!toggleStatus) {
@@ -196,16 +201,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                             console.log(e.status + ':' + e.statusText);
                             for (var y in $scope.resultSet) {
                                 if ($scope.resultSet[y].id === processedAsset.sys.id ) {
-                                    if (e.status == 422)
-                                    {
-                                        $scope.resultSet[y].status = "Process default locale before this."
-
-                                    }
-                                    else
                                         $scope.resultSet[y].status = e.status +": " + e.statusText
-                                   
-                                }
                             }
+                        }
                             $scope.$apply();
                         });
                 }).catch((err) => {
@@ -259,14 +257,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
                                         console.log(e.status + ':' + e.statusText);
                                         for (var y in $scope.resultSet) {
                                             if ($scope.resultSet[y].id === processedAsset.sys.id && !processedAsset.isPublished()) {
-                                                if (e.status == 422) {
-                                                    $scope.resultSet[y].status = "Process default locale before this."
-
-                                                }
-                                                else
                                                     $scope.resultSet[y].status = e.status + ": " + e.statusText
-                                            }
                                         }
+                                    }
                                         $scope.$apply();
                                     });
                             }).catch((err) => {
@@ -468,8 +461,6 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
             $scope.mgmntToken = "";
             $scope.spaceID = "";
             Materialize.toast('Congrats! Your operation was successfull', 2000);
-
-
         }
     }
     $scope.editValues = function (value, space, token) {
@@ -479,6 +470,9 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         txtSpaceId.readOnly = true;
         $scope.mgmntToken = token;
         btnSave.value = "Update";
+        $timeout(() => {
+            $scope.updateTextFields();
+          }, 10);
     }
     $scope.deleteSpace = function (value) {
         for (var v in spac) {
@@ -498,10 +492,11 @@ app.controller('layoutController', ['$scope', '$http', '$q', '$timeout', '$windo
         $scope.spaceName = "";
         $scope.mgmntToken = "";
         txtSpaceId.readOnly = false;
+        $timeout(() => {
+            $scope.updateTextFields();
+          }, 10);
         Materialize.toast('Oh! That vanished!', 2000);
     }
-
-
 }]);
 //end of controller
 
