@@ -6,7 +6,7 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/ghpages-materialize.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/vendor/ghpages-materialize.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="css/style.css" media="screen,projection" />
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!--Let browser know website is optimized for mobile-->
@@ -14,8 +14,8 @@
     <meta name="HandheldFriendly" content="true" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
-    <script src="js/contentful-management.min.js"></script>
-    <script src="../angular/script/ang.js"></script>
+    <script src="js/vendor/contentful-management.min.js"></script>
+    <script src="js/ang.js"></script>
 </head>
 
 <body data-ng-app="myApp">
@@ -41,7 +41,7 @@
                 <div class="container">
                     <div class="nav-wrapper">
                         <div class="col s12">
-                            <img src="images/tacos_logo.png" alt="" style="padding-left:25px" />
+                            <!-- <img src="images/tacos_logo.png" alt="" style="padding-left:25px" /> -->
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="container">
                     <div class="nav-wrapper">
                         <div class="col s12">
-                            <img src="images/tacos_logo.png" alt="" style="padding-right:15px; height: 55px;" />
+                            <!-- <img src="images/tacos_logo.png" alt="" style="padding-right:15px; height: 55px;" /> -->
                         </div>
                     </div>
                 </div>
@@ -186,21 +186,21 @@
         </div>
     </footer>
     <!--Import jQuery before materialize.js-->
-    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="../angular/script/app.js"></script>
-    <script type="text/javascript" src="../angular/script/controller.js"></script>
-    <script type="text/javascript" src="../angular/script/uploadController.js"></script>
-    <script type="text/javascript" src="../angular/script/bulkcontroller.js"></script>
-    <script type="text/javascript" src="../angular/script/entriesController.js"></script>
-    <script type="text/javascript" src="../angular/script/entriesLocaleController.js"></script>    
-    <script type="text/javascript" src="../angular/script/contentTypeController.js"></script>
-    <script src="js/xlsx.full.min.js"></script>
-    <script src="js/ods.js"></script>
-    <script src="js/xml2json.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/vendor/materialize.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/uploadController.js"></script>
+    <script type="text/javascript" src="js/bulkcontroller.js"></script>
+    <script type="text/javascript" src="js/entriesController.js"></script>
+    <script type="text/javascript" src="js/entriesLocaleController.js"></script>    
+    <script type="text/javascript" src="js/contentTypeController.js"></script>
+    <script src="js/vendor/xlsx.full.min.js"></script>
+    <script src="js/vendor/ods.js"></script>
+    <script src="js/vendor/xml2json.js"></script>
     <script>
         if (GetIEVersion() > 0) {
-            window.location.replace("angular/templates/unsupported.html");
+            window.location.replace("js/templates/unsupported.html");
         }
     </script>
     <script>

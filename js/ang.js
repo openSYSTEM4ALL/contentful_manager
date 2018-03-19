@@ -3,39 +3,39 @@ var app = angular.module('myApp', ['ngRoute']);
 app.config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
     $routeProvider.when("/migrate-content-types", {
         controller: "contentTypeController",
-        templateUrl: "angular/templates/content-types-migration.html"
+        templateUrl: "js/templates/content-types-migration.html"
     });
     $routeProvider.when("/migrate-entries", {
         controller: "entriesController",
-        templateUrl: "angular/templates/entries-migration.html"
+        templateUrl: "js/templates/entries-migration.html"
     });
     $routeProvider.when("/migrate-entries-locale", {
         controller: "entriesLocaleController",
-        templateUrl: "angular/templates/entries-locale-migration.html"
+        templateUrl: "js/templates/entries-locale-migration.html"
     });
     $routeProvider.when("/migrate", {
         controller: "layoutController",
-        templateUrl: "angular/templates/migrate.html"
+        templateUrl: "js/templates/migrate.html"
     });
     $routeProvider.when("/login", {
         controller: "loginController",
-        templateUrl:"angular/templates/login.html"
+        templateUrl:"js/templates/login.html"
     });
     $routeProvider.when("/configure", {
         controller: "layoutController",
-        templateUrl: "angular/templates/configure.html"
+        templateUrl: "js/templates/configure.html"
     });
     $routeProvider.when("/upload", {
         controller: "uploadController",
-        templateUrl: "angular/templates/upload.html"
+        templateUrl: "js/templates/upload.html"
     });
     $routeProvider.when("/bulkupload", {
         controller: "bulkController",
-        templateUrl:"angular/templates/bulkupload.html"
+        templateUrl:"js/templates/bulkupload.html"
     });
     $routeProvider.when("/", {
         controller: "landingController",
-        templateUrl:"angular/templates/landing.html"
+        templateUrl:"js/templates/landing.html"
     });
 
     $routeProvider.otherwise({
