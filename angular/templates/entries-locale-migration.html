@@ -43,7 +43,7 @@
             <div class="">
                 <ul class="tabs grey lighten-3">
                     <li class="tab col s4"><a id="assetslistid" href="#assetslist" class="red-text bold" >Source</a></li>
-                    <li class="tab col s4"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Destination</a></li>
+                    <li class="tab col s4"><a id="selectedAssetid" href="#selectedAsset" class="red-text bold accent-2">Destination & Locale</a></li>
                     <li class="tab col s3"><a id="migratedAssetid" href="#migratedAsset" class="red-text bold accent-2">Migrate</a></li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@
                     <div class="col s12 m6 l6" ng-hide="selectedSource == undefined || srcContentTypes.length == 0">
                         <label for="selectContentType">  Content Type : </label>
                         <select class="filled-in browser-default" name="selectContentType" id="ddlSrcContentType" ng-model="selectedContentType"
-                            ng-options="c.name for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
+                            ng-options="c.sys.id for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
                             <option value="" disabled selected>-- Select Content Type --</option>
                         </select>
                     </div>
@@ -207,11 +207,19 @@
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <h4 class="">For Your Information Please</h4>
-            <p class="modal-text">This process will not update any existing content type at the destination, however, it will create the content type if not present. If there is any modifiation in the content type at source please use <em>Content Type Migration</em> option to update the content type at the destination. </p>
+            <ul class="collection">
+                <li class="collection-item">
+                    <p class="modal-text">This migration will only migrate the localized content and will leave out the non-localized fields because such fields only have default locale.</p>
+                </li>
+                <li class="collection-item">
+                    <p class="modal-text">This migration will not update any existing content type at the destination, however, it will create the content type if not present. If there is any modifiation in the content type at source please use <em>Content Type Migration</em> option to update the content type at the destination. </p>
+                </li>
+            </ul>
+            
         </div>
         <div class="grey lighten-2 modal-footer">
                 <a id="modalAgree" href="" class="green darken-1 modal-button modal-action modal-close waves-effect waves-green btn" ng-click="migratecontent()">Go Ahead</a>
-            <a id="modalDisagree" href="" class="red lighten-1 modal-button modal-action modal-close waves-effect waves-red btn" onclick="$('#assetslistid').click()">Need to confirm</a>            
+            <a id="modalDisagree" href="" class="red lighten-1 modal-button modal-action modal-close waves-effect waves-red btn" onclick="$('#assetslistid').click()">Stop</a>            
         </div>
     </div>
 </div>

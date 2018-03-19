@@ -59,7 +59,7 @@
                 <div class="col s12 m6 l6" ng-hide="selectedSource == undefined || srcContentTypes.length == 0">
                     <label for="selectContentType">  Content Type : </label>
                     <select class="filled-in browser-default" name="selectContentType" id="ddlSrcContentType" ng-model="selectedContentType"
-                        ng-options="c.name for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
+                        ng-options="c.sys.id for c in srcContentTypes track by c.sys.id" ng-change="changedValue(selectedContentType)">
                             <option value="" disabled selected>-- Select Content Type --</option>
                             </select>
                 </div>
