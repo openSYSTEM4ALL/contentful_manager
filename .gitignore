@@ -1,6 +1,6 @@
-config.js
 launch.json
 */.DS_Store
 .vscode
+images/tacos_logo.png
 *.TMP
 npm-debug.log
