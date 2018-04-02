@@ -13,6 +13,10 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         $('select').material_select();
     }
 
+    $scope.updateTextFields = function updateTextFields() {
+        Materialize.updateTextFields();
+      };
+
     $scope.defaultDestLocale = null;
     $scope.spaces = spac;
     $scope.destLocales = [];
@@ -159,6 +163,9 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         //$scope.selectedLocale = locale;
         txtAssetName.readOnly = true;
         btnAdd.value = "Update";
+        $timeout(() => {
+            $scope.updateTextFields();
+          }, 10);
     }
 
     $scope.deleteAssetFromList = function (itemName) {
@@ -181,6 +188,9 @@ app.controller('uploadController', ['$scope', '$http', '$timeout', '$window', '$
         $scope.assetUrl = "";
         //$scope.selectedLocale = ""; //Not working for select
         txtAssetName.readOnly = false;
+        $timeout(() => {
+            $scope.updateTextFields();
+          }, 10);
         Materialize.toast('Oh! That vanished!', 4000);
     }
     /* End of Configuration methods */
