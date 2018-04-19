@@ -92,7 +92,7 @@ app.controller('entriesController', ['$scope', '$http', '$q', '$timeout', '$wind
                         $scope.names.push(entry);
                     }
                 });
-                if ($scope.names.length < $scope.totalEntries) {
+                if ($scope.namesT.length < $scope.totalEntries) {
                     skipValue = skipValue + 100;
                     $scope.getAllEntries(space, selectedContentTypeId, skipValue);
                 }
